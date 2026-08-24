@@ -46,8 +46,9 @@ jobs:
 
       - name: Commit and Push changes
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Configure Git to dynamically use the name and email of the last commit author
+          git config --global user.name "$(git log -1 --format='%an')"
+          git config --global user.email "$(git log -1 --format='%ae')"
           
           # Check if there are changes to commit
           if git diff --quiet README.md index.html; then
