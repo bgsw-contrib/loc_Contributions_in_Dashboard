@@ -1,56 +1,15 @@
-{
-  "contributors": {
-    "per9kor": {
-      "name": "Ramakrishnan PK",
-      "group": "S-Core Contributors"
-    },
-    "srinivasu-kandukuri": {
-      "name": "Srinivasu Kandukuri",
-      "group": "S-Core Contributors"
-    },
-    "vinodh": {
-      "name": "Vinodha",
-      "group": "S-Core Contributors"
-    },
-    "tjk1cob": {
-      "name": "Parthiban",
-      "group": "S-Core Contributors"
-    },
-    "dgi1cob": {
-      "name": "Divya",
-      "group": "S-Core Contributors"
-    },
-    "mdl2kor": {
-      "name": "Amulya",
-      "group": "S-Core Contributors"
-    },
-    "vrinda": {
-      "name": "Virinda",
-      "group": "S-Core Contributors"
-    },
-    "sujith": {
-      "name": "Sujith",
-      "group": "S-Core Contributors"
-    },
-    "kkumarrh3": {
-      "name": "Kiran Kumar HV",
-      "group": "S-Core Contributors"
-    },
-    "purnadev": {
-      "name": "Nanda Purna Chandra",
-      "group": "S-Core Contributors"
-    },
-    "naveena456": {
-      "name": "Panne Naveena",
-      "group": "S-Core Contributors"
-    },
-    "logesh": {
-      "name": "Logeshwari Sithan",
-      "group": "S-Core Contributors"
-    },
-    "xna2kor": {
-      "name": "Gnana Prakash N R",
-      "group": "S-Core Contributors"
-    }
-  }
-}
+[
+  "RamakrishnanPK",
+  "srinivasugithub",
+  "vinodh",
+  "tjk1cob",
+  "dgi1cob",
+  "mdl2kor",
+  "vrinda",
+  "sujith",
+  "kkumarrh3",
+  "purnadev",
+  "naveena456",
+  "logesh",
+  "xna2kor"
+]

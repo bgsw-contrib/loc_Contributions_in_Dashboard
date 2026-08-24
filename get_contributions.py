@@ -1,13 +1,14 @@
 import os
 import json
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # Environment variables
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 ORG_NAME = "bgsw-contrib"
 CONFIG_FILE = "users.json"
 DASHBOARD_FILE = "README.md"
+REPORT_FILE = "report.md"
 
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN environment variable is required.")
@@ -58,19 +59,14 @@ def get_pr_details(pr_url):
         return 0, 0
 
 def main():
-    config = load_config()
-    contributors = config.get("contributors", {})
+    contributors = load_config()
     
     user_stats = {}
-    group_stats = {}
     
     print("Gathering contribution metrics...")
     
-    for username, info in contributors.items():
-        name = info["name"]
-        group = info["group"]
-        
-        print(f"Analyzing user: {username} ({name})...")
+    for username in contributors:
+        print(f"Analyzing user: {username}...")
         prs = fetch_user_prs(username, ORG_NAME)
         
         total_additions = 0
@@ -86,29 +82,17 @@ def main():
                 total_deletions += deletions
         
         user_stats[username] = {
-            "name": name,
-            "group": group,
             "pr_count": pr_count,
             "additions": total_additions,
             "deletions": total_deletions,
             "total_loc": total_additions + total_deletions
         }
-        
-        # Aggregate by group
-        if group not in group_stats:
-            group_stats[group] = {
-                "members": 0,
-                "pr_count": 0,
-                "additions": 0,
-                "deletions": 0,
-                "total_loc": 0
-            }
-        
-        group_stats[group]["members"] += 1
-        group_stats[group]["pr_count"] += pr_count
-        group_stats[group]["additions"] += total_additions
-        group_stats[group]["deletions"] += total_deletions
-        group_stats[group]["total_loc"] += (total_additions + total_deletions)
+
+    # Calculate Totals
+    total_prs = sum(stats["pr_count"] for stats in user_stats.values())
+    total_additions = sum(stats["additions"] for stats in user_stats.values())
+    total_deletions = sum(stats["deletions"] for stats in user_stats.values())
+    total_loc = total_additions + total_deletions
 
     # Generate Markdown Dashboard Content
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -122,24 +106,18 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
 
 ---
 
-## 📊 Team & Group Summary
+## 👤 Contributor Standings
 
-| Role Group | Members Tracked | Total PRs | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-"""
-    for group, stats in sorted(group_stats.items(), key=lambda x: x[1]["total_loc"], reverse=True):
-        markdown += f"| **{group}** | {stats['members']} | {stats['pr_count']} | {stats['additions']:,} | {stats['deletions']:,} | **{stats['total_loc']:,}** |\n"
-
-    markdown += """
----
-
-## 👤 Individual Contributor Standings
-
-| Contributor | Role Group | PRs Created | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
-| :--- | :--- | :---: | :---: | :---: | :---: |
+| Contributor (GitHub Username) | PRs Created | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
+| :--- | :---: | :---: | :---: | :---: |
 """
     for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["total_loc"], reverse=True):
-        markdown += f"| **{stats['name']}** ({username}) | {stats['group']} | {stats['pr_count']} | {stats['additions']:,} | {stats['deletions']:,} | **{stats['total_loc']:,}** |\n"
+        profile_url = f"https://github.com/{username}"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}"
+        markdown += f"| **[{username}]({profile_url})** | [{stats['pr_count']:,}]({pr_query_url}) | {stats['additions']:,} | {stats['deletions']:,} | **{stats['total_loc']:,}** |\n"
+
+    # Add bold Total row at the bottom
+    markdown += f"| **Total** | **[{total_prs:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME})** | **{total_additions:,}** | **{total_deletions:,}** | **{total_loc:,}** |\n"
 
     markdown += """
 ---
@@ -147,13 +125,16 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
 ## 🛠️ How it Works
 This dashboard is fully automated. Every day, a GitHub Action workflow runs the tracking script, queries the GitHub API for activity within the organization, aggregates the LOC metrics, and updates this page.
 
-To manage the list of tracked contributors and their groups, modify the `users.json` file.
+To manage the list of tracked contributors, modify the `users.json` file.
 """
 
     with open(DASHBOARD_FILE, "w") as f:
         f.write(markdown)
+        
+    with open(REPORT_FILE, "w") as f:
+        f.write(markdown)
     
-    print("Dashboard updated successfully!")
+    print("Dashboard and report updated successfully!")
 
 if __name__ == "__main__":
     main()

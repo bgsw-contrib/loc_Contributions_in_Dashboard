@@ -9,7 +9,7 @@ on:
 
 jobs:
   update-dashboard:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, HYD_SLEF]
     permissions:
       contents: write # Allows pushing the updated README/dashboard back to the repo
 
@@ -27,10 +27,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run Tracker Script
+      - name: Run Tracker Script and Show Summary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python get_contributions.py
+        run: |
+          python get_contributions.py
+          # Output the report to the GitHub Actions Job Summary so it displays in the run overview
+          cat report.md >> $GITHUB_STEP_SUMMARY
 
       - name: Commit and Push changes
         run: |
@@ -38,10 +41,10 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           # Check if there are changes to commit
-          if git diff --quiet README.md; then
-            echo "No changes to the dashboard."
+          if git diff --quiet README.md report.md; then
+            echo "No changes to the dashboard or report."
           else
-            git add README.md
-            git commit -m "chore: auto-update contributions dashboard [skip ci]"
+            git add README.md report.md
+            git commit -m "chore: auto-update contributions dashboard and report [skip ci]"
             git push
           fi
