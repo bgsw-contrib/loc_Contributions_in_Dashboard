@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-24 19:10:19 (UTC)`  
+> **Last Updated:** `2026-08-24 13:43:48 (UTC)`  
 > *Note: Metrics represent total historical Pull Request contributions.*
 
 ---
@@ -12,7 +12,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | Contributor (GitHub Username) | PRs Created | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
 | **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [9](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar) | 1,549 | 1,737 | **3,286** |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub) | 1,445 | 199 | **1,644** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [3](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub) | 1,442 | 195 | **1,637** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK) | 538 | 34 | **572** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V) | 38 | 3 | **41** |
 | **[tjk1cob](https://github.com/tjk1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:tjk1cob) | 0 | 0 | **0** |
@@ -24,7 +24,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[naveena456](https://github.com/naveena456)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456) | 0 | 0 | **0** |
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor) | 0 | 0 | **0** |
-| **Total** | **[20](https://github.com/pulls?q=is:pr+org:bgsw-contrib)** | **3,570** | **1,973** | **5,543** |
+| **Total** | **[18](https://github.com/pulls?q=is:pr+org:bgsw-contrib)** | **3,567** | **1,969** | **5,536** |
 
 ---
 
