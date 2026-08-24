@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-24 12:40:33 (UTC)`  
+> **Last Updated:** `2026-08-24 12:45:51 (UTC)`  
 > *Note: Metrics represent total historical Pull Request contributions.*
 
 ---
@@ -32,11 +32,11 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 You can check the contribution metrics in two convenient ways:
 
-1. **🌐 Interactive Web Dashboard**: View the premium dark-mode dashboard with interactive Chart.js bar and doughnut charts live at:  
-   👉 **[bgsw-contrib.github.io/loc_Contributions_in_Dashboard/](https://bgsw-contrib.github.io/loc_Contributions_in_Dashboard/)**  
-   *(Served automatically via GitHub Pages)*
+1. **📄 Readme Standings Table**: View the clean, formatted Markdown standings table directly on the **[landing page of this repository](./README.md)**.
 
 2. **📊 GitHub Actions Run Summary**: Check the **Actions** tab of this repository. Every daily scheduled run or manual run renders this standings table directly in the run summary overview!
+
+*(Note: You can also download or view the generated **[index.html](./index.html)** file locally in your browser to interact with the rich Chart.js visualization charts.)*
 
 ---
 
