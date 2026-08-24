@@ -1,0 +1,24 @@
+{
+  "contributors": {
+    "srinivasu-kandukuri": {
+      "name": "Srinivasu Kandukuri",
+      "group": "S-Core & AUTOSAR Technical Lead"
+    },
+    "mayank-joshi": {
+      "name": "Mayank Joshi",
+      "group": "Infrastructure & Coordination"
+    },
+    "niranjan-babu": {
+      "name": "Niranjan Babu H S",
+      "group": "S-Core Architecture & QNX-Rust"
+    },
+    "amogh-purandare": {
+      "name": "Amogh Purandare",
+      "group": "GenAI & Innovation Strategy"
+    },
+    "ananda-kumar": {
+      "name": "Ananda Kumar",
+      "group": "QNX-RUST POC Lead"
+    }
+  }
+}
