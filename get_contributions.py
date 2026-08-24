@@ -22,6 +22,51 @@ def load_config():
     with open(CONFIG_FILE, "r") as f:
         return json.load(f)
 
+def resolve_username(identifier, org):
+    """
+    If identifier is an email address (contains '@'), resolve it to a GitHub username.
+    Otherwise, return the identifier as is.
+    """
+    if "@" not in identifier:
+        return identifier
+
+    email = identifier
+    print(f"Attempting to resolve email {email} to GitHub username...")
+
+    # 1. Search users by email globally
+    url = f"https://api.github.com/search/users?q={email}+in:email"
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            items = response.json().get("items", [])
+            if items:
+                username = items[0]["login"]
+                print(f"Successfully resolved email {email} to global user {username}")
+                return username
+    except Exception as e:
+        print(f"Exception searching user by email {email}: {e}")
+
+    # 2. Search commits in the organization by author-email (extremely reliable for internal contributors)
+    commit_headers = {**headers, "Accept": "application/vnd.github.cloak-preview+json"}
+    url = f"https://api.github.com/search/commits?q=org:{org}+author-email:{email}"
+    try:
+        response = requests.get(url, headers=commit_headers)
+        if response.status_code == 200:
+            items = response.json().get("items", [])
+            for item in items:
+                author = item.get("author")
+                if author and author.get("login"):
+                    username = author["login"]
+                    print(f"Successfully resolved email {email} to commit author {username}")
+                    return username
+    except Exception as e:
+        print(f"Exception searching commits for email {email}: {e}")
+
+    # Fallback to local part of the email
+    fallback = email.split("@")[0]
+    print(f"Could not resolve email {email}. Falling back to email localpart: {fallback}")
+    return fallback
+
 def fetch_user_prs(username, org):
     """
     Search for all Pull Requests created by the user in the specified organization.
@@ -59,13 +104,14 @@ def get_pr_details(pr_url):
         return 0, 0
 
 def main():
-    contributors = load_config()
+    identifiers = load_config()
     
     user_stats = {}
     
     print("Gathering contribution metrics...")
     
-    for username in contributors:
+    for identifier in identifiers:
+        username = resolve_username(identifier, ORG_NAME)
         print(f"Analyzing user: {username}...")
         prs = fetch_user_prs(username, ORG_NAME)
         
