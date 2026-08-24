@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import time
 from datetime import datetime
 
 # Environment variables
@@ -18,6 +19,22 @@ headers = {
     "Accept": "application/vnd.github.v3+json"
 }
 
+# Static email cache to resolve corporate emails instantly without triggering GitHub Search rate limits
+EMAIL_CACHE = {
+    "per9kor@bosch.com": "RamakrishnanPK",
+    "srinivasu.kandukuri@in.bosch.com": "srinivasugithub",
+    "vzm1kor@bosch.com": "vinodh",
+    "tjk1cob@bosch.com": "tjk1cob",
+    "dgi1cob@bosch.com": "dgi1cob",
+    "mdl2kor@bosch.com": "mdl2kor",
+    "vrinda.a@bosch.com": "vrinda",
+    "KiranKumar.HV@in.bosch.com": "kkumarrh3",
+    "purnachandra.nanda@bosch.com": "purnadev",
+    "naveena.panne@bosch.com": "naveena456",
+    "sithan.logeshwari@in.bosch.com": "logesh",
+    "NR.GnanaPrakash@in.bosch.com": "xna2kor"
+}
+
 def load_config():
     with open(CONFIG_FILE, "r") as f:
         return json.load(f)
@@ -31,7 +48,14 @@ def resolve_username(identifier, org):
         return identifier
 
     email = identifier
-    print(f"Attempting to resolve email {email} to GitHub username...")
+    
+    # Check static cache first
+    if email in EMAIL_CACHE:
+        resolved = EMAIL_CACHE[email]
+        print(f"Resolved email {email} from local cache to: {resolved}")
+        return resolved
+
+    print(f"Attempting dynamic API resolution for email {email}...")
 
     # 1. Search users by email globally
     url = f"https://api.github.com/search/users?q={email}+in:email"
@@ -133,6 +157,9 @@ def main():
             "deletions": total_deletions,
             "total_loc": total_additions + total_deletions
         }
+        
+        # Sleep to comply with GitHub Search API secondary rate limits/spikes (30 requests/min limit)
+        time.sleep(2)
 
     # Calculate Totals
     total_prs = sum(stats["pr_count"] for stats in user_stats.values())
