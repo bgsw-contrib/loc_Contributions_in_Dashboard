@@ -9,7 +9,7 @@ on:
 
 jobs:
   update-dashboard:
-    runs-on: [self-hosted, Linux, X64, HYD_SLEF]
+    runs-on: Ubuntu-Latest
     permissions:
       contents: write # Allows pushing the updated README/dashboard back to the repo
 
