@@ -129,13 +129,15 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
 
 ## 🔍 How to View the Reports
 
-You can check the contribution metrics in two convenient ways:
+You can check the contribution metrics in three convenient ways:
 
-1. **📄 Readme Standings Table**: View the clean, formatted Markdown standings table directly on the **[landing page of this repository](./README.md)**.
+1. **🌐 Interactive Web Dashboard**: View the premium dark-mode dashboard with interactive Chart.js bar and doughnut charts live at:  
+   👉 **[bgsw-contrib.github.io/loc_Contributions_in_Dashboard/](https://bgsw-contrib.github.io/loc_Contributions_in_Dashboard/)**  
+   *(Served automatically via GitHub Pages)*
 
-2. **📊 GitHub Actions Run Summary**: Check the **Actions** tab of this repository. Every daily scheduled run or manual run renders this standings table directly in the run summary overview!
+2. **📄 Readme Standings Table**: View the clean, formatted Markdown standings table directly on the **[landing page of this repository](./README.md)**.
 
-*(Note: You can also download or view the generated **[index.html](./index.html)** file locally in your browser to interact with the rich Chart.js visualization charts.)*
+3. **📊 GitHub Actions Run Summary**: Check the **Actions** tab of this repository. Every daily scheduled run or manual run renders this standings table directly in the run summary overview!
 
 ---
 
