@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-24 13:43:48 (UTC)`  
+> **Last Updated:** `2026-08-24 19:16:46 (UTC)`  
 > *Note: Metrics represent total historical Pull Request contributions.*
 
 ---
@@ -15,7 +15,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[srinivasugithub](https://github.com/srinivasugithub)** | [3](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub) | 1,442 | 195 | **1,637** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK) | 538 | 34 | **572** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V) | 38 | 3 | **41** |
-| **[tjk1cob](https://github.com/tjk1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:tjk1cob) | 0 | 0 | **0** |
+| **[parthibankuppudurai](https://github.com/parthibankuppudurai)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai) | 0 | 0 | **0** |
 | **[dgi1cob](https://github.com/dgi1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:dgi1cob) | 0 | 0 | **0** |
 | **[mdl2kor](https://github.com/mdl2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:mdl2kor) | 0 | 0 | **0** |
 | **[vrinda](https://github.com/vrinda)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:vrinda) | 0 | 0 | **0** |
