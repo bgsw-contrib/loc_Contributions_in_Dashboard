@@ -41,10 +41,10 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           # Check if there are changes to commit
-          if git diff --quiet README.md report.md; then
-            echo "No changes to the dashboard or report."
+          if git diff --quiet README.md report.md index.html; then
+            echo "No changes to the dashboard, report, or index.html."
           else
-            git add README.md report.md
-            git commit -m "chore: auto-update contributions dashboard and report [skip ci]"
+            git add README.md report.md index.html
+            git commit -m "chore: auto-update contributions dashboard, report, and HTML page [skip ci]"
             git push
           fi

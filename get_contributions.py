@@ -10,6 +10,7 @@ ORG_NAME = "bgsw-contrib"
 CONFIG_FILE = "users.json"
 DASHBOARD_FILE = "README.md"
 REPORT_FILE = "report.md"
+HTML_FILE = "index.html"
 
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN environment variable is required.")
@@ -97,6 +98,7 @@ def main():
     total_additions = sum(stats["additions"] for stats in user_stats.values())
     total_deletions = sum(stats["deletions"] for stats in user_stats.values())
     total_loc = total_additions + total_deletions
+    active_contributors = len(contributors)
 
     # Generate Markdown Dashboard Content
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -132,13 +134,514 @@ This dashboard is fully automated. Every day, a GitHub Action workflow runs the 
 To manage the list of tracked contributors, modify the `users.json` file.
 """
 
+    # Generate index.html Content (Rich Executive Dashboard with Chart.js)
+    labels = []
+    pr_counts = []
+    add_metrics = []
+    del_metrics = []
+    total_locs = []
+    
+    sorted_users = sorted(user_stats.items(), key=lambda x: x[1]["total_loc"], reverse=True)
+    for username, stats in sorted_users:
+        labels.append(username)
+        pr_counts.append(stats["pr_count"])
+        add_metrics.append(stats["additions"])
+        del_metrics.append(stats["deletions"])
+        total_locs.append(stats["total_loc"])
+
+    table_rows_html = ""
+    for username, stats in sorted_users:
+        profile_url = f"https://github.com/{username}"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}"
+        table_rows_html += f"""
+        <tr>
+            <td><a href="{profile_url}" target="_blank" class="user-link">@{username}</a></td>
+            <td class="text-center"><a href="{pr_query_url}" target="_blank" class="pr-link">{stats['pr_count']:,}</a></td>
+            <td class="text-green text-right">+{stats['additions']:,}</td>
+            <td class="text-red text-right">-{stats['deletions']:,}</td>
+            <td class="text-right font-bold"><b>{stats['total_loc']:,}</b></td>
+        </tr>
+        """
+
+    # Serialize JSON for inject into JavaScript
+    labels_json = json.dumps(labels)
+    pr_counts_json = json.dumps(pr_counts)
+    add_metrics_json = json.dumps(add_metrics)
+    del_metrics_json = json.dumps(del_metrics)
+    total_locs_json = json.dumps(total_locs)
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOC Contributions Dashboard - {ORG_NAME}</title>
+    <!-- Inter Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {{
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --success: #4ade80;
+            --danger: #f87171;
+            --accent: #a78bfa;
+        }}
+        
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }}
+        
+        body {{
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2.5rem 1.5rem;
+            min-height: 100vh;
+        }}
+        
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+        }}
+        
+        header {{
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }}
+        
+        h1 {{
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }}
+        
+        .updated-badge {{
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+        }}
+        
+        /* Stats Grid */
+        .stats-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }}
+        
+        .stat-card {{
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }}
+        
+        .stat-card:hover {{
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }}
+        
+        .stat-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--accent);
+        }}
+        
+        .stat-card.blue::before {{ background-color: var(--primary); }}
+        .stat-card.green::before {{ background-color: var(--success); }}
+        .stat-card.red::before {{ background-color: var(--danger); }}
+        
+        .stat-label {{
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+        
+        .stat-value {{
+            font-size: 1.75rem;
+            font-weight: 700;
+        }}
+        
+        /* Charts Section */
+        .charts-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }}
+        
+        @media (max-width: 600px) {{
+            .charts-grid {{
+                grid-template-columns: 1fr;
+            }}
+        }}
+        
+        .chart-card {{
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 380px;
+        }}
+        
+        .chart-title {{
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }}
+        
+        .chart-container {{
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }}
+        
+        /* Table Card */
+        .table-card {{
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 2.5rem;
+        }}
+        
+        .table-title {{
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }}
+        
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }}
+        
+        th, td {{
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+        }}
+        
+        th {{
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+        
+        tr:last-child td {{
+            border-bottom: none;
+        }}
+        
+        tr:hover td {{
+            background-color: rgba(255, 255, 255, 0.02);
+        }}
+        
+        .user-link {{
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.15s;
+        }}
+        
+        .user-link:hover {{
+            color: #7dd3fc;
+            text-decoration: underline;
+        }}
+        
+        .pr-link {{
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            background-color: rgba(167, 139, 250, 0.1);
+            padding: 0.25rem 0.625rem;
+            border-radius: 6px;
+            transition: background-color 0.15s;
+        }}
+        
+        .pr-link:hover {{
+            background-color: rgba(167, 139, 250, 0.2);
+            text-decoration: underline;
+        }}
+        
+        /* Utility classes */
+        .text-center {{ text-align: center; }}
+        .text-right {{ text-align: right; }}
+        .text-green {{ color: var(--success); }}
+        .text-red {{ color: var(--danger); }}
+        .font-bold {{ font-weight: 700; }}
+        
+        /* Footer */
+        footer {{
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--card-border);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }}
+        
+        footer a {{
+            color: var(--primary);
+            text-decoration: none;
+        }}
+        
+        footer a:hover {{
+            text-decoration: underline;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Lines of Code Contributions Dashboard</h1>
+                <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>{ORG_NAME}</strong> organization.</p>
+            </div>
+            <div class="updated-badge">
+                Last Updated: <strong>{now_str} UTC</strong>
+            </div>
+        </header>
+
+        <!-- Stats Row -->
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <span class="stat-label">Total Pull Requests</span>
+                <span class="stat-value">{total_prs:,}</span>
+            </div>
+            <div class="stat-card green">
+                <span class="stat-label">Total Lines Added</span>
+                <span class="stat-value">+{total_additions:,}</span>
+            </div>
+            <div class="stat-card red">
+                <span class="stat-label">Total Lines Deleted</span>
+                <span class="stat-value">-{total_deletions:,}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Contributors Tracked</span>
+                <span class="stat-value">{active_contributors}</span>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-grid">
+            <!-- Lines of Code Chart -->
+            <div class="chart-card">
+                <div class="chart-title">
+                    <span>Lines of Code Contributions</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Additions vs Deletions</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="locChart"></canvas>
+                </div>
+            </div>
+            <!-- Pull Requests Chart -->
+            <div class="chart-card">
+                <div class="chart-title">
+                    <span>Pull Request Share</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Percentage per Contributor</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="prChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Standings Table -->
+        <div class="table-card">
+            <h2 class="table-title">👤 Contributor Standings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Contributor (GitHub Username)</th>
+                        <th class="text-center">PRs Created</th>
+                        <th class="text-right">Lines Added (+)</th>
+                        <th class="text-right">Lines Deleted (-)</th>
+                        <th class="text-right">Total LOC Changed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {table_rows_html}
+                    <!-- Total Row -->
+                    <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
+                        <td><strong>Total Group Stats</strong></td>
+                        <td class="text-center font-bold">
+                            <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}" target="_blank" class="pr-link" style="font-weight: 700;">{total_prs:,}</a>
+                        </td>
+                        <td class="text-green text-right font-bold">+{total_additions:,}</td>
+                        <td class="text-red text-right font-bold">-{total_deletions:,}</td>
+                        <td class="text-right font-bold" style="color: var(--primary);"><b>{total_loc:,}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <p>This page is fully automated. Every day, a GitHub Action workflow runs the tracking script, aggregates LOC metrics, and updates this dashboard.</p>
+            <p style="margin-top: 0.5rem;">To manage contributors, modify the <a href="./users.json" target="_blank">users.json</a> configuration file.</p>
+        </footer>
+    </div>
+
+    <!-- Inject Chart.js Configuration -->
+    <script>
+        const labels = {labels_json};
+        const prCounts = {pr_counts_json};
+        const additions = {add_metrics_json};
+        const deletions = {del_metrics_json};
+        const totalLocs = {total_locs_json};
+
+        // 1. Lines of Code Stacked Bar Chart
+        const ctxLoc = document.getElementById('locChart').getContext('2d');
+        new Chart(ctxLoc, {{
+            type: 'bar',
+            data: {{
+                labels: labels,
+                datasets: [
+                    {{
+                        label: 'Lines Added (+)',
+                        data: additions,
+                        backgroundColor: '#4ade80',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }},
+                    {{
+                        label: 'Lines Deleted (-)',
+                        data: deletions.map(v => Math.abs(v)), // Plot positive values for stacked charts
+                        backgroundColor: '#f87171',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }}
+                ]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {{
+                    legend: {{
+                        position: 'top',
+                        labels: {{ color: '#f8fafc', font: {{ family: 'Inter' }} }}
+                    }},
+                    tooltip: {{
+                        callbacks: {{
+                            label: function(context) {{
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) label += context.parsed.y.toLocaleString();
+                                return label;
+                            }}
+                        }}
+                    }}
+                }},
+                scales: {{
+                    x: {{
+                        stacked: true,
+                        ticks: {{ color: '#94a3b8', font: {{ family: 'Inter' }} }},
+                        grid: {{ display: false }}
+                    }},
+                    y: {{
+                        stacked: true,
+                        ticks: {{ color: '#94a3b8', font: {{ family: 'Inter' }} }},
+                        grid: {{ color: '#334155' }}
+                    }}
+                }}
+            }}
+        }});
+
+        // 2. Pull Request Doughnut Chart
+        const ctxPr = document.getElementById('prChart').getContext('2d');
+        
+        // Generate beautiful gradient color palette for doughnut segments
+        const colorPalette = [
+            '#38bdf8', '#a78bfa', '#f43f5e', '#fbbf24', '#34d399', 
+            '#f472b6', '#fb7185', '#a3e635', '#2dd4bf', '#fb923c'
+        ];
+        
+        new Chart(ctxPr, {{
+            type: 'doughnut',
+            data: {{
+                labels: labels,
+                datasets: [{{
+                    label: 'PR Share',
+                    data: prCounts,
+                    backgroundColor: colorPalette.slice(0, labels.length),
+                    borderWidth: 2,
+                    borderColor: '#1e293b'
+                }}]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {{
+                    legend: {{
+                        position: 'right',
+                        labels: {{ color: '#f8fafc', font: {{ family: 'Inter', size: 11 }} }}
+                    }},
+                    tooltip: {{
+                        callbacks: {{
+                            label: function(context) {{
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                return ` ${{context.label}}: ${{value}} PRs (${{percentage}}%)`;
+                            }}
+                        }}
+                    }}
+                }},
+                cutout: '65%'
+            }}
+        }});
+    </script>
+</body>
+</html>
+"""
+
     with open(DASHBOARD_FILE, "w") as f:
         f.write(markdown)
         
     with open(REPORT_FILE, "w") as f:
         f.write(markdown)
+        
+    with open(HTML_FILE, "w") as f:
+        f.write(html_content)
     
-    print("Dashboard and report updated successfully!")
+    print("Dashboard, report, and HTML dashboard updated successfully!")
 
 if __name__ == "__main__":
     main()
