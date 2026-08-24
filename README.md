@@ -11,7 +11,7 @@ This repository tracks and displays statistics on Pull Request activity and line
 The dashboard below is updated automatically every day.
 
 > **Last Updated:** `Not run yet`  
-> *Note: Metrics represent Pull Request contributions created in the last 30 days.*
+> *Note: Metrics represent total historical Pull Request contributions.*
 
 ---
 
@@ -33,7 +33,7 @@ You can configure and manage the list of tracked contributors and their groups b
 1. **Daily Tracker Execution:**
    Every day, a scheduled GitHub Actions workflow runs the [get_contributions.py](./get_contributions.py) Python script.
 2. **API Data Collection:**
-   The script queries the GitHub Search API for all Pull Requests created by the specified users in the `bgsw-contrib` organization over the last 30 days.
+   The script queries the GitHub Search API for all Pull Requests created by the specified users in the `bgsw-contrib` organization.
 3. **Metric Calculation:**
    For each PR, the script retrieves detailed contribution metrics (lines of code added and deleted) from the GitHub REST API.
 4. **Aggregation:**

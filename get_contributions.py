@@ -24,11 +24,9 @@ def load_config():
 def fetch_user_prs(username, org):
     """
     Search for all Pull Requests created by the user in the specified organization.
-    To avoid fetching historical data infinitely, we can scope it (e.g., last 30 days)
-    or fetch all PRs. In this example, we fetch PRs from the last 30 days.
+    In this version, we fetch all historical PRs without any date filter.
     """
-    since_date = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
-    query = f"org:{org} author:{username} type:pr created:>={since_date}"
+    query = f"org:{org} author:{username} type:pr"
     url = f"https://api.github.com/search/issues?q={query}"
     
     try:
@@ -120,7 +118,7 @@ def main():
 Automated dashboard tracking active contributions within the **{ORG_NAME}** organization.
 
 > **Last Updated:** `{now_str} (UTC)`  
-> *Note: Metrics represent Pull Request contributions created in the last 30 days.*
+> *Note: Metrics represent total historical Pull Request contributions.*
 
 ---
 
