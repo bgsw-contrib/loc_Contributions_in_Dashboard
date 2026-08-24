@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-24 12:22:15 (UTC)`  
+> **Last Updated:** `2026-08-24 17:55:15 (UTC)`  
 > *Note: Metrics represent total historical Pull Request contributions.*
 
 ---
@@ -11,7 +11,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 | Contributor (GitHub Username) | PRs Created | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [3](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub) | 1,442 | 195 | **1,637** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub) | 1,445 | 199 | **1,644** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK) | 538 | 34 | **572** |
 | **[vinodh](https://github.com/vinodh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:vinodh) | 0 | 0 | **0** |
 | **[tjk1cob](https://github.com/tjk1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:tjk1cob) | 0 | 0 | **0** |
@@ -24,7 +24,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[naveena456](https://github.com/naveena456)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456) | 0 | 0 | **0** |
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor) | 0 | 0 | **0** |
-| **Total** | **[7](https://github.com/pulls?q=is:pr+org:bgsw-contrib)** | **1,980** | **229** | **2,209** |
+| **Total** | **[9](https://github.com/pulls?q=is:pr+org:bgsw-contrib)** | **1,983** | **233** | **2,216** |
 
 ---
 

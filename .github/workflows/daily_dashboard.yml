@@ -7,11 +7,20 @@ on:
   workflow_dispatch:
     # Allows manual trigger of the workflow from the Actions tab
 
+# Set permissions at the workflow level to allow both writing commits and deploying to Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   update-dashboard:
     runs-on: Ubuntu-Latest
-    permissions:
-      contents: write # Allows pushing the updated README/dashboard back to the repo
 
     steps:
       - name: Checkout repository
@@ -48,3 +57,28 @@ jobs:
             git commit -m "chore: auto-update contributions dashboard, report, and HTML page [skip ci]"
             git push
           fi
+
+  deploy-pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: Ubuntu-Latest
+    needs: update-dashboard # Deploy only after update-dashboard succeeds and commits the latest index.html
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main # Pull the absolute latest code that was just pushed by the previous job
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.' # Upload root folder containing index.html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
