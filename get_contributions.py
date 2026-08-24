@@ -19,77 +19,9 @@ headers = {
     "Accept": "application/vnd.github.v3+json"
 }
 
-# Static email cache to resolve corporate emails instantly without triggering GitHub Search rate limits
-EMAIL_CACHE = {
-    "per9kor@bosch.com": "RamakrishnanPK",
-    "srinivasu.kandukuri@in.bosch.com": "srinivasugithub",
-    "vzm1kor@bosch.com": "vinodh",
-    "tjk1cob@bosch.com": "tjk1cob",
-    "dgi1cob@bosch.com": "dgi1cob",
-    "mdl2kor@bosch.com": "mdl2kor",
-    "vrinda.a@bosch.com": "vrinda",
-    "KiranKumar.HV@in.bosch.com": "kkumarrh3",
-    "purnachandra.nanda@bosch.com": "purnadev",
-    "naveena.panne@bosch.com": "naveena456",
-    "sithan.logeshwari@in.bosch.com": "logesh",
-    "NR.GnanaPrakash@in.bosch.com": "xna2kor"
-}
-
 def load_config():
     with open(CONFIG_FILE, "r") as f:
         return json.load(f)
-
-def resolve_username(identifier, org):
-    """
-    If identifier is an email address (contains '@'), resolve it to a GitHub username.
-    Otherwise, return the identifier as is.
-    """
-    if "@" not in identifier:
-        return identifier
-
-    email = identifier
-    
-    # Check static cache first
-    if email in EMAIL_CACHE:
-        resolved = EMAIL_CACHE[email]
-        print(f"Resolved email {email} from local cache to: {resolved}")
-        return resolved
-
-    print(f"Attempting dynamic API resolution for email {email}...")
-
-    # 1. Search users by email globally
-    url = f"https://api.github.com/search/users?q={email}+in:email"
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            items = response.json().get("items", [])
-            if items:
-                username = items[0]["login"]
-                print(f"Successfully resolved email {email} to global user {username}")
-                return username
-    except Exception as e:
-        print(f"Exception searching user by email {email}: {e}")
-
-    # 2. Search commits in the organization by author-email (extremely reliable for internal contributors)
-    commit_headers = {**headers, "Accept": "application/vnd.github.cloak-preview+json"}
-    url = f"https://api.github.com/search/commits?q=org:{org}+author-email:{email}"
-    try:
-        response = requests.get(url, headers=commit_headers)
-        if response.status_code == 200:
-            items = response.json().get("items", [])
-            for item in items:
-                author = item.get("author")
-                if author and author.get("login"):
-                    username = author["login"]
-                    print(f"Successfully resolved email {email} to commit author {username}")
-                    return username
-    except Exception as e:
-        print(f"Exception searching commits for email {email}: {e}")
-
-    # Fallback to local part of the email
-    fallback = email.split("@")[0]
-    print(f"Could not resolve email {email}. Falling back to email localpart: {fallback}")
-    return fallback
 
 def fetch_user_prs(username, org):
     """
@@ -128,14 +60,13 @@ def get_pr_details(pr_url):
         return 0, 0
 
 def main():
-    identifiers = load_config()
+    contributors = load_config()
     
     user_stats = {}
     
     print("Gathering contribution metrics...")
     
-    for identifier in identifiers:
-        username = resolve_username(identifier, ORG_NAME)
+    for username in contributors:
         print(f"Analyzing user: {username}...")
         prs = fetch_user_prs(username, ORG_NAME)
         
@@ -158,8 +89,8 @@ def main():
             "total_loc": total_additions + total_deletions
         }
         
-        # Sleep to comply with GitHub Search API secondary rate limits/spikes (30 requests/min limit)
-        time.sleep(2)
+        # Short sleep to prevent hitting GitHub search API secondary rate limits/abuse filters
+        time.sleep(1)
 
     # Calculate Totals
     total_prs = sum(stats["pr_count"] for stats in user_stats.values())
