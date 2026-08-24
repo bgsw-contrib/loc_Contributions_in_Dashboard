@@ -125,7 +125,21 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
     # Add bold Total row at the bottom
     markdown += f"| **Total** | **[{total_prs:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME})** | **{total_additions:,}** | **{total_deletions:,}** | **{total_loc:,}** |\n"
 
-    markdown += """
+    markdown += f"""
+---
+
+## 🔍 How to View the Reports
+
+You can check the contribution metrics in three convenient ways:
+
+1. **🌐 Interactive Web Dashboard**: View the premium dark-mode dashboard with interactive Chart.js bar and doughnut charts live at:  
+   👉 **[bgsw-contrib.github.io/loc_Contributions_in_Dashboard/](https://bgsw-contrib.github.io/loc_Contributions_in_Dashboard/)**  
+   *(Served automatically via GitHub Pages)*
+
+2. **👤 Standalone Markdown Report**: Open **[report.md](./report.md)** directly in GitHub or your local editor for a dedicated, clean markdown standings table.
+
+3. **📊 GitHub Actions Run Summary**: Check the **Actions** tab of this repository. Every daily scheduled run or manual run renders this standings table directly in the run summary overview!
+
 ---
 
 ## 🛠️ How it Works

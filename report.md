@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-24 17:47:56 (UTC)`  
+> **Last Updated:** `2026-08-24 17:50:49 (UTC)`  
 > *Note: Metrics represent total historical Pull Request contributions.*
 
 ---
@@ -25,6 +25,20 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor) | 0 | 0 | **0** |
 | **Total** | **[9](https://github.com/pulls?q=is:pr+org:bgsw-contrib)** | **1,983** | **233** | **2,216** |
+
+---
+
+## 🔍 How to View the Reports
+
+You can check the contribution metrics in three convenient ways:
+
+1. **🌐 Interactive Web Dashboard**: View the premium dark-mode dashboard with interactive Chart.js bar and doughnut charts live at:  
+   👉 **[bgsw-contrib.github.io/loc_Contributions_in_Dashboard/](https://bgsw-contrib.github.io/loc_Contributions_in_Dashboard/)**  
+   *(Served automatically via GitHub Pages)*
+
+2. **👤 Standalone Markdown Report**: Open **[report.md](./report.md)** directly in GitHub or your local editor for a dedicated, clean markdown standings table.
+
+3. **📊 GitHub Actions Run Summary**: Check the **Actions** tab of this repository. Every daily scheduled run or manual run renders this standings table directly in the run summary overview!
 
 ---
 
