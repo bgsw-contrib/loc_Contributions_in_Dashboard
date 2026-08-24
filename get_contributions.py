@@ -9,7 +9,6 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 ORG_NAME = "bgsw-contrib"
 CONFIG_FILE = "users.json"
 DASHBOARD_FILE = "README.md"
-REPORT_FILE = "report.md"
 HTML_FILE = "index.html"
 
 if not GITHUB_TOKEN:
@@ -130,15 +129,13 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
 
 ## 🔍 How to View the Reports
 
-You can check the contribution metrics in three convenient ways:
+You can check the contribution metrics in two convenient ways:
 
 1. **🌐 Interactive Web Dashboard**: View the premium dark-mode dashboard with interactive Chart.js bar and doughnut charts live at:  
    👉 **[bgsw-contrib.github.io/loc_Contributions_in_Dashboard/](https://bgsw-contrib.github.io/loc_Contributions_in_Dashboard/)**  
    *(Served automatically via GitHub Pages)*
 
-2. **👤 Standalone Markdown Report**: Open **[report.md](./report.md)** directly in GitHub or your local editor for a dedicated, clean markdown standings table.
-
-3. **📊 GitHub Actions Run Summary**: Check the **Actions** tab of this repository. Every daily scheduled run or manual run renders this standings table directly in the run summary overview!
+2. **📊 GitHub Actions Run Summary**: Check the **Actions** tab of this repository. Every daily scheduled run or manual run renders this standings table directly in the run summary overview!
 
 ---
 
@@ -649,13 +646,10 @@ To manage the list of tracked contributors, modify the `users.json` file.
     with open(DASHBOARD_FILE, "w") as f:
         f.write(markdown)
         
-    with open(REPORT_FILE, "w") as f:
-        f.write(markdown)
-        
     with open(HTML_FILE, "w") as f:
         f.write(html_content)
     
-    print("Dashboard, report, and HTML dashboard updated successfully!")
+    print("Dashboard and HTML dashboard updated successfully!")
 
 if __name__ == "__main__":
     main()

@@ -41,8 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python get_contributions.py
-          # Output the report to the GitHub Actions Job Summary so it displays in the run overview
-          cat report.md >> $GITHUB_STEP_SUMMARY
+          # Output the dashboard to the GitHub Actions Job Summary so it displays in the run overview
+          cat README.md >> $GITHUB_STEP_SUMMARY
 
       - name: Commit and Push changes
         run: |
@@ -50,11 +50,11 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           # Check if there are changes to commit
-          if git diff --quiet README.md report.md index.html; then
-            echo "No changes to the dashboard, report, or index.html."
+          if git diff --quiet README.md index.html; then
+            echo "No changes to the dashboard or index.html."
           else
-            git add README.md report.md index.html
-            git commit -m "chore: auto-update contributions dashboard, report, and HTML page [skip ci]"
+            git add README.md index.html
+            git commit -m "chore: auto-update contributions dashboard and HTML page [skip ci]"
             git push
           fi
 
