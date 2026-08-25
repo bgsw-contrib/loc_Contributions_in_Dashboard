@@ -417,7 +417,7 @@
                 <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>bgsw-contrib</strong> organization.</p>
             </div>
             <div class="updated-badge">
-                Last Updated: <strong>2026-08-25 12:24:08 UTC</strong>
+                Last Updated: <strong>2026-08-25 12:27:52 UTC</strong>
             </div>
         </header>
 
@@ -839,7 +839,7 @@
         
         </div>
 
-        <!-- TAB 3: SYSTEM HEALTH PLACEHOLDER -->
+        <!-- TAB 3: SYSTEM HEALTH PANEL -->
         <div id="health-tab" class="tab-content">
             <div class="material-card">
                 <div class="material-card-header header-dark">
@@ -892,6 +892,101 @@
                             <span class="text-green">ONLINE</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Organization Workflow Monitor Card -->
+            <div class="material-card">
+                <div class="material-card-header header-blue">
+                    <div>
+                        <h3 class="material-card-title">🤖 Org-Wide Workflow Status Monitor</h3>
+                        <p class="material-card-subtitle">Live action run states across all repositories in bgsw-contrib</p>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Repository</th>
+                                <th>Workflow Name</th>
+                                <th>Last Run State</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/.repositories" target="_blank" class="user-link">.repositories</a></td>
+            <td><a href="https://github.com/bgsw-contrib/.repositories/actions/runs/32792424602" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Fork & Grant</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-25 00:12 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/infra_testing" target="_blank" class="user-link">infra_testing</a></td>
+            <td><a href="https://github.com/bgsw-contrib/infra_testing/actions/runs/22563429411" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Self-hosted runner test</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-03-02 05:58 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_apt-install" target="_blank" class="user-link">score_apt-install</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_apt-install/actions/runs/30988209422" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot cloud agent</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-05 08:15 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_baselibs" target="_blank" class="user-link">score_baselibs</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_baselibs/actions/runs/26866355074" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot Code Review</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-06-03 05:54 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_bazel_registry" target="_blank" class="user-link">score_bazel_registry</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_bazel_registry/actions/runs/31446434591" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot cloud agent</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-11 00:33 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_cicd-actions" target="_blank" class="user-link">score_cicd-actions</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_cicd-actions/actions/runs/32735877339" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot Code Review</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-24 14:02 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_cicd-workflows" target="_blank" class="user-link">score_cicd-workflows</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_cicd-workflows/actions/runs/32049201382" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot cloud agent</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-17 17:12 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_docs-as-code" target="_blank" class="user-link">score_docs-as-code</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_docs-as-code/actions/runs/32135001352" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot Code Review</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-18 12:08 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_docs-as-code" target="_blank" class="user-link">score_docs-as-code</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_docs-as-code/actions/runs/31782545414" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot cloud agent</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-14 08:16 UTC</td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/bgsw-contrib/score_infrastructure" target="_blank" class="user-link">score_infrastructure</a></td>
+            <td><a href="https://github.com/bgsw-contrib/score_infrastructure/actions/runs/32219557586" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">Running Copilot cloud agent</a></td>
+            <td><span class="status-badge status-done">Success</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">2026-08-19 05:29 UTC</td>
+        </tr>
+        
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

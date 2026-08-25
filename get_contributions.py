@@ -53,6 +53,44 @@ def fetch_jira_issue(instance, key):
         print(f"Exception fetching Jira ticket {key}: {e}")
         return None
 
+def fetch_org_workflows(org):
+    url = f"https://api.github.com/orgs/{org}/repos?per_page=100"
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            return []
+        repos = response.json()
+        
+        workflow_runs = []
+        for r in repos:
+            repo_name = r.get("name")
+            runs_url = f"https://api.github.com/repos/{org}/{repo_name}/actions/runs?per_page=3"
+            try:
+                runs_res = requests.get(runs_url, headers=headers)
+                if runs_res.status_code == 200:
+                    runs_data = runs_res.json().get("workflow_runs", [])
+                    # Group by workflow_id to get only the latest run for each distinct workflow
+                    seen_workflows = set()
+                    for run in runs_data:
+                        wf_id = run.get("workflow_id")
+                        if wf_id not in seen_workflows:
+                            seen_workflows.add(wf_id)
+                            workflow_runs.append({
+                                "repo": repo_name,
+                                "name": run.get("name", "Unnamed Workflow"),
+                                "status": run.get("status"),
+                                "conclusion": run.get("conclusion"),
+                                "url": run.get("html_url"),
+                                "updated_at": run.get("updated_at")
+                            })
+                time.sleep(0.1)  # Polite pause
+            except Exception as e:
+                print(f"Exception fetching runs for {repo_name}: {e}")
+        return workflow_runs
+    except Exception as e:
+        print(f"Exception fetching org repos: {e}")
+        return []
+
 # Environment variables
 GITHUB_TOKEN = get_gh_token()
 ORG_NAME = "bgsw-contrib"
@@ -412,6 +450,58 @@ To manage the list of tracked contributors, modify the `users.json` file.
                     </p>
                 </div>
             </div>
+        """
+
+    # Fetch all organization workflow runs
+    print("Gathering organization workflow statuses...")
+    workflows = fetch_org_workflows(ORG_NAME)
+    
+    # Sort workflows: alphabetically by repository name, then by workflow name
+    workflows_sorted = sorted(workflows, key=lambda x: (x["repo"], x["name"]))
+    
+    workflow_rows_html = ""
+    for wf in workflows_sorted:
+        repo_url = f"https://github.com/{ORG_NAME}/{wf['repo']}"
+        status = wf["status"]
+        conclusion = wf["conclusion"]
+        
+        # Determine color-coded badges
+        if status == "completed":
+            if conclusion == "success":
+                badge_class = "status-done"
+                badge_text = "Success"
+            elif conclusion == "failure":
+                badge_class = "status-blocked"
+                badge_text = "Failure"
+            else:
+                badge_class = "status-progress"
+                badge_text = conclusion.capitalize() if conclusion else "Completed"
+        else:
+            badge_class = "status-progress"
+            badge_text = status.capitalize() if status else "Running"
+            
+        # Format updated_at timestamp
+        updated_at_str = wf["updated_at"]
+        try:
+            dt = datetime.strptime(updated_at_str, "%Y-%m-%dT%H:%M:%SZ")
+            formatted_time = dt.strftime("%Y-%m-%d %H:%M")
+        except Exception:
+            formatted_time = updated_at_str
+            
+        workflow_rows_html += f"""
+        <tr>
+            <td><a href="{repo_url}" target="_blank" class="user-link">{wf['repo']}</a></td>
+            <td><a href="{wf['url']}" target="_blank" class="pr-link" style="background-color: rgba(255,255,255,0.04); color: var(--text-main); font-weight: 500;">{wf['name']}</a></td>
+            <td><span class="status-badge {badge_class}">{badge_text}</span></td>
+            <td class="text-muted" style="font-size: 0.85rem;">{formatted_time} UTC</td>
+        </tr>
+        """
+
+    if not workflow_rows_html:
+        workflow_rows_html = """
+        <tr>
+            <td colspan="4" class="text-center text-muted">No active workflow runs found in this organization.</td>
+        </tr>
         """
 
     html_content = f"""<!DOCTYPE html>
@@ -989,7 +1079,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             {jira_status_html}
         </div>
 
-        <!-- TAB 3: SYSTEM HEALTH PLACEHOLDER -->
+        <!-- TAB 3: SYSTEM HEALTH PANEL -->
         <div id="health-tab" class="tab-content">
             <div class="material-card">
                 <div class="material-card-header header-dark">
@@ -1042,6 +1132,31 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             <span class="text-green">ONLINE</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Organization Workflow Monitor Card -->
+            <div class="material-card">
+                <div class="material-card-header header-blue">
+                    <div>
+                        <h3 class="material-card-title">🤖 Org-Wide Workflow Status Monitor</h3>
+                        <p class="material-card-subtitle">Live action run states across all repositories in {ORG_NAME}</p>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Repository</th>
+                                <th>Workflow Name</th>
+                                <th>Last Run State</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {workflow_rows_html}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
