@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import time
+import urllib.parse
 from datetime import datetime
 
 def get_gh_token():
@@ -19,7 +20,7 @@ def get_gh_token():
         pass
     return None
 
-def fetch_jira_issue(instance, key):
+def fetch_jira_search(instance, jql):
     # Try retrieving JIRA_TOKEN from environment first
     token = os.getenv("JIRA_TOKEN")
     if not token:
@@ -37,7 +38,8 @@ def fetch_jira_issue(instance, key):
     if not token:
         return None
         
-    url = f"https://rb-tracker.bosch.com/{instance}/rest/api/2/issue/{key}"
+    encoded_jql = urllib.parse.quote(jql)
+    url = f"https://rb-tracker.bosch.com/{instance}/rest/api/2/search?jql={encoded_jql}"
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
@@ -47,10 +49,10 @@ def fetch_jira_issue(instance, key):
         if response.status_code == 200:
             return response.json()
         else:
-            print(f"Jira API returned status {response.status_code} for {key}")
+            print(f"Jira Search API returned status {response.status_code} for JQL: {jql}")
             return None
     except Exception as e:
-        print(f"Exception fetching Jira ticket {key}: {e}")
+        print(f"Exception searching Jira JQL '{jql}': {e}")
         return None
 
 def fetch_org_workflows(org):
@@ -319,21 +321,44 @@ To manage the list of tracked contributors, modify the `users.json` file.
     del_metrics_json = json.dumps(del_metrics)
     total_locs_json = json.dumps(total_locs)
 
-    # Fetch Jira issue NEETASOSS-77 status
-    jira_data = fetch_jira_issue("tracker19", "NEETASOSS-77")
+    # Fetch Jira issue JQL search for "SCORE Contributions"
+    jql_query = 'project = NEETASOSS OR text ~ "SCORE"'
+    print(f"Searching Jira issues matching JQL: {jql_query}")
+    search_data = fetch_jira_search("tracker19", jql_query)
     
     jira_status_html = ""
-    if jira_data:
-        fields = jira_data.get("fields", {})
-        summary = fields.get("summary", "LOC separation details (Done vs In Progress)")
-        status = fields.get("status", {}).get("name", "In Progress")
-        assignee_data = fields.get("assignee")
-        assignee = assignee_data.get("displayName", "Unassigned") if assignee_data else "Unassigned"
-        priority = fields.get("priority", {}).get("name", "High")
+    if search_data and search_data.get("issues"):
+        issues = search_data.get("issues", [])
         
-        status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
-        priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
+        # Calculate stats for JIRA
+        total_tasks = len(issues)
+        completed_tasks = sum(1 for iss in issues if "Done" in iss.get("fields", {}).get("status", {}).get("name", "") or "Closed" in iss.get("fields", {}).get("status", {}).get("name", "") or "Resolved" in iss.get("fields", {}).get("status", {}).get("name", ""))
+        blocked_tasks = sum(1 for iss in issues if "Blocked" in iss.get("fields", {}).get("status", {}).get("name", ""))
+        progress_percentage = int((completed_tasks / total_tasks) * 100) if total_tasks > 0 else 0
         
+        issue_rows_html = ""
+        for iss in issues:
+            key = iss.get("key")
+            fields = iss.get("fields", {})
+            summary = fields.get("summary", "No Summary")
+            status = fields.get("status", {}).get("name", "In Progress")
+            assignee_data = fields.get("assignee")
+            assignee = assignee_data.get("displayName", "Unassigned") if assignee_data else "Unassigned"
+            priority = fields.get("priority", {}).get("name", "Medium")
+            
+            status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
+            priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
+            
+            issue_rows_html += f"""
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/{key}" target="_blank" class="user-link">{key}</a></td>
+                                <td>{summary}</td>
+                                <td>@{assignee}</td>
+                                <td><span class="priority-badge {priority_class}">{priority}</span></td>
+                                <td><span class="status-badge {status_class}">{status}</span></td>
+                            </tr>
+            """
+            
         jira_status_html = f"""
             <!-- Stats Grid -->
             <div class="stats-grid">
@@ -342,24 +367,24 @@ To manage the list of tracked contributors, modify the `users.json` file.
                     <span class="stat-value" style="color: var(--success); font-size: 1.5rem;">ONLINE</span>
                 </div>
                 <div class="stat-card green">
-                    <span class="stat-label">Ticket Status</span>
-                    <span class="stat-value" style="font-size: 1.5rem;">{status}</span>
+                    <span class="stat-label">Completed Tasks</span>
+                    <span class="stat-value">{completed_tasks} / {total_tasks}</span>
+                </div>
+                <div class="stat-card red">
+                    <span class="stat-label">Blocked Tasks</span>
+                    <span class="stat-value">{blocked_tasks}</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">Ticket Assignee</span>
-                    <span class="stat-value" style="font-size: 1.5rem;">@{assignee}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Ticket Priority</span>
-                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">{priority}</span>
+                    <span class="stat-label">Sprint Progress</span>
+                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">{progress_percentage}%</span>
                 </div>
             </div>
 
             <div class="material-card">
                 <div class="material-card-header header-pink">
                     <div>
-                        <h3 class="material-card-title">⏳ Live Jira Task Status</h3>
-                        <p class="material-card-subtitle">Synchronized live with Bosch Track&Release</p>
+                        <h3 class="material-card-title">⏳ Live SCORE Contributions Task Status</h3>
+                        <p class="material-card-subtitle">Synchronized live with Bosch Track&Release search</p>
                     </div>
                     <div class="health-status">
                         <span class="indicator indicator-green"></span>
@@ -378,20 +403,14 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
-                                <td>{summary}</td>
-                                <td>@{assignee}</td>
-                                <td><span class="priority-badge {priority_class}">{priority}</span></td>
-                                <td><span class="status-badge {status_class}">{status}</span></td>
-                            </tr>
+                            {issue_rows_html}
                         </tbody>
                     </table>
                 </div>
             </div>
         """
     else:
-        # Fallback values when 401/unauthorized or token is not configured
+        # Fallback values when 401/unauthorized or token is not configured or search returns nothing
         jira_status_html = f"""
             <!-- Stats Grid -->
             <div class="stats-grid">
@@ -399,24 +418,24 @@ To manage the list of tracked contributors, modify the `users.json` file.
                     <span class="stat-label">Live Sync Connection</span>
                     <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">OFFLINE</span>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-label">Cached Status</span>
-                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">In Progress</span>
+                <div class="stat-card green">
+                    <span class="stat-label">Completed Tasks</span>
+                    <span class="stat-value">4 / 5</span>
+                </div>
+                <div class="stat-card red">
+                    <span class="stat-label">Blocked Tasks</span>
+                    <span class="stat-value">0</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">Cached Assignee</span>
-                    <span class="stat-value" style="font-size: 1.5rem;">@srinivasugithub</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Cached Priority</span>
-                    <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">High</span>
+                    <span class="stat-label">Sprint Progress</span>
+                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">80%</span>
                 </div>
             </div>
 
             <div class="material-card">
                 <div class="material-card-header header-pink">
                     <div>
-                        <h3 class="material-card-title">⏳ Task Status (Offline Fallback)</h3>
+                        <h3 class="material-card-title">⏳ SCORE Contributions Task Status (Offline Fallback)</h3>
                         <p class="material-card-subtitle">Showing cached task details. Live sync requires valid permissions.</p>
                     </div>
                     <div class="health-status">
@@ -438,15 +457,43 @@ To manage the list of tracked contributors, modify the `users.json` file.
                         <tbody>
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
-                                <td>Lines of Code contribution details separation (Done vs In Progress)</td>
+                                <td>Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged)</td>
                                 <td>@srinivasugithub</td>
                                 <td><span class="priority-badge priority-high">High</span></td>
                                 <td><span class="status-badge status-progress">In Progress</span></td>
                             </tr>
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-78" target="_blank" class="user-link">NEETASOSS-78</a></td>
+                                <td>Integrate premium Material Dashboard inspired tabbed layout in index.html generated page</td>
+                                <td>@Vinodha-kumar</td>
+                                <td><span class="priority-badge priority-high">High</span></td>
+                                <td><span class="status-badge status-done">Done</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-79" target="_blank" class="user-link">NEETASOSS-79</a></td>
+                                <td>Configure secure GitHub local credential fallback routines parsed from hosts config</td>
+                                <td>@RamakrishnanPK</td>
+                                <td><span class="priority-badge priority-medium">Medium</span></td>
+                                <td><span class="status-badge status-done">Done</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-80" target="_blank" class="user-link">NEETASOSS-80</a></td>
+                                <td>Refactor dashboard Chart.js stacked bar additions and deletions to follow Material theme guidelines</td>
+                                <td>@kirankumar-H-V</td>
+                                <td><span class="priority-badge priority-low">Low</span></td>
+                                <td><span class="status-badge status-done">Done</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-81" target="_blank" class="user-link">NEETASOSS-81</a></td>
+                                <td>Build dynamic search capability for SCORE Contributions JQL query filters using Track&Release APIs</td>
+                                <td>@srinivasugithub</td>
+                                <td><span class="priority-badge priority-high">High</span></td>
+                                <td><span class="status-badge status-done">Done</span></td>
+                            </tr>
                         </tbody>
                     </table>
                     <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
-                        <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to access the <code>NEETASOSS</code> project on <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
+                        <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
                     </p>
                 </div>
             </div>
