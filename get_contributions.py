@@ -194,7 +194,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
         
         status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
         priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
-        type_class = "text-red" if "Bug" in issue_type else ("text-green" if "Story" in issue_type or "User Story" in issue_type else ("text-blue" if "Feature" in issue_type or "New Feature" in issue_type else ("text-pink" if "Epic" in issue_type else "text-muted")))
+        type_class = "text-red" if "Bug" in issue_type else ("text-green" if "Story" in issue_type or "User Story" in issue_type else ("text-blue" if "Feature" in issue_type or "New Feature" in issue_type else ("text-pink" if "Epic" in issue_type else ("text-orange" if "Task" in issue_type else "text-muted"))))
         
         issue_rows_html += f"""
                         <tr>
