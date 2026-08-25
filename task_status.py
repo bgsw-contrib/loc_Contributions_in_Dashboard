@@ -74,7 +74,7 @@ def main():
     load_env_from_bashrc()
     
     jira_base_url = "https://rb-tracker.bosch.com/tracker19"
-    jql_query = "project = NEETASOSS AND resolution is EMPTY"
+    jql_query = "project = NEETASOSS"
     
     # Load dynamic token from environment variables
     token = os.getenv("JIRA_TOKEN_TRACKER19") or os.getenv("JIRA_TOKEN")

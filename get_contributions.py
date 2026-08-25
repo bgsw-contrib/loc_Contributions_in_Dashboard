@@ -314,6 +314,8 @@ To manage the list of tracked contributors, modify the `users.json` file.
                 header_class = "header-orange"
             elif "Blocked" in status_group or "Hold" in status_group:
                 header_class = "header-dark"
+            elif "Done" in status_group or "Closed" in status_group or "Resolved" in status_group:
+                header_class = "header-green"
                 
             group_rows_html = ""
             for iss in group_list:
