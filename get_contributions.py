@@ -1,196 +1,49 @@
+# get_contributions.py
 import os
 import json
-import requests
-import time
-import urllib.parse
+import subprocess
 from datetime import datetime
 
-def get_gh_token():
-    token = os.getenv("GITHUB_TOKEN")
-    if token:
-        return token
-    try:
-        hosts_path = os.path.expanduser("~/.config/gh/hosts.yml")
-        if os.path.exists(hosts_path):
-            with open(hosts_path, "r") as f:
-                for line in f:
-                    if "oauth_token:" in line:
-                        return line.split("oauth_token:")[1].strip().strip('"').strip("'")
-    except Exception:
-        pass
-    return None
+# Import sub-modules for programmatic fallback execution
+import lines_of_code
+import task_status
+import system_health
 
-def fetch_jira_search(instance, jql):
-    # Try retrieving JIRA_TOKEN from environment first
-    token = os.getenv("JIRA_TOKEN")
-    if not token:
-        # Load environment from ~/.bashrc manually to find exported JIRA_TOKEN
-        try:
-            bashrc_path = os.path.expanduser("~/.bashrc")
-            if os.path.exists(bashrc_path):
-                with open(bashrc_path, "r") as f:
-                    for line in f:
-                        if line.strip().startswith("export JIRA_TOKEN="):
-                            token = line.split("export JIRA_TOKEN=")[1].strip().strip('"').strip("'")
-        except Exception:
-            pass
-            
-    if not token:
-        return None
-        
-    encoded_jql = urllib.parse.quote(jql)
-    url = f"https://rb-tracker.bosch.com/{instance}/rest/api/2/search?jql={encoded_jql}"
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Jira Search API returned status {response.status_code} for JQL: {jql}")
-            return None
-    except Exception as e:
-        print(f"Exception searching Jira JQL '{jql}': {e}")
-        return None
-
-def fetch_org_workflows(org):
-    url = f"https://api.github.com/orgs/{org}/repos?per_page=100"
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            return []
-        repos = response.json()
-        
-        workflow_runs = []
-        for r in repos:
-            repo_name = r.get("name")
-            runs_url = f"https://api.github.com/repos/{org}/{repo_name}/actions/runs?per_page=3"
-            try:
-                runs_res = requests.get(runs_url, headers=headers)
-                if runs_res.status_code == 200:
-                    runs_data = runs_res.json().get("workflow_runs", [])
-                    # Group by workflow_id to get only the latest run for each distinct workflow
-                    seen_workflows = set()
-                    for run in runs_data:
-                        wf_id = run.get("workflow_id")
-                        if wf_id not in seen_workflows:
-                            seen_workflows.add(wf_id)
-                            workflow_runs.append({
-                                "repo": repo_name,
-                                "name": run.get("name", "Unnamed Workflow"),
-                                "status": run.get("status"),
-                                "conclusion": run.get("conclusion"),
-                                "url": run.get("html_url"),
-                                "updated_at": run.get("updated_at")
-                            })
-                time.sleep(0.1)  # Polite pause
-            except Exception as e:
-                print(f"Exception fetching runs for {repo_name}: {e}")
-        return workflow_runs
-    except Exception as e:
-        print(f"Exception fetching org repos: {e}")
-        return []
-
-# Environment variables
-GITHUB_TOKEN = get_gh_token()
 ORG_NAME = "bgsw-contrib"
 CONFIG_FILE = "users.json"
 DASHBOARD_FILE = "README.md"
 HTML_FILE = "index.html"
 
-if not GITHUB_TOKEN:
-    raise ValueError("GITHUB_TOKEN environment variable is required.")
-
-headers = {
-    "Authorization": f"token {GITHUB_TOKEN}",
-    "Accept": "application/vnd.github.v3+json"
-}
-
 def load_config():
     with open(CONFIG_FILE, "r") as f:
         return json.load(f)
 
-def fetch_user_prs(username, org):
-    """
-    Search for all Pull Requests created by the user in the specified organization.
-    In this version, we fetch all historical PRs without any date filter.
-    """
-    query = f"org:{org} author:{username} type:pr"
-    url = f"https://api.github.com/search/issues?q={query}"
-    
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            try:
-                error_msg = response.json().get("message", "Unknown error")
-            except Exception:
-                error_msg = response.text
-            print(f"Error fetching PRs for {username}: {error_msg}")
-            return []
-        return response.json().get("items", [])
-    except Exception as e:
-        print(f"Exception fetching PRs for {username}: {e}")
-        return []
-
-def get_pr_details(pr_url):
-    """
-    Fetches additions and deletions from the specific PR API endpoint.
-    """
-    try:
-        response = requests.get(pr_url, headers=headers)
-        if response.status_code != 200:
-            return 0, 0
-        data = response.json()
-        return data.get("additions", 0), data.get("deletions", 0)
-    except Exception as e:
-        print(f"Exception fetching PR details from {pr_url}: {e}")
-        return 0, 0
-
 def main():
     contributors = load_config()
     
-    user_stats = {}
-    
-    print("Gathering contribution metrics...")
-    
-    for username in contributors:
-        print(f"Analyzing user: {username}...")
-        prs = fetch_user_prs(username, ORG_NAME)
+    # 1. Load or run Lines of Code standings stage
+    if not os.path.exists("loc_stats.json"):
+        print("loc_stats.json not found. Executing lines_of_code.py...")
+        subprocess.run(["python3", "lines_of_code.py"])
         
-        user_stats[username] = {
-            "done": {
-                "pr_count": 0,
-                "additions": 0,
-                "deletions": 0,
-                "total_loc": 0
-            },
-            "in_progress": {
-                "pr_count": 0,
-                "additions": 0,
-                "deletions": 0,
-                "total_loc": 0
-            }
-        }
+    with open("loc_stats.json", "r") as f:
+        user_stats = json.load(f)
         
-        for pr in prs:
-            # The search endpoint returns issue items; we need the actual pull_request API URL
-            if "pull_request" in pr:
-                pr_detail_url = pr["pull_request"]["url"]
-                additions, deletions = get_pr_details(pr_detail_url)
-                
-                # Check state to decide if Done (merged/closed) or In Progress (open)
-                state = pr.get("state", "closed")
-                category = "in_progress" if state == "open" else "done"
-                
-                user_stats[username][category]["pr_count"] += 1
-                user_stats[username][category]["additions"] += additions
-                user_stats[username][category]["deletions"] += deletions
-                user_stats[username][category]["total_loc"] += additions + deletions
+    # 2. Load or run Task Status Jira query stage
+    if not os.path.exists("jira_stats.json"):
+        print("jira_stats.json not found. Executing task_status.py...")
+        subprocess.run(["python3", "task_status.py"])
         
-        # Short sleep to prevent hitting GitHub search API secondary rate limits/abuse filters
-        time.sleep(1)
+    with open("jira_stats.json", "r") as f:
+        jira_stats = json.load(f)
+        
+    # 3. Load or run System Health organization workflows stage
+    if not os.path.exists("health_stats.json"):
+        print("health_stats.json not found. Executing system_health.py...")
+        subprocess.run(["python3", "system_health.py"])
+        
+    with open("health_stats.json", "r") as f:
+        workflows = json.load(f)
 
     # Calculate Totals for Done
     total_prs_done = sum(stats["done"]["pr_count"] for stats in user_stats.values())
@@ -321,195 +174,103 @@ To manage the list of tracked contributors, modify the `users.json` file.
     del_metrics_json = json.dumps(del_metrics)
     total_locs_json = json.dumps(total_locs)
 
-    # Fetch Jira issue JQL search for "SCORE Contributions"
-    jql_query = 'project = NEETASOSS OR text ~ "SCORE"'
-    print(f"Searching Jira issues matching JQL: {jql_query}")
-    search_data = fetch_jira_search("tracker19", jql_query)
+    # Process Jira JQL Search Results
+    issues = jira_stats.get("issues", [])
+    is_live = jira_stats.get("success", False)
     
-    jira_status_html = ""
-    if search_data and search_data.get("issues"):
-        issues = search_data.get("issues", [])
+    total_tasks = len(issues)
+    completed_tasks = sum(1 for iss in issues if "Done" in iss.get("status", "") or "Closed" in iss.get("status", "") or "Resolved" in iss.get("status", ""))
+    blocked_tasks = sum(1 for iss in issues if "Blocked" in iss.get("status", ""))
+    progress_percentage = int((completed_tasks / total_tasks) * 100) if total_tasks > 0 else 0
+    
+    issue_rows_html = ""
+    for iss in issues:
+        key = iss.get("key")
+        summary = iss.get("summary", "No Summary")
+        status = iss.get("status", "In Progress")
+        assignee = iss.get("assignee", "Unassigned")
+        priority = iss.get("priority", "Medium")
         
-        # Calculate stats for JIRA
-        total_tasks = len(issues)
-        completed_tasks = sum(1 for iss in issues if "Done" in iss.get("fields", {}).get("status", {}).get("name", "") or "Closed" in iss.get("fields", {}).get("status", {}).get("name", "") or "Resolved" in iss.get("fields", {}).get("status", {}).get("name", ""))
-        blocked_tasks = sum(1 for iss in issues if "Blocked" in iss.get("fields", {}).get("status", {}).get("name", ""))
-        progress_percentage = int((completed_tasks / total_tasks) * 100) if total_tasks > 0 else 0
+        status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
+        priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
         
-        issue_rows_html = ""
-        for iss in issues:
-            key = iss.get("key")
-            fields = iss.get("fields", {})
-            summary = fields.get("summary", "No Summary")
-            status = fields.get("status", {}).get("name", "In Progress")
-            assignee_data = fields.get("assignee")
-            assignee = assignee_data.get("displayName", "Unassigned") if assignee_data else "Unassigned"
-            priority = fields.get("priority", {}).get("name", "Medium")
-            
-            status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
-            priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
-            
-            issue_rows_html += f"""
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/{key}" target="_blank" class="user-link">{key}</a></td>
-                                <td>{summary}</td>
-                                <td>{assignee}</td>
-                                <td><span class="priority-badge {priority_class}">{priority}</span></td>
-                                <td><span class="status-badge {status_class}">{status}</span></td>
-                            </tr>
-            """
-            
-        jira_status_html = f"""
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card blue">
-                    <span class="stat-label">Live Sync Connection</span>
-                    <span class="stat-value" style="color: var(--success); font-size: 1.5rem;">ONLINE</span>
-                </div>
-                <div class="stat-card green">
-                    <span class="stat-label">Completed Tasks</span>
-                    <span class="stat-value">{completed_tasks} / {total_tasks}</span>
-                </div>
-                <div class="stat-card red">
-                    <span class="stat-label">Blocked Tasks</span>
-                    <span class="stat-value">{blocked_tasks}</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Sprint Progress</span>
-                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">{progress_percentage}%</span>
-                </div>
-            </div>
-
-            <div class="material-card">
-                <div class="material-card-header header-pink">
-                    <div>
-                        <h3 class="material-card-title">⏳ Live SCORE Contributions Task Status</h3>
-                        <p class="material-card-subtitle">Synchronized live with Bosch Track&Release search</p>
-                    </div>
-                    <div class="health-status">
-                        <span class="indicator indicator-green"></span>
-                        <span class="text-green">LIVE SYNCED</span>
-                    </div>
-                </div>
-                <div style="overflow-x: auto; padding-top: 0.5rem;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ticket Key</th>
-                                <th>Summary</th>
-                                <th>Assignee</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {issue_rows_html}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        issue_rows_html += f"""
+                        <tr>
+                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/{key}" target="_blank" class="user-link">{key}</a></td>
+                            <td>{summary}</td>
+                            <td>{assignee}</td>
+                            <td><span class="priority-badge {priority_class}">{priority}</span></td>
+                            <td><span class="status-badge {status_class}">{status}</span></td>
+                        </tr>
         """
-    else:
-        # Fallback values when 401/unauthorized or token is not configured or search returns nothing
-        jira_status_html = f"""
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card blue">
-                    <span class="stat-label">Live Sync Connection</span>
-                    <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">OFFLINE</span>
-                </div>
-                <div class="stat-card green">
-                    <span class="stat-label">Completed Tasks</span>
-                    <span class="stat-value">4 / 6</span>
-                </div>
-                <div class="stat-card red">
-                    <span class="stat-label">Blocked Tasks</span>
-                    <span class="stat-value">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Sprint Progress</span>
-                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">66%</span>
-                </div>
-            </div>
-
-            <div class="material-card">
-                <div class="material-card-header header-pink">
-                    <div>
-                        <h3 class="material-card-title">⏳ SCORE Contributions Task Status (Offline Fallback)</h3>
-                        <p class="material-card-subtitle">Showing cached task details. Live sync requires valid permissions.</p>
-                    </div>
-                    <div class="health-status">
-                        <span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>
-                        <span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>
-                    </div>
-                </div>
-                <div style="overflow-x: auto; padding-top: 0.5rem;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ticket Key</th>
-                                <th>Summary</th>
-                                <th>Assignee</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72" target="_blank" class="user-link">NEETASOSS-72</a></td>
-                                <td>Configure JIRA_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs</td>
-                                <td>Srinivasu Kandukuri</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-progress">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
-                                <td>Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged)</td>
-                                <td>Srinivasu Kandukuri</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-progress">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-78" target="_blank" class="user-link">NEETASOSS-78</a></td>
-                                <td>Integrate premium Material Dashboard inspired tabbed layout in index.html generated page</td>
-                                <td>Vinodha kumar mv</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-79" target="_blank" class="user-link">NEETASOSS-79</a></td>
-                                <td>Configure secure GitHub local credential fallback routines parsed from hosts config</td>
-                                <td>Ramakrishnan PK</td>
-                                <td><span class="priority-badge priority-medium">Medium</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-80" target="_blank" class="user-link">NEETASOSS-80</a></td>
-                                <td>Refactor dashboard Chart.js stacked bar additions and deletions to follow Material theme guidelines</td>
-                                <td>Kirankumar H V</td>
-                                <td><span class="priority-badge priority-low">Low</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-81" target="_blank" class="user-link">NEETASOSS-81</a></td>
-                                <td>Build dynamic search capability for SCORE Contributions JQL query filters using Track&Release APIs</td>
-                                <td>Srinivasu Kandukuri</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
-                        <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
-                    </p>
-                </div>
-            </div>
+        
+    sync_badge = '<span class="text-green">LIVE SYNCED</span>' if is_live else '<span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>'
+    sync_indicator = '<span class="indicator indicator-green"></span>' if is_live else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
+    sync_header_title = 'Live SCORE Contributions Task Status' if is_live else 'SCORE Contributions Task Status (Offline Fallback)'
+    sync_header_subtitle = 'Synchronized live with Bosch Track&Release search' if is_live else 'Showing cached task details. Live sync requires valid permissions.'
+    sync_conn_val = 'ONLINE' if is_live else 'OFFLINE'
+    sync_conn_color = 'var(--success)' if is_live else 'var(--danger)'
+    
+    notice_paragraph = ""
+    if not is_live:
+        notice_paragraph = """
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
+                    <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
+                </p>
         """
 
-    # Fetch all organization workflow runs
-    print("Gathering organization workflow statuses...")
-    workflows = fetch_org_workflows(ORG_NAME)
-    
+    jira_status_html = f"""
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <span class="stat-label">Live Sync Connection</span>
+                <span class="stat-value" style="color: {sync_conn_color}; font-size: 1.5rem;">{sync_conn_val}</span>
+            </div>
+            <div class="stat-card green">
+                <span class="stat-label">Completed Tasks</span>
+                <span class="stat-value">{completed_tasks} / {total_tasks}</span>
+            </div>
+            <div class="stat-card red">
+                <span class="stat-label">Blocked Tasks</span>
+                <span class="stat-value">{blocked_tasks}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Sprint Progress</span>
+                <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">{progress_percentage}%</span>
+            </div>
+        </div>
+
+        <div class="material-card">
+            <div class="material-card-header header-pink">
+                <div>
+                    <h3 class="material-card-title">⏳ {sync_header_title}</h3>
+                    <p class="material-card-subtitle">{sync_header_subtitle}</p>
+                </div>
+                <div class="health-status">
+                    {sync_indicator}
+                    {sync_badge}
+                </div>
+            </div>
+            <div style="overflow-x: auto; padding-top: 0.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket Key</th>
+                            <th>Summary</th>
+                            <th>Assignee</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {issue_rows_html}
+                    </tbody>
+                </table>
+                {notice_paragraph}
+            </div>
+        </div>
+    """
+
     # Sort workflows: alphabetically by repository name, then by workflow name
     workflows_sorted = sorted(workflows, key=lambda x: (x["repo"], x["name"]))
     

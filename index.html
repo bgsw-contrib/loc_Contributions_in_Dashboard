@@ -417,7 +417,7 @@
                 <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>bgsw-contrib</strong> organization.</p>
             </div>
             <div class="updated-badge">
-                Last Updated: <strong>2026-08-25 13:32:04 UTC</strong>
+                Last Updated: <strong>2026-08-25 13:46:07 UTC</strong>
             </div>
         </header>
 
@@ -779,99 +779,108 @@
         <!-- TAB 2: TASKS STATUS PANEL -->
         <div id="tasks-tab" class="tab-content">
             
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card blue">
-                    <span class="stat-label">Live Sync Connection</span>
-                    <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">OFFLINE</span>
-                </div>
-                <div class="stat-card green">
-                    <span class="stat-label">Completed Tasks</span>
-                    <span class="stat-value">4 / 6</span>
-                </div>
-                <div class="stat-card red">
-                    <span class="stat-label">Blocked Tasks</span>
-                    <span class="stat-value">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Sprint Progress</span>
-                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">66%</span>
-                </div>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <span class="stat-label">Live Sync Connection</span>
+                <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">OFFLINE</span>
             </div>
+            <div class="stat-card green">
+                <span class="stat-label">Completed Tasks</span>
+                <span class="stat-value">4 / 6</span>
+            </div>
+            <div class="stat-card red">
+                <span class="stat-label">Blocked Tasks</span>
+                <span class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Sprint Progress</span>
+                <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">66%</span>
+            </div>
+        </div>
 
-            <div class="material-card">
-                <div class="material-card-header header-pink">
-                    <div>
-                        <h3 class="material-card-title">⏳ SCORE Contributions Task Status (Offline Fallback)</h3>
-                        <p class="material-card-subtitle">Showing cached task details. Live sync requires valid permissions.</p>
-                    </div>
-                    <div class="health-status">
-                        <span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>
-                        <span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>
-                    </div>
+        <div class="material-card">
+            <div class="material-card-header header-pink">
+                <div>
+                    <h3 class="material-card-title">⏳ SCORE Contributions Task Status (Offline Fallback)</h3>
+                    <p class="material-card-subtitle">Showing cached task details. Live sync requires valid permissions.</p>
                 </div>
-                <div style="overflow-x: auto; padding-top: 0.5rem;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ticket Key</th>
-                                <th>Summary</th>
-                                <th>Assignee</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72" target="_blank" class="user-link">NEETASOSS-72</a></td>
-                                <td>Configure JIRA_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs</td>
-                                <td>Srinivasu Kandukuri</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-progress">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
-                                <td>Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged)</td>
-                                <td>Srinivasu Kandukuri</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-progress">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-78" target="_blank" class="user-link">NEETASOSS-78</a></td>
-                                <td>Integrate premium Material Dashboard inspired tabbed layout in index.html generated page</td>
-                                <td>Vinodha kumar mv</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-79" target="_blank" class="user-link">NEETASOSS-79</a></td>
-                                <td>Configure secure GitHub local credential fallback routines parsed from hosts config</td>
-                                <td>Ramakrishnan PK</td>
-                                <td><span class="priority-badge priority-medium">Medium</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-80" target="_blank" class="user-link">NEETASOSS-80</a></td>
-                                <td>Refactor dashboard Chart.js stacked bar additions and deletions to follow Material theme guidelines</td>
-                                <td>Kirankumar H V</td>
-                                <td><span class="priority-badge priority-low">Low</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                            <tr>
-                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-81" target="_blank" class="user-link">NEETASOSS-81</a></td>
-                                <td>Build dynamic search capability for SCORE Contributions JQL query filters using Track&Release APIs</td>
-                                <td>Srinivasu Kandukuri</td>
-                                <td><span class="priority-badge priority-high">High</span></td>
-                                <td><span class="status-badge status-done">Done</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
-                        <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
-                    </p>
+                <div class="health-status">
+                    <span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>
+                    <span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>
                 </div>
             </div>
+            <div style="overflow-x: auto; padding-top: 0.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket Key</th>
+                            <th>Summary</th>
+                            <th>Assignee</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72" target="_blank" class="user-link">NEETASOSS-72</a></td>
+                            <td>Configure JIRA_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs</td>
+                            <td>Srinivasu Kandukuri</td>
+                            <td><span class="priority-badge priority-high">High</span></td>
+                            <td><span class="status-badge status-progress">In Progress</span></td>
+                        </tr>
         
+                        <tr>
+                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
+                            <td>Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged)</td>
+                            <td>Srinivasu Kandukuri</td>
+                            <td><span class="priority-badge priority-high">High</span></td>
+                            <td><span class="status-badge status-progress">In Progress</span></td>
+                        </tr>
+        
+                        <tr>
+                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-78" target="_blank" class="user-link">NEETASOSS-78</a></td>
+                            <td>Integrate premium Material Dashboard inspired tabbed layout in index.html generated page</td>
+                            <td>Vinodha kumar mv</td>
+                            <td><span class="priority-badge priority-high">High</span></td>
+                            <td><span class="status-badge status-done">Done</span></td>
+                        </tr>
+        
+                        <tr>
+                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-79" target="_blank" class="user-link">NEETASOSS-79</a></td>
+                            <td>Configure secure GitHub local credential fallback routines parsed from hosts config</td>
+                            <td>Ramakrishnan PK</td>
+                            <td><span class="priority-badge priority-medium">Medium</span></td>
+                            <td><span class="status-badge status-done">Done</span></td>
+                        </tr>
+        
+                        <tr>
+                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-80" target="_blank" class="user-link">NEETASOSS-80</a></td>
+                            <td>Refactor dashboard Chart.js stacked bar additions and deletions to follow Material theme guidelines</td>
+                            <td>Kirankumar H V</td>
+                            <td><span class="priority-badge priority-low">Low</span></td>
+                            <td><span class="status-badge status-done">Done</span></td>
+                        </tr>
+        
+                        <tr>
+                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-81" target="_blank" class="user-link">NEETASOSS-81</a></td>
+                            <td>Build dynamic search capability for SCORE Contributions JQL query filters using Track&Release APIs</td>
+                            <td>Srinivasu Kandukuri</td>
+                            <td><span class="priority-badge priority-high">High</span></td>
+                            <td><span class="status-badge status-done">Done</span></td>
+                        </tr>
+        
+                    </tbody>
+                </table>
+                
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
+                    <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
+                </p>
+        
+            </div>
+        </div>
+    
         </div>
 
         <!-- TAB 3: SYSTEM HEALTH PANEL -->
