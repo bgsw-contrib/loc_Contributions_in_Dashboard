@@ -267,8 +267,6 @@ To manage the list of tracked contributors, modify the `users.json` file.
     sync_indicator = '<span class="indicator indicator-green"></span>' if is_live else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
     sync_header_title = 'Live SCORE Contributions Task Status' if is_live else 'SCORE Contributions Task Status (Offline Fallback)'
     sync_header_subtitle = 'Synchronized live with Bosch Track&Release search' if is_live else 'Showing cached task details. Live sync requires valid permissions.'
-    sync_conn_val = 'ONLINE' if is_live else 'OFFLINE'
-    sync_conn_color = 'var(--success)' if is_live else 'var(--danger)'
     
     notice_paragraph = ""
     if not is_live:
@@ -281,10 +279,6 @@ To manage the list of tracked contributors, modify the `users.json` file.
     jira_status_html = f"""
         <!-- Stats Grid -->
         <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-            <div class="stat-card blue">
-                <span class="stat-label">Connection</span>
-                <span class="stat-value" style="color: {sync_conn_color}; font-size: 1.5rem;">{sync_conn_val}</span>
-            </div>
             <div class="stat-card" style="border-left: 4px solid var(--primary);">
                 <span class="stat-label">To Do</span>
                 <span class="stat-value" style="color: var(--primary);">{todo_count}</span>
