@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-25 16:38:17 (UTC)`  
+> **Last Updated:** `2026-08-25 11:13:01 (UTC)`  
 > *Note: Metrics are split into completed ("Done") and active ("In Progress") pull requests.*
 
 ---
@@ -12,7 +12,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | Contributor (GitHub Username) | PRs Closed/Merged | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
 | **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [9](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:closed) | 1,549 | 1,737 | **3,286** |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:closed) | 481 | 66 | **547** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:closed) | 479 | 64 | **543** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [3](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:closed) | 299 | 34 | **333** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:closed) | 36 | 1 | **37** |
 | **[parthibankuppudurai](https://github.com/parthibankuppudurai)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai+is:closed) | 0 | 0 | **0** |
@@ -25,7 +25,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:closed) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:closed) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:closed) | 0 | 0 | **0** |
-| **Total** | **[15](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed)** | **2,365** | **1,838** | **4,203** |
+| **Total** | **[14](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed)** | **2,363** | **1,836** | **4,199** |
 
 ---
 
@@ -33,7 +33,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 | Contributor (GitHub Username) | PRs Open | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [3](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:open) | 964 | 133 | **1,097** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:open) | 963 | 131 | **1,094** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:open) | 251 | 0 | **251** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:open) | 2 | 2 | **4** |
 | **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:open) | 0 | 0 | **0** |
@@ -47,7 +47,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:open) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:open) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:open) | 0 | 0 | **0** |
-| **Total** | **[5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open)** | **1,217** | **135** | **1,352** |
+| **Total** | **[4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open)** | **1,216** | **133** | **1,349** |
 
 ---
 
@@ -55,82 +55,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 Automated task status tracking synchronized live with Track&Release JQL indexer. Grouped dynamically by their current status.
 
-### In Progress (24)
-
-| Key | Type | Assignee | Summary |
-| :--- | :--- | :--- | :--- |
-| **[NEETASOSS-78](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-78)** | User Story | Ramakrishnan P K | https://github.com/eclipse-score/tooling/issues/82 |
-| **[NEETASOSS-77](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77)** | User Story | Srinivasu Kandukuri | (INTERNAL) Dashboard on LOC (lines of code) for S-Core Contributions   |
-| **[NEETASOSS-76](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-76)** | Task | Srinivasu Kandukuri | https://github.com/eclipse-score/lifecycle/issues/448 |
-| **[NEETASOSS-75](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-75)** | Task | Srinivasu Kandukuri | https://github.com/eclipse-score/baselibs/issues/455 |
-| **[NEETASOSS-74](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-74)** | User Story | Ramakrishnan P K | https://github.com/eclipse-score/score/issues/1837 |
-| **[NEETASOSS-73](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-73)** | User Story | Panne Naveena | https://github.com/eclipse-score/module\_template/issues/130 |
-| **[NEETASOSS-72](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72)** | User Story | Nanda Purna Chandra | https://github.com/eclipse-score/bazel\_registry/issues/485 |
-| **[NEETASOSS-70](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-70)** | Task | Kumar Mv Vinodha | https://github.com/eclipse-score/docs-as-code/issues/595 |
-| **[NEETASOSS-67](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-67)** | User Story | Ramakrishnan P K | https://github.com/eclipse-score/.eclipsefdn/issues/210 |
-| **[NEETASOSS-53](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-53)** | User Story | Ramakrishnan P K | Joystick Reader integration - New Project Conan Cmake |
-| **[NEETASOSS-51](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-51)** | User Story | Amulya Doma | https://github.com/eclipse-score/scrample/issues/27 |
-| **[NEETASOSS-46](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-46)** | User Story | Parthiban Kuppudurai | https://github.com/eclipse-score/cicd-workflows/issues/135 |
-| **[NEETASOSS-43](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-43)** | Epic | Prashanth Manje Gowda | mw::com Data Provider for Kuksa Databroker (Rust, QM) |
-| **[NEETASOSS-39](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-39)** | User Story | Patil Rutuja Milind | \[mw::com Data Provider\] Signal conversion & broker ingest |
-| **[NEETASOSS-38](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-38)** | User Story | Patil Rutuja Milind | \[mw::com Data Provider\] JSON + config generator |
-| **[NEETASOSS-37](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-37)** | User Story | Patil Rutuja Milind | \[mw::com Data Provider\] Rust bindings for mw::com using codegen |
-| **[NEETASOSS-36](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-36)** | User Story | Prashanth Manje Gowda | \[mw::com Data Provider\] Provider skeleton and data provider trait implementation |
-| **[NEETASOSS-35](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-35)** | User Story | Prashanth Manje Gowda | \[mw::com Data Provider\] Analysis and design |
-| **[NEETASOSS-34](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-34)** | New Feature | Prashanth Manje Gowda | mw::com Data Provider for Kuksa Databroker (Rust, QM) |
-| **[NEETASOSS-32](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-32)** | User Story | Divya Priya Gopal | https://github.com/eclipse-score/cicd-workflows/issues/126 |
-| **[NEETASOSS-28](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-28)** | Subtask | Patil Rutuja Milind | Part 1: Split Bridge Management fucntionality |
-| **[NEETASOSS-27](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-27)** | User Story | Patil Rutuja Milind | https://github.com/eclipse-score/inc\_someip\_gateway/issues/79 |
-| **[NEETASOSS-22](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-22)** | Epic | Ramakrishnan P K | S-CORE Demo Kit |
-| **[NEETASOSS-20](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-20)** | User Story | Patil Rutuja Milind | https://github.com/eclipse-score/communication/issues/449 |
-
-### On Hold (2)
-
-| Key | Type | Assignee | Summary |
-| :--- | :--- | :--- | :--- |
-| **[NEETASOSS-18](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-18)** | Task | Amulya Doma | Prepare the New development board |
-| **[NEETASOSS-17](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-17)** | Task | Amulya Doma | Cleanup initrd with unwanted binaries. |
-
-### To Do (36)
-
-| Key | Type | Assignee | Summary |
-| :--- | :--- | :--- | :--- |
-| **[NEETASOSS-69](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-69)** | Task | Divya Priya Gopal | https://github.com/eclipse-score/cicd-workflows/issues/121 |
-| **[NEETASOSS-66](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-66)** | Epic | Parthiban Kuppudurai | Parthiban Kuppudurai: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-65](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-65)** | Epic | Srinivasu Kandukuri | Srinivasu Kandukuri: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-64](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-64)** | Epic | Nanda Purna Chandra | Nanda Purna Chandra: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-63](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-63)** | Epic | Logeshwari Sithan | Logeshwari Sithan: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-62](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-62)** | Epic | Deepak Pk Shetty | Deepak Pk Shetty: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-61](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-61)** | Epic | Gnana Prakash N R | Gnana Prakash N R: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-59](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-59)** | User Story | Ramakrishnan P K | Android App update for Motor Control Demo |
-| **[NEETASOSS-58](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-58)** | User Story | Ramakrishnan P K | Velocitas App for Motor Control Demo |
-| **[NEETASOSS-57](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-57)** | User Story | Ramakrishnan P K | Motor Control Sources - CAN support |
-| **[NEETASOSS-56](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-56)** | User Story | Ramakrishnan P K | Sync Middleware SOMEIP configurations |
-| **[NEETASOSS-55](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-55)** | User Story | Ramakrishnan P K | VSS signal update  - RC car controls |
-| **[NEETASOSS-54](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-54)** | User Story | Ramakrishnan P K | Kuksa Databroker feeder Integration |
-| **[NEETASOSS-52](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-52)** | User Story | Ramakrishnan P K | Joystick Reader and Databroker sender Integration for RaspberryPI |
-| **[NEETASOSS-49](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-49)** | Epic | Amulya Doma | Amulya Doma: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-47](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-47)** | Epic | Panne Naveena | Panne Naveena: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-45](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-45)** | Epic | Patil Kamesh Shambhurao | Patil Kamesh Shambhurao: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-44](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-44)** | Epic | Akhila Thapliyal | Akhila Thapliyal: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-42](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-42)** | User Story | Patil Rutuja Milind | \[mw::com Data Provider\] Delivery & OSS contribution |
-| **[NEETASOSS-41](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-41)** | User Story | Patil Rutuja Milind | \[mw::com Data Provider\] Testing and validation |
-| **[NEETASOSS-40](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-40)** | User Story | Prashanth Manje Gowda | \[mw::com Data Provider\] QM <-> ASIL-B boundary & robustness |
-| **[NEETASOSS-33](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-33)** | Epic | Divya Priya Gopal | Divya: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-30](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-30)** | Epic | Vrinda A M | Vrinda: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-29](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-29)** | Epic | Prashanth Manje Gowda | Prashanth MG: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-25](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-25)** | Epic | Kumar Mv Vinodha | Vinodha: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-24](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-24)** | Epic | Kiran Kumar Hoskere Venkatesh | KiranHV: S-Core Contributions: improvements, Bugs and test cases |
-| **[NEETASOSS-23](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-23)** | Epic | Ramakrishnan P K | RamPK: S-Core Contributions: Improvements, Bugs and test cases |
-| **[NEETASOSS-19](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-19)** | Bug | Amulya Doma | FIX the below error due to FIL |
-| **[NEETASOSS-10](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-10)** | Epic | Ramakrishnan P K | S-Core RBC Demo feature |
-| **[NEETASOSS-8](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-8)** | User Story | Patil Rutuja Milind | Architecture & Design |
-| **[NEETASOSS-7](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-7)** | Epic | Joshi Mayank | KUKSA Databroker Integration with Eclipse S‑CORE  |
-| **[NEETASOSS-6](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-6)** | New Feature | Ramakrishnan P K | S-Core: Suitcase demo (RBC App) |
-| **[NEETASOSS-4](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-4)** | Epic | Patil Rutuja Milind | Rutuja: S-Core Contributions: Improvements, Bugs and test cases |
-| **[NEETASOSS-3](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-3)** | Epic | Joshi Mayank | Score-Demo with Read and write |
-| **[NEETASOSS-2](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-2)** | Epic | Joshi Mayank | Drag and drop epics to reorder |
-| **[NEETASOSS-1](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-1)** | Epic | Joshi Mayank | Click here to edit this epic's name |
+*No unresolved JIRA issues found for this project.*
 
 ---
 
