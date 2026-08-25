@@ -4,8 +4,23 @@ import requests
 import time
 from datetime import datetime
 
+def get_gh_token():
+    token = os.getenv("GITHUB_TOKEN")
+    if token:
+        return token
+    try:
+        hosts_path = os.path.expanduser("~/.config/gh/hosts.yml")
+        if os.path.exists(hosts_path):
+            with open(hosts_path, "r") as f:
+                for line in f:
+                    if "oauth_token:" in line:
+                        return line.split("oauth_token:")[1].strip().strip('"').strip("'")
+    except Exception:
+        pass
+    return None
+
 # Environment variables
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+GITHUB_TOKEN = get_gh_token()
 ORG_NAME = "bgsw-contrib"
 CONFIG_FILE = "users.json"
 DASHBOARD_FILE = "README.md"
@@ -70,33 +85,51 @@ def main():
         print(f"Analyzing user: {username}...")
         prs = fetch_user_prs(username, ORG_NAME)
         
-        total_additions = 0
-        total_deletions = 0
-        pr_count = len(prs)
+        user_stats[username] = {
+            "done": {
+                "pr_count": 0,
+                "additions": 0,
+                "deletions": 0,
+                "total_loc": 0
+            },
+            "in_progress": {
+                "pr_count": 0,
+                "additions": 0,
+                "deletions": 0,
+                "total_loc": 0
+            }
+        }
         
         for pr in prs:
             # The search endpoint returns issue items; we need the actual pull_request API URL
             if "pull_request" in pr:
                 pr_detail_url = pr["pull_request"]["url"]
                 additions, deletions = get_pr_details(pr_detail_url)
-                total_additions += additions
-                total_deletions += deletions
-        
-        user_stats[username] = {
-            "pr_count": pr_count,
-            "additions": total_additions,
-            "deletions": total_deletions,
-            "total_loc": total_additions + total_deletions
-        }
+                
+                # Check state to decide if Done (merged/closed) or In Progress (open)
+                state = pr.get("state", "closed")
+                category = "in_progress" if state == "open" else "done"
+                
+                user_stats[username][category]["pr_count"] += 1
+                user_stats[username][category]["additions"] += additions
+                user_stats[username][category]["deletions"] += deletions
+                user_stats[username][category]["total_loc"] += additions + deletions
         
         # Short sleep to prevent hitting GitHub search API secondary rate limits/abuse filters
         time.sleep(1)
 
-    # Calculate Totals
-    total_prs = sum(stats["pr_count"] for stats in user_stats.values())
-    total_additions = sum(stats["additions"] for stats in user_stats.values())
-    total_deletions = sum(stats["deletions"] for stats in user_stats.values())
-    total_loc = total_additions + total_deletions
+    # Calculate Totals for Done
+    total_prs_done = sum(stats["done"]["pr_count"] for stats in user_stats.values())
+    total_additions_done = sum(stats["done"]["additions"] for stats in user_stats.values())
+    total_deletions_done = sum(stats["done"]["deletions"] for stats in user_stats.values())
+    total_loc_done = total_additions_done + total_deletions_done
+
+    # Calculate Totals for In Progress
+    total_prs_ip = sum(stats["in_progress"]["pr_count"] for stats in user_stats.values())
+    total_additions_ip = sum(stats["in_progress"]["additions"] for stats in user_stats.values())
+    total_deletions_ip = sum(stats["in_progress"]["deletions"] for stats in user_stats.values())
+    total_loc_ip = total_additions_ip + total_deletions_ip
+
     active_contributors = len(contributors)
 
     # Generate Markdown Dashboard Content
@@ -107,22 +140,38 @@ def main():
 Automated dashboard tracking active contributions within the **{ORG_NAME}** organization.
 
 > **Last Updated:** `{now_str} (UTC)`  
-> *Note: Metrics represent total historical Pull Request contributions.*
+> *Note: Metrics are split into completed ("Done") and active ("In Progress") pull requests.*
 
 ---
 
-## 👤 Contributor Standings
+## 🏆 Completed Contributions (Done)
 
-| Contributor (GitHub Username) | PRs Created | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
+| Contributor (GitHub Username) | PRs Closed/Merged | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
 """
-    for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["total_loc"], reverse=True):
+    for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["done"]["total_loc"], reverse=True):
         profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}"
-        markdown += f"| **[{username}]({profile_url})** | [{stats['pr_count']:,}]({pr_query_url}) | {stats['additions']:,} | {stats['deletions']:,} | **{stats['total_loc']:,}** |\n"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:closed"
+        markdown += f"| **[{username}]({profile_url})** | [{stats['done']['pr_count']:,}]({pr_query_url}) | {stats['done']['additions']:,} | {stats['done']['deletions']:,} | **{stats['done']['total_loc']:,}** |\n"
 
-    # Add bold Total row at the bottom
-    markdown += f"| **Total** | **[{total_prs:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME})** | **{total_additions:,}** | **{total_deletions:,}** | **{total_loc:,}** |\n"
+    # Add bold Total row for Done at the bottom
+    markdown += f"| **Total** | **[{total_prs_done:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:closed)** | **{total_additions_done:,}** | **{total_deletions_done:,}** | **{total_loc_done:,}** |\n"
+
+    markdown += f"""
+---
+
+## ⏳ In-Progress Contributions (In Progress)
+
+| Contributor (GitHub Username) | PRs Open | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
+| :--- | :---: | :---: | :---: | :---: |
+"""
+    for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["in_progress"]["total_loc"], reverse=True):
+        profile_url = f"https://github.com/{username}"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:open"
+        markdown += f"| **[{username}]({profile_url})** | [{stats['in_progress']['pr_count']:,}]({pr_query_url}) | {stats['in_progress']['additions']:,} | {stats['in_progress']['deletions']:,} | **{stats['in_progress']['total_loc']:,}** |\n"
+
+    # Add bold Total row for In Progress at the bottom
+    markdown += f"| **Total** | **[{total_prs_ip:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:open)** | **{total_additions_ip:,}** | **{total_deletions_ip:,}** | **{total_loc_ip:,}** |\n"
 
     markdown += f"""
 ---
@@ -154,25 +203,40 @@ To manage the list of tracked contributors, modify the `users.json` file.
     del_metrics = []
     total_locs = []
     
-    sorted_users = sorted(user_stats.items(), key=lambda x: x[1]["total_loc"], reverse=True)
+    sorted_users = sorted(user_stats.items(), key=lambda x: x[1]["done"]["total_loc"], reverse=True)
     for username, stats in sorted_users:
         labels.append(username)
-        pr_counts.append(stats["pr_count"])
-        add_metrics.append(stats["additions"])
-        del_metrics.append(stats["deletions"])
-        total_locs.append(stats["total_loc"])
+        pr_counts.append(stats["done"]["pr_count"])
+        add_metrics.append(stats["done"]["additions"])
+        del_metrics.append(stats["done"]["deletions"])
+        total_locs.append(stats["done"]["total_loc"])
 
-    table_rows_html = ""
+    table_rows_done_html = ""
     for username, stats in sorted_users:
         profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}"
-        table_rows_html += f"""
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:closed"
+        table_rows_done_html += f"""
         <tr>
             <td><a href="{profile_url}" target="_blank" class="user-link">@{username}</a></td>
-            <td class="text-center"><a href="{pr_query_url}" target="_blank" class="pr-link">{stats['pr_count']:,}</a></td>
-            <td class="text-green text-right">+{stats['additions']:,}</td>
-            <td class="text-red text-right">-{stats['deletions']:,}</td>
-            <td class="text-right font-bold"><b>{stats['total_loc']:,}</b></td>
+            <td class="text-center"><a href="{pr_query_url}" target="_blank" class="pr-link">{stats['done']['pr_count']:,}</a></td>
+            <td class="text-green text-right">+{stats['done']['additions']:,}</td>
+            <td class="text-red text-right">-{stats['done']['deletions']:,}</td>
+            <td class="text-right font-bold"><b>{stats['done']['total_loc']:,}</b></td>
+        </tr>
+        """
+
+    table_rows_ip_html = ""
+    sorted_users_ip = sorted(user_stats.items(), key=lambda x: x[1]["in_progress"]["total_loc"], reverse=True)
+    for username, stats in sorted_users_ip:
+        profile_url = f"https://github.com/{username}"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:open"
+        table_rows_ip_html += f"""
+        <tr>
+            <td><a href="{profile_url}" target="_blank" class="user-link">@{username}</a></td>
+            <td class="text-center"><a href="{pr_query_url}" target="_blank" class="pr-link">{stats['in_progress']['pr_count']:,}</a></td>
+            <td class="text-green text-right">+{stats['in_progress']['additions']:,}</td>
+            <td class="text-red text-right">-{stats['in_progress']['deletions']:,}</td>
+            <td class="text-right font-bold"><b>{stats['in_progress']['total_loc']:,}</b></td>
         </tr>
         """
 
@@ -258,7 +322,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.25rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
         }}
         
         .stat-card {{
@@ -453,23 +517,44 @@ To manage the list of tracked contributors, modify the `users.json` file.
             </div>
         </header>
 
-        <!-- Stats Row -->
+        <!-- Stats Rows -->
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main);">🏆 Completed Metrics (Done)</h2>
         <div class="stats-grid">
             <div class="stat-card blue">
-                <span class="stat-label">Total Pull Requests</span>
-                <span class="stat-value">{total_prs:,}</span>
+                <span class="stat-label">Done Pull Requests</span>
+                <span class="stat-value">{total_prs_done:,}</span>
             </div>
             <div class="stat-card green">
-                <span class="stat-label">Total Lines Added</span>
-                <span class="stat-value">+{total_additions:,}</span>
+                <span class="stat-label">Lines Added (Done)</span>
+                <span class="stat-value">+{total_additions_done:,}</span>
             </div>
             <div class="stat-card red">
-                <span class="stat-label">Total Lines Deleted</span>
-                <span class="stat-value">-{total_deletions:,}</span>
+                <span class="stat-label">Lines Deleted (Done)</span>
+                <span class="stat-value">-{total_deletions_done:,}</span>
             </div>
             <div class="stat-card">
                 <span class="stat-label">Contributors Tracked</span>
                 <span class="stat-value">{active_contributors}</span>
+            </div>
+        </div>
+
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main); margin-top: 1.5rem;">⏳ Active Metrics (In Progress)</h2>
+        <div class="stats-grid" style="margin-bottom: 2.5rem;">
+            <div class="stat-card blue">
+                <span class="stat-label">Open Pull Requests</span>
+                <span class="stat-value">{total_prs_ip:,}</span>
+            </div>
+            <div class="stat-card green">
+                <span class="stat-label">Lines Added (IP)</span>
+                <span class="stat-value">+{total_additions_ip:,}</span>
+            </div>
+            <div class="stat-card red">
+                <span class="stat-label">Lines Deleted (IP)</span>
+                <span class="stat-value">-{total_deletions_ip:,}</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Total LOC In-Progress</span>
+                <span class="stat-value" style="color: var(--accent);">{total_loc_ip:,}</span>
             </div>
         </div>
 
@@ -478,7 +563,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             <!-- Lines of Code Chart -->
             <div class="chart-card">
                 <div class="chart-title">
-                    <span>Lines of Code Contributions</span>
+                    <span>Lines of Code Contributions (Completed)</span>
                     <span style="font-size: 0.75rem; color: var(--text-muted);">Additions vs Deletions</span>
                 </div>
                 <div class="chart-container">
@@ -488,7 +573,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             <!-- Pull Requests Chart -->
             <div class="chart-card">
                 <div class="chart-title">
-                    <span>Pull Request Share</span>
+                    <span>Completed Pull Request Share</span>
                     <span style="font-size: 0.75rem; color: var(--text-muted);">Percentage per Contributor</span>
                 </div>
                 <div class="chart-container">
@@ -497,30 +582,59 @@ To manage the list of tracked contributors, modify the `users.json` file.
             </div>
         </div>
 
-        <!-- Standings Table -->
+        <!-- Completed Standings Table -->
         <div class="table-card">
-            <h2 class="table-title">👤 Contributor Standings</h2>
+            <h2 class="table-title">🏆 Completed Contributions (Done)</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Contributor (GitHub Username)</th>
-                        <th class="text-center">PRs Created</th>
+                        <th class="text-center">PRs Closed/Merged</th>
                         <th class="text-right">Lines Added (+)</th>
                         <th class="text-right">Lines Deleted (-)</th>
                         <th class="text-right">Total LOC Changed</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {table_rows_html}
+                    {table_rows_done_html}
                     <!-- Total Row -->
                     <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
-                        <td><strong>Total Group Stats</strong></td>
+                        <td><strong>Total Completed Stats</strong></td>
                         <td class="text-center font-bold">
-                            <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}" target="_blank" class="pr-link" style="font-weight: 700;">{total_prs:,}</a>
+                            <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{total_prs_done:,}</a>
                         </td>
-                        <td class="text-green text-right font-bold">+{total_additions:,}</td>
-                        <td class="text-red text-right font-bold">-{total_deletions:,}</td>
-                        <td class="text-right font-bold" style="color: var(--primary);"><b>{total_loc:,}</b></td>
+                        <td class="text-green text-right font-bold">+{total_additions_done:,}</td>
+                        <td class="text-red text-right font-bold">-{total_deletions_done:,}</td>
+                        <td class="text-right font-bold" style="color: var(--primary);"><b>{total_loc_done:,}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- In Progress Standings Table -->
+        <div class="table-card">
+            <h2 class="table-title">⏳ In-Progress Contributions (In Progress)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Contributor (GitHub Username)</th>
+                        <th class="text-center">PRs Open</th>
+                        <th class="text-right">Lines Added (+)</th>
+                        <th class="text-right">Lines Deleted (-)</th>
+                        <th class="text-right">Total LOC Changed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {table_rows_ip_html}
+                    <!-- Total Row -->
+                    <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
+                        <td><strong>Total In-Progress Stats</strong></td>
+                        <td class="text-center font-bold">
+                            <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:open" target="_blank" class="pr-link" style="font-weight: 700; background-color: rgba(56, 189, 248, 0.1); color: var(--primary);">{total_prs_ip:,}</a>
+                        </td>
+                        <td class="text-green text-right font-bold">+{total_additions_ip:,}</td>
+                        <td class="text-red text-right font-bold">-{total_deletions_ip:,}</td>
+                        <td class="text-right font-bold" style="color: var(--accent);"><b>{total_loc_ip:,}</b></td>
                     </tr>
                 </tbody>
             </table>

@@ -73,7 +73,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.25rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .stat-card {
@@ -264,27 +264,48 @@
                 <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>bgsw-contrib</strong> organization.</p>
             </div>
             <div class="updated-badge">
-                Last Updated: <strong>2026-08-24 19:16:46 UTC</strong>
+                Last Updated: <strong>2026-08-25 11:58:11 UTC</strong>
             </div>
         </header>
 
-        <!-- Stats Row -->
+        <!-- Stats Rows -->
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main);">🏆 Completed Metrics (Done)</h2>
         <div class="stats-grid">
             <div class="stat-card blue">
-                <span class="stat-label">Total Pull Requests</span>
-                <span class="stat-value">18</span>
+                <span class="stat-label">Done Pull Requests</span>
+                <span class="stat-value">15</span>
             </div>
             <div class="stat-card green">
-                <span class="stat-label">Total Lines Added</span>
-                <span class="stat-value">+3,567</span>
+                <span class="stat-label">Lines Added (Done)</span>
+                <span class="stat-value">+2,365</span>
             </div>
             <div class="stat-card red">
-                <span class="stat-label">Total Lines Deleted</span>
-                <span class="stat-value">-1,969</span>
+                <span class="stat-label">Lines Deleted (Done)</span>
+                <span class="stat-value">-1,838</span>
             </div>
             <div class="stat-card">
                 <span class="stat-label">Contributors Tracked</span>
                 <span class="stat-value">13</span>
+            </div>
+        </div>
+
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main); margin-top: 1.5rem;">⏳ Active Metrics (In Progress)</h2>
+        <div class="stats-grid" style="margin-bottom: 2.5rem;">
+            <div class="stat-card blue">
+                <span class="stat-label">Open Pull Requests</span>
+                <span class="stat-value">5</span>
+            </div>
+            <div class="stat-card green">
+                <span class="stat-label">Lines Added (IP)</span>
+                <span class="stat-value">+1,205</span>
+            </div>
+            <div class="stat-card red">
+                <span class="stat-label">Lines Deleted (IP)</span>
+                <span class="stat-value">-135</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Total LOC In-Progress</span>
+                <span class="stat-value" style="color: var(--accent);">1,340</span>
             </div>
         </div>
 
@@ -293,7 +314,7 @@
             <!-- Lines of Code Chart -->
             <div class="chart-card">
                 <div class="chart-title">
-                    <span>Lines of Code Contributions</span>
+                    <span>Lines of Code Contributions (Completed)</span>
                     <span style="font-size: 0.75rem; color: var(--text-muted);">Additions vs Deletions</span>
                 </div>
                 <div class="chart-container">
@@ -303,7 +324,7 @@
             <!-- Pull Requests Chart -->
             <div class="chart-card">
                 <div class="chart-title">
-                    <span>Pull Request Share</span>
+                    <span>Completed Pull Request Share</span>
                     <span style="font-size: 0.75rem; color: var(--text-muted);">Percentage per Contributor</span>
                 </div>
                 <div class="chart-container">
@@ -312,14 +333,14 @@
             </div>
         </div>
 
-        <!-- Standings Table -->
+        <!-- Completed Standings Table -->
         <div class="table-card">
-            <h2 class="table-title">👤 Contributor Standings</h2>
+            <h2 class="table-title">🏆 Completed Contributions (Done)</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Contributor (GitHub Username)</th>
-                        <th class="text-center">PRs Created</th>
+                        <th class="text-center">PRs Closed/Merged</th>
                         <th class="text-right">Lines Added (+)</th>
                         <th class="text-right">Lines Deleted (-)</th>
                         <th class="text-right">Total LOC Changed</th>
@@ -329,7 +350,7 @@
                     
         <tr>
             <td><a href="https://github.com/Vinodha-kumar" target="_blank" class="user-link">@Vinodha-kumar</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar" target="_blank" class="pr-link">9</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:closed" target="_blank" class="pr-link">9</a></td>
             <td class="text-green text-right">+1,549</td>
             <td class="text-red text-right">-1,737</td>
             <td class="text-right font-bold"><b>3,286</b></td>
@@ -337,31 +358,31 @@
         
         <tr>
             <td><a href="https://github.com/srinivasugithub" target="_blank" class="user-link">@srinivasugithub</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub" target="_blank" class="pr-link">3</a></td>
-            <td class="text-green text-right">+1,442</td>
-            <td class="text-red text-right">-195</td>
-            <td class="text-right font-bold"><b>1,637</b></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:closed" target="_blank" class="pr-link">2</a></td>
+            <td class="text-green text-right">+481</td>
+            <td class="text-red text-right">-66</td>
+            <td class="text-right font-bold"><b>547</b></td>
         </tr>
         
         <tr>
             <td><a href="https://github.com/RamakrishnanPK" target="_blank" class="user-link">@RamakrishnanPK</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK" target="_blank" class="pr-link">4</a></td>
-            <td class="text-green text-right">+538</td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:closed" target="_blank" class="pr-link">3</a></td>
+            <td class="text-green text-right">+299</td>
             <td class="text-red text-right">-34</td>
-            <td class="text-right font-bold"><b>572</b></td>
+            <td class="text-right font-bold"><b>333</b></td>
         </tr>
         
         <tr>
             <td><a href="https://github.com/kirankumar-H-V" target="_blank" class="user-link">@kirankumar-H-V</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V" target="_blank" class="pr-link">2</a></td>
-            <td class="text-green text-right">+38</td>
-            <td class="text-red text-right">-3</td>
-            <td class="text-right font-bold"><b>41</b></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:closed" target="_blank" class="pr-link">1</a></td>
+            <td class="text-green text-right">+36</td>
+            <td class="text-red text-right">-1</td>
+            <td class="text-right font-bold"><b>37</b></td>
         </tr>
         
         <tr>
             <td><a href="https://github.com/parthibankuppudurai" target="_blank" class="user-link">@parthibankuppudurai</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -369,7 +390,7 @@
         
         <tr>
             <td><a href="https://github.com/dgi1cob" target="_blank" class="user-link">@dgi1cob</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:dgi1cob" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:dgi1cob+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -377,7 +398,7 @@
         
         <tr>
             <td><a href="https://github.com/mdl2kor" target="_blank" class="user-link">@mdl2kor</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:mdl2kor" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:mdl2kor+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -385,7 +406,7 @@
         
         <tr>
             <td><a href="https://github.com/vrinda" target="_blank" class="user-link">@vrinda</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:vrinda" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:vrinda+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -393,7 +414,7 @@
         
         <tr>
             <td><a href="https://github.com/sujith" target="_blank" class="user-link">@sujith</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:sujith" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:sujith+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -401,7 +422,7 @@
         
         <tr>
             <td><a href="https://github.com/purnadev" target="_blank" class="user-link">@purnadev</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:purnadev" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:purnadev+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -409,7 +430,7 @@
         
         <tr>
             <td><a href="https://github.com/naveena456" target="_blank" class="user-link">@naveena456</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -417,7 +438,7 @@
         
         <tr>
             <td><a href="https://github.com/logesh" target="_blank" class="user-link">@logesh</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -425,7 +446,7 @@
         
         <tr>
             <td><a href="https://github.com/xna2kor" target="_blank" class="user-link">@xna2kor</a></td>
-            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor" target="_blank" class="pr-link">0</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:closed" target="_blank" class="pr-link">0</a></td>
             <td class="text-green text-right">+0</td>
             <td class="text-red text-right">-0</td>
             <td class="text-right font-bold"><b>0</b></td>
@@ -433,13 +454,146 @@
         
                     <!-- Total Row -->
                     <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
-                        <td><strong>Total Group Stats</strong></td>
+                        <td><strong>Total Completed Stats</strong></td>
                         <td class="text-center font-bold">
-                            <a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib" target="_blank" class="pr-link" style="font-weight: 700;">18</a>
+                            <a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">15</a>
                         </td>
-                        <td class="text-green text-right font-bold">+3,567</td>
-                        <td class="text-red text-right font-bold">-1,969</td>
-                        <td class="text-right font-bold" style="color: var(--primary);"><b>5,536</b></td>
+                        <td class="text-green text-right font-bold">+2,365</td>
+                        <td class="text-red text-right font-bold">-1,838</td>
+                        <td class="text-right font-bold" style="color: var(--primary);"><b>4,203</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- In Progress Standings Table -->
+        <div class="table-card">
+            <h2 class="table-title">⏳ In-Progress Contributions (In Progress)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Contributor (GitHub Username)</th>
+                        <th class="text-center">PRs Open</th>
+                        <th class="text-right">Lines Added (+)</th>
+                        <th class="text-right">Lines Deleted (-)</th>
+                        <th class="text-right">Total LOC Changed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td><a href="https://github.com/srinivasugithub" target="_blank" class="user-link">@srinivasugithub</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:open" target="_blank" class="pr-link">3</a></td>
+            <td class="text-green text-right">+964</td>
+            <td class="text-red text-right">-133</td>
+            <td class="text-right font-bold"><b>1,097</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/RamakrishnanPK" target="_blank" class="user-link">@RamakrishnanPK</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:open" target="_blank" class="pr-link">1</a></td>
+            <td class="text-green text-right">+239</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>239</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/kirankumar-H-V" target="_blank" class="user-link">@kirankumar-H-V</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:open" target="_blank" class="pr-link">1</a></td>
+            <td class="text-green text-right">+2</td>
+            <td class="text-red text-right">-2</td>
+            <td class="text-right font-bold"><b>4</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/Vinodha-kumar" target="_blank" class="user-link">@Vinodha-kumar</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/parthibankuppudurai" target="_blank" class="user-link">@parthibankuppudurai</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/dgi1cob" target="_blank" class="user-link">@dgi1cob</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:dgi1cob+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/mdl2kor" target="_blank" class="user-link">@mdl2kor</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:mdl2kor+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/vrinda" target="_blank" class="user-link">@vrinda</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:vrinda+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/sujith" target="_blank" class="user-link">@sujith</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:sujith+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/purnadev" target="_blank" class="user-link">@purnadev</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:purnadev+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/naveena456" target="_blank" class="user-link">@naveena456</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/logesh" target="_blank" class="user-link">@logesh</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+        <tr>
+            <td><a href="https://github.com/xna2kor" target="_blank" class="user-link">@xna2kor</a></td>
+            <td class="text-center"><a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:open" target="_blank" class="pr-link">0</a></td>
+            <td class="text-green text-right">+0</td>
+            <td class="text-red text-right">-0</td>
+            <td class="text-right font-bold"><b>0</b></td>
+        </tr>
+        
+                    <!-- Total Row -->
+                    <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
+                        <td><strong>Total In-Progress Stats</strong></td>
+                        <td class="text-center font-bold">
+                            <a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open" target="_blank" class="pr-link" style="font-weight: 700; background-color: rgba(56, 189, 248, 0.1); color: var(--primary);">5</a>
+                        </td>
+                        <td class="text-green text-right font-bold">+1,205</td>
+                        <td class="text-red text-right font-bold">-135</td>
+                        <td class="text-right font-bold" style="color: var(--accent);"><b>1,340</b></td>
                     </tr>
                 </tbody>
             </table>
@@ -454,10 +608,10 @@
     <!-- Inject Chart.js Configuration -->
     <script>
         const labels = ["Vinodha-kumar", "srinivasugithub", "RamakrishnanPK", "kirankumar-H-V", "parthibankuppudurai", "dgi1cob", "mdl2kor", "vrinda", "sujith", "purnadev", "naveena456", "logesh", "xna2kor"];
-        const prCounts = [9, 3, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        const additions = [1549, 1442, 538, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        const deletions = [1737, 195, 34, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        const totalLocs = [3286, 1637, 572, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const prCounts = [9, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const additions = [1549, 481, 299, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const deletions = [1737, 66, 34, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const totalLocs = [3286, 547, 333, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         // 1. Lines of Code Stacked Bar Chart
         const ctxLoc = document.getElementById('locChart').getContext('2d');
