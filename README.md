@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-25 13:56:15 (UTC)`  
+> **Last Updated:** `2026-08-25 14:01:41 (UTC)`  
 > *Note: Metrics are split into completed ("Done") and active ("In Progress") pull requests.*
 
 ---
@@ -24,6 +24,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[naveena456](https://github.com/naveena456)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456+is:closed) | 0 | 0 | **0** |
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:closed) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:closed) | 0 | 0 | **0** |
+| **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:closed) | 0 | 0 | **0** |
 | **Total** | **[15](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed)** | **2,365** | **1,838** | **4,203** |
 
 ---
@@ -45,6 +46,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[naveena456](https://github.com/naveena456)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456+is:open) | 0 | 0 | **0** |
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:open) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:open) | 0 | 0 | **0** |
+| **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:open) | 0 | 0 | **0** |
 | **Total** | **[5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open)** | **1,205** | **135** | **1,340** |
 
 ---
