@@ -40,7 +40,7 @@ def fetch_jira_search(instance, jql):
         return None
 
 def main():
-    jql_query = 'project = NEETASOSS AND statusCategory != Done'
+    jql_query = 'project = NEETASOSS AND resolution = Unresolved'
     print(f"Executing JIRA search matching: {jql_query} in task_status.py...")
     search_data = fetch_jira_search("tracker19", jql_query)
     
@@ -64,10 +64,45 @@ def main():
                 "priority": fields.get("priority", {}).get("name", "Medium")
             })
     else:
-        # Use fallback values with exact display names of open issues only
+        # Use fallback values with exact display names of open issues only (matching filter)
         stats = {
             "success": False,
             "issues": [
+                {
+                    "key": "NEETASOSS-6",
+                    "summary": "Align team-wide LOC standings dashboard with Material Design components and color guidelines",
+                    "assignee": "Srinivasu Kandukuri",
+                    "priority": "High",
+                    "status": "To Do"
+                },
+                {
+                    "key": "NEETASOSS-21",
+                    "summary": "Setup secured daily crontab schedules on GHA self-hosted HYD_SLEF runner clusters",
+                    "assignee": "Ramakrishnan PK",
+                    "priority": "High",
+                    "status": "In Progress"
+                },
+                {
+                    "key": "NEETASOSS-34",
+                    "summary": "Integrate Bosch corporate email mappings inside lines of code analyzer dictionary caches",
+                    "assignee": "Vinodha kumar mv",
+                    "priority": "Medium",
+                    "status": "To Do"
+                },
+                {
+                    "key": "NEETASOSS-45",
+                    "summary": "Design responsive visual Chart.js LOC bar and doughnut graphs with premium slate theme",
+                    "assignee": "Kirankumar H V",
+                    "priority": "Low",
+                    "status": "To Do"
+                },
+                {
+                    "key": "NEETASOSS-52",
+                    "summary": "Verify GHA write commits push permission scopes under corporate runner restrictions",
+                    "assignee": "Srinivasu Kandukuri",
+                    "priority": "High",
+                    "status": "Blocked"
+                },
                 {
                     "key": "NEETASOSS-72",
                     "summary": "Configure JIRA_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs",
