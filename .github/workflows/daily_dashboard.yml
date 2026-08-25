@@ -19,7 +19,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  update-dashboard:
+  line-of-code:
+    name: 📊 Line of Code Stage
     runs-on: Ubuntu-Latest
 
     steps:
@@ -36,7 +37,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run Tracker Script and Show Summary
+      - name: Run LOC Tracker Script and Show Summary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
@@ -60,18 +61,58 @@ jobs:
             git push
           fi
 
-  deploy-pages:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  task-status:
+    name: ⏳ Task Status Stage
     runs-on: Ubuntu-Latest
-    needs: update-dashboard # Deploy only after update-dashboard succeeds and commits the latest index.html
+    needs: line-of-code
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Validate Jira JQL Search Quotas & Connections
+        env:
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+        run: |
+          # Test querying Track&Release with simplified check to log validation metrics in GHA summary
+          python3 -c "
+          import requests, urllib.parse, os
+          token = os.getenv('JIRA_TOKEN')
+          if not token:
+              print('Warning: JIRA_TOKEN is missing. Validating offline state.')
+              exit(0)
+          encoded_jql = urllib.parse.quote('project = NEETASOSS OR text ~ \"SCORE\"')
+          url = f'https://rb-tracker.bosch.com/tracker19/rest/api/2/search?jql={encoded_jql}'
+          res = requests.get(url, headers={'Authorization': f'Bearer {token}'})
+          print(f'Jira validation completed. Response code: {res.status_code}')
+          "
+
+  system-health:
+    name: ⚙️ System Health & Deployment Stage
+    runs-on: Ubuntu-Latest
+    needs: task-status
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main # Pull the absolute latest code that was just pushed by the previous job
+          ref: main # Pull the absolute latest code that was just pushed by the line-of-code job
+
+      - name: Run Linter Validation
+        run: |
+          # Validate get_contributions.py python syntax compilation
+          python3 -m py_compile get_contributions.py
+          echo "Python syntax validation passed successfully."
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

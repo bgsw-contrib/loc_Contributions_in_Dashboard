@@ -353,7 +353,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/{key}" target="_blank" class="user-link">{key}</a></td>
                                 <td>{summary}</td>
-                                <td>@{assignee}</td>
+                                <td>{assignee}</td>
                                 <td><span class="priority-badge {priority_class}">{priority}</span></td>
                                 <td><span class="status-badge {status_class}">{status}</span></td>
                             </tr>
@@ -458,42 +458,42 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72" target="_blank" class="user-link">NEETASOSS-72</a></td>
                                 <td>Configure JIRA_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs</td>
-                                <td>@srinivasugithub</td>
+                                <td>Srinivasu Kandukuri</td>
                                 <td><span class="priority-badge priority-high">High</span></td>
                                 <td><span class="status-badge status-progress">In Progress</span></td>
                             </tr>
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
                                 <td>Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged)</td>
-                                <td>@srinivasugithub</td>
+                                <td>Srinivasu Kandukuri</td>
                                 <td><span class="priority-badge priority-high">High</span></td>
                                 <td><span class="status-badge status-progress">In Progress</span></td>
                             </tr>
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-78" target="_blank" class="user-link">NEETASOSS-78</a></td>
                                 <td>Integrate premium Material Dashboard inspired tabbed layout in index.html generated page</td>
-                                <td>@Vinodha-kumar</td>
+                                <td>Vinodha kumar mv</td>
                                 <td><span class="priority-badge priority-high">High</span></td>
                                 <td><span class="status-badge status-done">Done</span></td>
                             </tr>
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-79" target="_blank" class="user-link">NEETASOSS-79</a></td>
                                 <td>Configure secure GitHub local credential fallback routines parsed from hosts config</td>
-                                <td>@RamakrishnanPK</td>
+                                <td>Ramakrishnan PK</td>
                                 <td><span class="priority-badge priority-medium">Medium</span></td>
                                 <td><span class="status-badge status-done">Done</span></td>
                             </tr>
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-80" target="_blank" class="user-link">NEETASOSS-80</a></td>
                                 <td>Refactor dashboard Chart.js stacked bar additions and deletions to follow Material theme guidelines</td>
-                                <td>@kirankumar-H-V</td>
+                                <td>Kirankumar H V</td>
                                 <td><span class="priority-badge priority-low">Low</span></td>
                                 <td><span class="status-badge status-done">Done</span></td>
                             </tr>
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-81" target="_blank" class="user-link">NEETASOSS-81</a></td>
                                 <td>Build dynamic search capability for SCORE Contributions JQL query filters using Track&Release APIs</td>
-                                <td>@srinivasugithub</td>
+                                <td>Srinivasu Kandukuri</td>
                                 <td><span class="priority-badge priority-high">High</span></td>
                                 <td><span class="status-badge status-done">Done</span></td>
                             </tr>
