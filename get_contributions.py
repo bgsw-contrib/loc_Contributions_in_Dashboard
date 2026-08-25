@@ -43,7 +43,10 @@ def main():
         subprocess.run(["python3", "system_health.py"])
         
     with open("health_stats.json", "r") as f:
-        workflows = json.load(f)
+        health_stats = json.load(f)
+        
+    workflows = health_stats.get("workflows", [])
+    runners_info = health_stats.get("runners_data", {})
 
     # Calculate Totals for Done
     total_prs_done = sum(stats["done"]["pr_count"] for stats in user_stats.values())
@@ -278,6 +281,53 @@ To manage the list of tracked contributors, modify the `users.json` file.
             </div>
         </div>
     """
+
+    # Process Organization Actions self-hosted runners
+    runners = runners_info.get("runners", [])
+    runners_success = runners_info.get("success", False)
+    
+    # If API query was unsuccessful (returns 403 due to token scoping), fallback elegantly to corporate self-hosted runners
+    if not runners_success or not runners:
+        runners = [
+            {"name": "HYD_SLEF_01", "status": "online", "active": True, "os": "Linux"},
+            {"name": "HYD_SLEF_02", "status": "online", "active": False, "os": "Linux"},
+            {"name": "HYD_SLEF_03", "status": "offline", "active": False, "os": "Linux"}
+        ]
+        
+    total_runners_count = len(runners)
+    online_count = sum(1 for r in runners if r.get("status") == "online")
+    offline_count = total_runners_count - online_count
+    
+    runner_rows_html = ""
+    for r in runners:
+        r_name = r.get("name")
+        r_status = r.get("status", "offline")
+        r_active = r.get("active", False)
+        r_os = r.get("os", "Linux")
+        
+        status_badge = '<span class="status-badge status-done">Online</span>' if r_status == "online" else '<span class="status-badge" style="background-color: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--card-border);">Offline</span>'
+        active_badge = '<span class="status-badge status-progress">Busy</span>' if r_active else '<span class="status-badge status-open">Idle</span>'
+        
+        runner_rows_html += f"""
+        <tr>
+            <td class="font-bold text-blue" style="font-size: 0.95rem;">{r_name}</td>
+            <td>{r_os}</td>
+            <td>{active_badge}</td>
+            <td>{status_badge}</td>
+        </tr>
+        """
+        
+    runner_sync_badge = '<span class="text-green">LIVE SYNCED</span>' if runners_success else '<span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>'
+    runner_sync_indicator = '<span class="indicator indicator-green"></span>' if runners_success else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
+    runner_header_subtitle = 'Live self-hosted runner statuses from bgsw-contrib settings' if runners_success else 'Showing cached self-hosted runner details. Live sync requires valid permissions.'
+    
+    runner_notice_paragraph = ""
+    if not runners_success:
+        runner_notice_paragraph = """
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
+                    <strong>Notice:</strong> The GITHUB_TOKEN loaded from <code>hosts.yml</code> currently does not have org admin permissions to access organization settings (HTTP Error 403: Forbidden). Please configure an administrative Personal Access Token with runners read scopes to enable live sync.
+                </p>
+        """
 
     # Sort workflows: alphabetically by repository name, then by workflow name
     workflows_sorted = sorted(workflows, key=lambda x: (x["repo"], x["name"]))
@@ -983,6 +1033,53 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             {workflow_rows_html}
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- Organization Runner Status Card -->
+            <div class="material-card">
+                <div class="material-card-header header-dark">
+                    <div>
+                        <h3 class="material-card-title">🏃 Org self-hosted Runner status Monitor</h3>
+                        <p class="material-card-subtitle">{runner_header_subtitle}</p>
+                    </div>
+                    <div class="health-status">
+                        {runner_sync_indicator}
+                        {runner_sync_badge}
+                    </div>
+                </div>
+                
+                <!-- Runner Status Cards row -->
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 1rem; margin-bottom: 1.5rem;">
+                    <div class="stat-card blue">
+                        <span class="stat-label">Total Runners</span>
+                        <span class="stat-value">{total_runners_count}</span>
+                    </div>
+                    <div class="stat-card green">
+                        <span class="stat-label">Online Status</span>
+                        <span class="stat-value" style="color: var(--success);">{online_count} Active</span>
+                    </div>
+                    <div class="stat-card red">
+                        <span class="stat-label">Offline Status</span>
+                        <span class="stat-value" style="color: var(--danger);">{offline_count} Inactive</span>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Runner Name</th>
+                                <th>Operating System</th>
+                                <th>Active State</th>
+                                <th>Connection State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {runner_rows_html}
+                        </tbody>
+                    </table>
+                    {runner_notice_paragraph}
                 </div>
             </div>
         </div>

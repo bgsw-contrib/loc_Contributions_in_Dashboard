@@ -57,6 +57,38 @@ def fetch_org_workflows(org, headers):
         print(f"Exception fetching org repos: {e}")
         return []
 
+def fetch_org_runners(org, headers):
+    url = f"https://api.github.com/orgs/{org}/actions/runners"
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            return {
+                "success": True,
+                "total_count": data.get("total_count", 0),
+                "runners": [
+                    {
+                        "name": r.get("name"),
+                        "status": r.get("status"),
+                        "active": r.get("active"),
+                        "os": r.get("os")
+                    }
+                    for r in data.get("runners", [])
+                ]
+            }
+        else:
+            return {
+                "success": False,
+                "message": f"API status {response.status_code}",
+                "runners": []
+            }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": str(e),
+            "runners": []
+        }
+
 def main():
     token = get_gh_token()
     if not token:
@@ -68,9 +100,19 @@ def main():
         "Accept": "application/vnd.github.v3+json"
     }
     
+    print("Gathering organization workflow statuses in system_health.py...")
     workflows = fetch_org_workflows("bgsw-contrib", headers)
+    
+    print("Gathering organization Actions self-hosted runners in system_health.py...")
+    runners_data = fetch_org_runners("bgsw-contrib", headers)
+    
+    health_stats = {
+        "workflows": workflows,
+        "runners_data": runners_data
+    }
+    
     with open("health_stats.json", "w") as f:
-        json.dump(workflows, f, indent=2)
+        json.dump(health_stats, f, indent=2)
     print("system_health.py completed: health_stats.json written.")
 
 if __name__ == "__main__":
