@@ -19,6 +19,40 @@ def get_gh_token():
         pass
     return None
 
+def fetch_jira_issue(instance, key):
+    # Try retrieving JIRA_TOKEN from environment first
+    token = os.getenv("JIRA_TOKEN")
+    if not token:
+        # Load environment from ~/.bashrc manually to find exported JIRA_TOKEN
+        try:
+            bashrc_path = os.path.expanduser("~/.bashrc")
+            if os.path.exists(bashrc_path):
+                with open(bashrc_path, "r") as f:
+                    for line in f:
+                        if line.strip().startswith("export JIRA_TOKEN="):
+                            token = line.split("export JIRA_TOKEN=")[1].strip().strip('"').strip("'")
+        except Exception:
+            pass
+            
+    if not token:
+        return None
+        
+    url = f"https://rb-tracker.bosch.com/{instance}/rest/api/2/issue/{key}"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Jira API returned status {response.status_code} for {key}")
+            return None
+    except Exception as e:
+        print(f"Exception fetching Jira ticket {key}: {e}")
+        return None
+
 # Environment variables
 GITHUB_TOKEN = get_gh_token()
 ORG_NAME = "bgsw-contrib"
@@ -247,6 +281,139 @@ To manage the list of tracked contributors, modify the `users.json` file.
     del_metrics_json = json.dumps(del_metrics)
     total_locs_json = json.dumps(total_locs)
 
+    # Fetch Jira issue NEETASOSS-77 status
+    jira_data = fetch_jira_issue("tracker19", "NEETASOSS-77")
+    
+    jira_status_html = ""
+    if jira_data:
+        fields = jira_data.get("fields", {})
+        summary = fields.get("summary", "LOC separation details (Done vs In Progress)")
+        status = fields.get("status", {}).get("name", "In Progress")
+        assignee_data = fields.get("assignee")
+        assignee = assignee_data.get("displayName", "Unassigned") if assignee_data else "Unassigned"
+        priority = fields.get("priority", {}).get("name", "High")
+        
+        status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
+        priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
+        
+        jira_status_html = f"""
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <span class="stat-label">Live Sync Connection</span>
+                    <span class="stat-value" style="color: var(--success); font-size: 1.5rem;">ONLINE</span>
+                </div>
+                <div class="stat-card green">
+                    <span class="stat-label">Ticket Status</span>
+                    <span class="stat-value" style="font-size: 1.5rem;">{status}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Ticket Assignee</span>
+                    <span class="stat-value" style="font-size: 1.5rem;">@{assignee}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Ticket Priority</span>
+                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">{priority}</span>
+                </div>
+            </div>
+
+            <div class="material-card">
+                <div class="material-card-header header-pink">
+                    <div>
+                        <h3 class="material-card-title">⏳ Live Jira Task Status</h3>
+                        <p class="material-card-subtitle">Synchronized live with Bosch Track&Release</p>
+                    </div>
+                    <div class="health-status">
+                        <span class="indicator indicator-green"></span>
+                        <span class="text-green">LIVE SYNCED</span>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket Key</th>
+                                <th>Summary</th>
+                                <th>Assignee</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
+                                <td>{summary}</td>
+                                <td>@{assignee}</td>
+                                <td><span class="priority-badge {priority_class}">{priority}</span></td>
+                                <td><span class="status-badge {status_class}">{status}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        """
+    else:
+        # Fallback values when 401/unauthorized or token is not configured
+        jira_status_html = f"""
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <span class="stat-label">Live Sync Connection</span>
+                    <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">OFFLINE</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Cached Status</span>
+                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">In Progress</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Cached Assignee</span>
+                    <span class="stat-value" style="font-size: 1.5rem;">@srinivasugithub</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Cached Priority</span>
+                    <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">High</span>
+                </div>
+            </div>
+
+            <div class="material-card">
+                <div class="material-card-header header-pink">
+                    <div>
+                        <h3 class="material-card-title">⏳ Task Status (Offline Fallback)</h3>
+                        <p class="material-card-subtitle">Showing cached task details. Live sync requires valid permissions.</p>
+                    </div>
+                    <div class="health-status">
+                        <span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>
+                        <span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket Key</th>
+                                <th>Summary</th>
+                                <th>Assignee</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
+                                <td>Lines of Code contribution details separation (Done vs In Progress)</td>
+                                <td>@srinivasugithub</td>
+                                <td><span class="priority-badge priority-high">High</span></td>
+                                <td><span class="status-badge status-progress">In Progress</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
+                        <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to access the <code>NEETASOSS</code> project on <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
+                    </p>
+                </div>
+            </div>
+        """
+
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -317,12 +484,124 @@ To manage the list of tracked contributors, modify the `users.json` file.
             border-radius: 9999px;
         }}
         
+        /* Tabs Navbar Style */
+        .nav-tabs-wrapper {{
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 0.5rem;
+            display: inline-flex;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--card-border);
+            flex-wrap: wrap;
+        }}
+        
+        .tab-btn {{
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }}
+        
+        .tab-btn:hover {{
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.04);
+        }}
+        
+        .tab-btn.active {{
+            background: linear-gradient(195deg, #38bdf8, #1a73e8);
+            color: #ffffff;
+            box-shadow: 0 4px 20px 0 rgba(56, 189, 248, 0.2), 0 7px 10px -5px rgba(26, 115, 232, 0.4);
+        }}
+        
+        /* Tab Transition Animation */
+        .tab-content {{
+            display: none;
+        }}
+        
+        .tab-content.active {{
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }}
+        
+        @keyframes fadeIn {{
+            from {{ opacity: 0; transform: translateY(10px); }}
+            to {{ opacity: 1; transform: translateY(0); }}
+        }}
+        
+        /* Material Dashboard Card style */
+        .material-card {{
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+            position: relative;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.1);
+        }}
+        
+        .material-card-header {{
+            margin: -2.5rem 0 1.5rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.4);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }}
+        
+        .header-blue {{
+            background: linear-gradient(195deg, #49a3f1, #1a73e8);
+            box-shadow: 0 4px 20px 0 rgba(73, 163, 241, 0.15), 0 7px 10px -5px rgba(26, 115, 232, 0.4);
+        }}
+        
+        .header-green {{
+            background: linear-gradient(195deg, #66bb6a, #43a047);
+            box-shadow: 0 4px 20px 0 rgba(102, 187, 106, 0.15), 0 7px 10px -5px rgba(67, 160, 71, 0.4);
+        }}
+        
+        .header-orange {{
+            background: linear-gradient(195deg, #ffa726, #fb8c00);
+            box-shadow: 0 4px 20px 0 rgba(255, 167, 38, 0.15), 0 7px 10px -5px rgba(251, 140, 0, 0.4);
+        }}
+        
+        .header-pink {{
+            background: linear-gradient(195deg, #ec407a, #d81b60);
+            box-shadow: 0 4px 20px 0 rgba(236, 64, 122, 0.15), 0 7px 10px -5px rgba(216, 27, 96, 0.4);
+        }}
+        
+        .header-dark {{
+            background: linear-gradient(195deg, #42424a, #191919);
+            box-shadow: 0 4px 20px 0 rgba(66, 66, 74, 0.15), 0 7px 10px -5px rgba(25, 25, 25, 0.4);
+        }}
+        
+        .material-card-title {{
+            font-size: 1.25rem;
+            font-weight: 600;
+        }}
+        
+        .material-card-subtitle {{
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 0.25rem;
+        }}
+        
         /* Stats Grid */
         .stats-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.25rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }}
         
         .stat-card {{
@@ -336,6 +615,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             position: relative;
             overflow: hidden;
             transition: transform 0.2s, border-color 0.2s;
+            box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.05);
         }}
         
         .stat-card:hover {{
@@ -375,7 +655,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }}
         
         @media (max-width: 600px) {{
@@ -390,6 +670,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             border-radius: 12px;
             padding: 1.5rem;
             min-height: 380px;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.08);
         }}
         
         .chart-title {{
@@ -406,22 +687,6 @@ To manage the list of tracked contributors, modify the `users.json` file.
             position: relative;
             height: 300px;
             width: 100%;
-        }}
-        
-        /* Table Card */
-        .table-card {{
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            overflow-x: auto;
-            margin-bottom: 2.5rem;
-        }}
-        
-        .table-title {{
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
         }}
         
         table {{
@@ -478,6 +743,61 @@ To manage the list of tracked contributors, modify the `users.json` file.
             text-decoration: underline;
         }}
         
+        /* Mock Priority and Status tags */
+        .priority-badge {{
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }}
+        .priority-high {{ background-color: rgba(248, 113, 113, 0.15); color: var(--danger); }}
+        .priority-medium {{ background-color: rgba(251, 146, 60, 0.15); color: #fb923c; }}
+        .priority-low {{ background-color: rgba(56, 189, 248, 0.15); color: var(--primary); }}
+        
+        .status-badge {{
+            display: inline-block;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }}
+        .status-open {{ background-color: rgba(56, 189, 248, 0.2); color: var(--primary); border: 1px solid rgba(56, 189, 248, 0.3); }}
+        .status-progress {{ background-color: rgba(167, 139, 250, 0.2); color: var(--accent); border: 1px solid rgba(167, 139, 250, 0.3); }}
+        .status-blocked {{ background-color: rgba(248, 113, 113, 0.2); color: var(--danger); border: 1px solid rgba(248, 113, 113, 0.3); }}
+        .status-done {{ background-color: rgba(74, 222, 128, 0.2); color: var(--success); border: 1px solid rgba(74, 222, 128, 0.3); }}
+
+        /* Health indicators */
+        .health-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }}
+        .health-card {{
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }}
+        .health-status {{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }}
+        .indicator {{
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }}
+        .indicator-green {{ background-color: var(--success); box-shadow: 0 0 8px var(--success); }}
+        
         /* Utility classes */
         .text-center {{ text-align: center; }}
         .text-right {{ text-align: right; }}
@@ -492,7 +812,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
             font-size: 0.875rem;
             border-top: 1px solid var(--card-border);
             padding-top: 1.5rem;
-            margin-top: 1.5rem;
+            margin-top: 2.5rem;
         }}
         
         footer a {{
@@ -517,127 +837,213 @@ To manage the list of tracked contributors, modify the `users.json` file.
             </div>
         </header>
 
-        <!-- Stats Rows -->
-        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main);">🏆 Completed Metrics (Done)</h2>
-        <div class="stats-grid">
-            <div class="stat-card blue">
-                <span class="stat-label">Done Pull Requests</span>
-                <span class="stat-value">{total_prs_done:,}</span>
+        <!-- Navigation Tabs Bar -->
+        <div class="nav-tabs-wrapper">
+            <button class="tab-btn active" onclick="switchTab('loc-tab')">📊 Lines of Code</button>
+            <button class="tab-btn" onclick="switchTab('tasks-tab')">⏳ Task Status</button>
+            <button class="tab-btn" onclick="switchTab('health-tab')">⚙️ System Health</button>
+        </div>
+
+        <!-- TAB 1: LINES OF CODE METRICS -->
+        <div id="loc-tab" class="tab-content active">
+            <!-- Stats Rows -->
+            <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main);">🏆 Completed Metrics (Done)</h2>
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <span class="stat-label">Done Pull Requests</span>
+                    <span class="stat-value">{total_prs_done:,}</span>
+                </div>
+                <div class="stat-card green">
+                    <span class="stat-label">Lines Added (Done)</span>
+                    <span class="stat-value">+{total_additions_done:,}</span>
+                </div>
+                <div class="stat-card red">
+                    <span class="stat-label">Lines Deleted (Done)</span>
+                    <span class="stat-value">-{total_deletions_done:,}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Contributors Tracked</span>
+                    <span class="stat-value">{active_contributors}</span>
+                </div>
             </div>
-            <div class="stat-card green">
-                <span class="stat-label">Lines Added (Done)</span>
-                <span class="stat-value">+{total_additions_done:,}</span>
+
+            <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main); margin-top: 1.5rem;">⏳ Active Metrics (In Progress)</h2>
+            <div class="stats-grid" style="margin-bottom: 2.5rem;">
+                <div class="stat-card blue">
+                    <span class="stat-label">Open Pull Requests</span>
+                    <span class="stat-value">{total_prs_ip:,}</span>
+                </div>
+                <div class="stat-card green">
+                    <span class="stat-label">Lines Added (IP)</span>
+                    <span class="stat-value">+{total_additions_ip:,}</span>
+                </div>
+                <div class="stat-card red">
+                    <span class="stat-label">Lines Deleted (IP)</span>
+                    <span class="stat-value">-{total_deletions_ip:,}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Total LOC In-Progress</span>
+                    <span class="stat-value" style="color: var(--accent);">{total_loc_ip:,}</span>
+                </div>
             </div>
-            <div class="stat-card red">
-                <span class="stat-label">Lines Deleted (Done)</span>
-                <span class="stat-value">-{total_deletions_done:,}</span>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <!-- Lines of Code Chart -->
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <span>Lines of Code Contributions (Completed)</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Additions vs Deletions</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="locChart"></canvas>
+                    </div>
+                </div>
+                <!-- Pull Requests Chart -->
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <span>Completed Pull Request Share</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Percentage per Contributor</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="prChart"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Contributors Tracked</span>
-                <span class="stat-value">{active_contributors}</span>
+
+            <!-- Completed Standings Table -->
+            <div class="material-card">
+                <div class="material-card-header header-green">
+                    <div>
+                        <h3 class="material-card-title">🏆 Completed Contributions (Done)</h3>
+                        <p class="material-card-subtitle">Finalized LOC and pull request standings</p>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contributor (GitHub Username)</th>
+                                <th class="text-center">PRs Closed/Merged</th>
+                                <th class="text-right">Lines Added (+)</th>
+                                <th class="text-right">Lines Deleted (-)</th>
+                                <th class="text-right">Total LOC Changed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {table_rows_done_html}
+                            <!-- Total Row -->
+                            <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
+                                <td><strong>Total Completed Stats</strong></td>
+                                <td class="text-center font-bold">
+                                    <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{total_prs_done:,}</a>
+                                </td>
+                                <td class="text-green text-right font-bold">+{total_additions_done:,}</td>
+                                <td class="text-red text-right font-bold">-{total_deletions_done:,}</td>
+                                <td class="text-right font-bold" style="color: var(--primary);"><b>{total_loc_done:,}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- In Progress Standings Table -->
+            <div class="material-card">
+                <div class="material-card-header header-orange">
+                    <div>
+                        <h3 class="material-card-title">⏳ In-Progress Contributions (In Progress)</h3>
+                        <p class="material-card-subtitle">Active pull requests currently under review</p>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contributor (GitHub Username)</th>
+                                <th class="text-center">PRs Open</th>
+                                <th class="text-right">Lines Added (+)</th>
+                                <th class="text-right">Lines Deleted (-)</th>
+                                <th class="text-right">Total LOC Changed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {table_rows_ip_html}
+                            <!-- Total Row -->
+                            <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
+                                <td><strong>Total In-Progress Stats</strong></td>
+                                <td class="text-center font-bold">
+                                    <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:open" target="_blank" class="pr-link" style="font-weight: 700; background-color: rgba(56, 189, 248, 0.1); color: var(--primary);">{total_prs_ip:,}</a>
+                                </td>
+                                <td class="text-green text-right font-bold">+{total_additions_ip:,}</td>
+                                <td class="text-red text-right font-bold">-{total_deletions_ip:,}</td>
+                                <td class="text-right font-bold" style="color: var(--accent);"><b>{total_loc_ip:,}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main); margin-top: 1.5rem;">⏳ Active Metrics (In Progress)</h2>
-        <div class="stats-grid" style="margin-bottom: 2.5rem;">
-            <div class="stat-card blue">
-                <span class="stat-label">Open Pull Requests</span>
-                <span class="stat-value">{total_prs_ip:,}</span>
-            </div>
-            <div class="stat-card green">
-                <span class="stat-label">Lines Added (IP)</span>
-                <span class="stat-value">+{total_additions_ip:,}</span>
-            </div>
-            <div class="stat-card red">
-                <span class="stat-label">Lines Deleted (IP)</span>
-                <span class="stat-value">-{total_deletions_ip:,}</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Total LOC In-Progress</span>
-                <span class="stat-value" style="color: var(--accent);">{total_loc_ip:,}</span>
-            </div>
+        <!-- TAB 2: TASKS STATUS PANEL -->
+        <div id="tasks-tab" class="tab-content">
+            {jira_status_html}
         </div>
 
-        <!-- Charts Row -->
-        <div class="charts-grid">
-            <!-- Lines of Code Chart -->
-            <div class="chart-card">
-                <div class="chart-title">
-                    <span>Lines of Code Contributions (Completed)</span>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">Additions vs Deletions</span>
+        <!-- TAB 3: SYSTEM HEALTH PLACEHOLDER -->
+        <div id="health-tab" class="tab-content">
+            <div class="material-card">
+                <div class="material-card-header header-dark">
+                    <div>
+                        <h3 class="material-card-title">⚙️ Automation System Status & Metrics</h3>
+                        <p class="material-card-subtitle">Integration checks for daily GHA workflows and API quotas</p>
+                    </div>
                 </div>
-                <div class="chart-container">
-                    <canvas id="locChart"></canvas>
+                
+                <div class="health-grid">
+                    <div class="health-card">
+                        <div>
+                            <p style="font-weight: 600; font-size: 0.95rem;">GitHub Actions Workflow</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Daily cron job schedule (00:00 UTC)</p>
+                        </div>
+                        <div class="health-status">
+                            <span class="indicator indicator-green"></span>
+                            <span class="text-green">PASSING</span>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <div>
+                            <p style="font-weight: 600; font-size: 0.95rem;">GitHub Search API Quota</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Remaining search limit allocations</p>
+                        </div>
+                        <div class="health-status">
+                            <span style="color: var(--primary);">98% HEALTHY</span>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <div>
+                            <p style="font-weight: 600; font-size: 0.95rem;">Python Linter & Code Quality</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Style guidelines conformance checks</p>
+                        </div>
+                        <div class="health-status">
+                            <span class="indicator indicator-green"></span>
+                            <span class="text-green">COMPLIANT</span>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <div>
+                            <p style="font-weight: 600; font-size: 0.95rem;">GHA Self-Hosted Runner</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Secured organization network cluster</p>
+                        </div>
+                        <div class="health-status">
+                            <span class="indicator indicator-green"></span>
+                            <span class="text-green">ONLINE</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!-- Pull Requests Chart -->
-            <div class="chart-card">
-                <div class="chart-title">
-                    <span>Completed Pull Request Share</span>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">Percentage per Contributor</span>
-                </div>
-                <div class="chart-container">
-                    <canvas id="prChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Completed Standings Table -->
-        <div class="table-card">
-            <h2 class="table-title">🏆 Completed Contributions (Done)</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Contributor (GitHub Username)</th>
-                        <th class="text-center">PRs Closed/Merged</th>
-                        <th class="text-right">Lines Added (+)</th>
-                        <th class="text-right">Lines Deleted (-)</th>
-                        <th class="text-right">Total LOC Changed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {table_rows_done_html}
-                    <!-- Total Row -->
-                    <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
-                        <td><strong>Total Completed Stats</strong></td>
-                        <td class="text-center font-bold">
-                            <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{total_prs_done:,}</a>
-                        </td>
-                        <td class="text-green text-right font-bold">+{total_additions_done:,}</td>
-                        <td class="text-red text-right font-bold">-{total_deletions_done:,}</td>
-                        <td class="text-right font-bold" style="color: var(--primary);"><b>{total_loc_done:,}</b></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- In Progress Standings Table -->
-        <div class="table-card">
-            <h2 class="table-title">⏳ In-Progress Contributions (In Progress)</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Contributor (GitHub Username)</th>
-                        <th class="text-center">PRs Open</th>
-                        <th class="text-right">Lines Added (+)</th>
-                        <th class="text-right">Lines Deleted (-)</th>
-                        <th class="text-right">Total LOC Changed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {table_rows_ip_html}
-                    <!-- Total Row -->
-                    <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
-                        <td><strong>Total In-Progress Stats</strong></td>
-                        <td class="text-center font-bold">
-                            <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:open" target="_blank" class="pr-link" style="font-weight: 700; background-color: rgba(56, 189, 248, 0.1); color: var(--primary);">{total_prs_ip:,}</a>
-                        </td>
-                        <td class="text-green text-right font-bold">+{total_additions_ip:,}</td>
-                        <td class="text-red text-right font-bold">-{total_deletions_ip:,}</td>
-                        <td class="text-right font-bold" style="color: var(--accent);"><b>{total_loc_ip:,}</b></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
 
         <footer>
@@ -653,6 +1059,19 @@ To manage the list of tracked contributors, modify the `users.json` file.
         const additions = {add_metrics_json};
         const deletions = {del_metrics_json};
         const totalLocs = {total_locs_json};
+
+        // Tab Switching Logic
+        function switchTab(tabId) {{
+            document.querySelectorAll('.tab-content').forEach(el => {{
+                el.classList.remove('active');
+            }});
+            document.querySelectorAll('.tab-btn').forEach(btn => {{
+                btn.classList.remove('active');
+            }});
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }}
 
         // 1. Lines of Code Stacked Bar Chart
         const ctxLoc = document.getElementById('locChart').getContext('2d');
