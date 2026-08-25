@@ -81,7 +81,7 @@ def main():
     # Generate Markdown Dashboard Content
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    markdown = f"""# Lines of Code Contributions Dashboard
+    markdown = f"""# Dashboard
 
 Automated dashboard tracking active contributions within the **{ORG_NAME}** organization.
 
@@ -851,7 +851,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
     <div class="container">
         <header>
             <div>
-                <h1>Lines of Code Contributions Dashboard</h1>
+                <h1>Dashboard</h1>
                 <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>{ORG_NAME}</strong> organization.</p>
             </div>
             <div class="updated-badge">
