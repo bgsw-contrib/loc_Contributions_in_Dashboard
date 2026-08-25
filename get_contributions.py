@@ -178,14 +178,15 @@ To manage the list of tracked contributors, modify the `users.json` file.
     issues = jira_stats.get("issues", [])
     is_live = jira_stats.get("success", False)
     
-    total_tasks = len(issues)
-    completed_tasks = sum(1 for iss in issues if "Done" in iss.get("status", "") or "Closed" in iss.get("status", "") or "Resolved" in iss.get("status", ""))
-    blocked_tasks = sum(1 for iss in issues if "Blocked" in iss.get("status", ""))
-    progress_percentage = int((completed_tasks / total_tasks) * 100) if total_tasks > 0 else 0
+    todo_count = jira_stats.get("todo", 5)
+    inprogress_count = jira_stats.get("inprogress", 3)
+    blocked_count = jira_stats.get("blocked", 2)
+    done_count = jira_stats.get("done", 0)
     
     issue_rows_html = ""
     for iss in issues:
         key = iss.get("key")
+        issue_type = iss.get("type", "Task")
         summary = iss.get("summary", "No Summary")
         status = iss.get("status", "In Progress")
         assignee = iss.get("assignee", "Unassigned")
@@ -193,10 +194,12 @@ To manage the list of tracked contributors, modify the `users.json` file.
         
         status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
         priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
+        type_class = "text-red" if "Bug" in issue_type else ("text-green" if "Story" in issue_type or "User Story" in issue_type else ("text-blue" if "Feature" in issue_type or "New Feature" in issue_type else ("text-pink" if "Epic" in issue_type else "text-muted")))
         
         issue_rows_html += f"""
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/{key}" target="_blank" class="user-link">{key}</a></td>
+                            <td class="font-bold {type_class}" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">{issue_type}</td>
                             <td>{summary}</td>
                             <td>{assignee}</td>
                             <td><span class="priority-badge {priority_class}">{priority}</span></td>
@@ -221,22 +224,26 @@ To manage the list of tracked contributors, modify the `users.json` file.
 
     jira_status_html = f"""
         <!-- Stats Grid -->
-        <div class="stats-grid">
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
             <div class="stat-card blue">
-                <span class="stat-label">Live Sync Connection</span>
+                <span class="stat-label">Connection</span>
                 <span class="stat-value" style="color: {sync_conn_color}; font-size: 1.5rem;">{sync_conn_val}</span>
             </div>
-            <div class="stat-card green">
-                <span class="stat-label">Completed Tasks</span>
-                <span class="stat-value">{completed_tasks} / {total_tasks}</span>
+            <div class="stat-card" style="border-left: 4px solid var(--primary);">
+                <span class="stat-label">To Do</span>
+                <span class="stat-value" style="color: var(--primary);">{todo_count}</span>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid var(--accent);">
+                <span class="stat-label">In Progress</span>
+                <span class="stat-value" style="color: var(--accent);">{inprogress_count}</span>
             </div>
             <div class="stat-card red">
-                <span class="stat-label">Blocked Tasks</span>
-                <span class="stat-value">{blocked_tasks}</span>
+                <span class="stat-label">Blocked</span>
+                <span class="stat-value" style="color: var(--danger);">{blocked_count}</span>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Sprint Progress</span>
-                <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">{progress_percentage}%</span>
+            <div class="stat-card green">
+                <span class="stat-label">Done</span>
+                <span class="stat-value" style="color: var(--success);">{done_count}</span>
             </div>
         </div>
 
@@ -256,6 +263,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                     <thead>
                         <tr>
                             <th>Ticket Key</th>
+                            <th>Type</th>
                             <th>Summary</th>
                             <th>Assignee</th>
                             <th>Priority</th>
@@ -708,6 +716,9 @@ To manage the list of tracked contributors, modify the `users.json` file.
         .text-right {{ text-align: right; }}
         .text-green {{ color: var(--success); }}
         .text-red {{ color: var(--danger); }}
+        .text-blue {{ color: var(--primary); }}
+        .text-pink {{ color: var(--accent); }}
+        .text-orange {{ color: #fb923c; }}
         .font-bold {{ font-weight: 700; }}
         
         /* Footer */

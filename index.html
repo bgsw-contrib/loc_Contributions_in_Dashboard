@@ -387,6 +387,9 @@
         .text-right { text-align: right; }
         .text-green { color: var(--success); }
         .text-red { color: var(--danger); }
+        .text-blue { color: var(--primary); }
+        .text-pink { color: var(--accent); }
+        .text-orange { color: #fb923c; }
         .font-bold { font-weight: 700; }
         
         /* Footer */
@@ -417,7 +420,7 @@
                 <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>bgsw-contrib</strong> organization.</p>
             </div>
             <div class="updated-badge">
-                Last Updated: <strong>2026-08-25 14:06:39 UTC</strong>
+                Last Updated: <strong>2026-08-25 14:20:42 UTC</strong>
             </div>
         </header>
 
@@ -796,22 +799,26 @@
         <div id="tasks-tab" class="tab-content">
             
         <!-- Stats Grid -->
-        <div class="stats-grid">
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
             <div class="stat-card blue">
-                <span class="stat-label">Live Sync Connection</span>
+                <span class="stat-label">Connection</span>
                 <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">OFFLINE</span>
             </div>
-            <div class="stat-card green">
-                <span class="stat-label">Completed Tasks</span>
-                <span class="stat-value">0 / 10</span>
+            <div class="stat-card" style="border-left: 4px solid var(--primary);">
+                <span class="stat-label">To Do</span>
+                <span class="stat-value" style="color: var(--primary);">5</span>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid var(--accent);">
+                <span class="stat-label">In Progress</span>
+                <span class="stat-value" style="color: var(--accent);">3</span>
             </div>
             <div class="stat-card red">
-                <span class="stat-label">Blocked Tasks</span>
-                <span class="stat-value">2</span>
+                <span class="stat-label">Blocked</span>
+                <span class="stat-value" style="color: var(--danger);">2</span>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Sprint Progress</span>
-                <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">0%</span>
+            <div class="stat-card green">
+                <span class="stat-label">Done</span>
+                <span class="stat-value" style="color: var(--success);">0</span>
             </div>
         </div>
 
@@ -831,6 +838,7 @@
                     <thead>
                         <tr>
                             <th>Ticket Key</th>
+                            <th>Type</th>
                             <th>Summary</th>
                             <th>Assignee</th>
                             <th>Priority</th>
@@ -841,6 +849,7 @@
                         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-6" target="_blank" class="user-link">NEETASOSS-6</a></td>
+                            <td class="font-bold text-blue" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">New Feature</td>
                             <td>Align team-wide LOC standings dashboard with Material Design components and color guidelines</td>
                             <td>Srinivasu Kandukuri</td>
                             <td><span class="priority-badge priority-high">High</span></td>
@@ -849,6 +858,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-21" target="_blank" class="user-link">NEETASOSS-21</a></td>
+                            <td class="font-bold text-muted" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
                             <td>Setup secured daily crontab schedules on GHA self-hosted HYD_SLEF runner clusters</td>
                             <td>Ramakrishnan PK</td>
                             <td><span class="priority-badge priority-high">High</span></td>
@@ -857,6 +867,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-34" target="_blank" class="user-link">NEETASOSS-34</a></td>
+                            <td class="font-bold text-red" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Bug</td>
                             <td>Integrate Bosch corporate email mappings inside lines of code analyzer dictionary caches</td>
                             <td>Vinodha kumar mv</td>
                             <td><span class="priority-badge priority-medium">Medium</span></td>
@@ -865,6 +876,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-45" target="_blank" class="user-link">NEETASOSS-45</a></td>
+                            <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
                             <td>Design responsive visual Chart.js LOC bar and doughnut graphs with premium slate theme</td>
                             <td>Kirankumar H V</td>
                             <td><span class="priority-badge priority-low">Low</span></td>
@@ -873,6 +885,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-52" target="_blank" class="user-link">NEETASOSS-52</a></td>
+                            <td class="font-bold text-muted" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
                             <td>Verify GHA write commits push permission scopes under corporate runner restrictions</td>
                             <td>Srinivasu Kandukuri</td>
                             <td><span class="priority-badge priority-high">High</span></td>
@@ -881,6 +894,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72" target="_blank" class="user-link">NEETASOSS-72</a></td>
+                            <td class="font-bold text-blue" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">New Feature</td>
                             <td>Configure JIRA_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs</td>
                             <td>Srinivasu Kandukuri</td>
                             <td><span class="priority-badge priority-high">High</span></td>
@@ -889,6 +903,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
+                            <td class="font-bold text-blue" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">New Feature</td>
                             <td>Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged)</td>
                             <td>Srinivasu Kandukuri</td>
                             <td><span class="priority-badge priority-high">High</span></td>
@@ -897,6 +912,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-82" target="_blank" class="user-link">NEETASOSS-82</a></td>
+                            <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
                             <td>Implement automatic hourly token expiration checks for Track&Release PAT integrations</td>
                             <td>Vinodha kumar mv</td>
                             <td><span class="priority-badge priority-medium">Medium</span></td>
@@ -905,6 +921,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-83" target="_blank" class="user-link">NEETASOSS-83</a></td>
+                            <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
                             <td>Design dynamic loading spinner animations for Chart.js dashboard tab switching</td>
                             <td>Kirankumar H V</td>
                             <td><span class="priority-badge priority-low">Low</span></td>
@@ -913,6 +930,7 @@
         
                         <tr>
                             <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-84" target="_blank" class="user-link">NEETASOSS-84</a></td>
+                            <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
                             <td>Configure GHA self-hosted runner network cluster firewall permissions for Bosch trackers</td>
                             <td>Ramakrishnan PK</td>
                             <td><span class="priority-badge priority-high">High</span></td>
