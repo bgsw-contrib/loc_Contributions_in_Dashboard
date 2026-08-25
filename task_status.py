@@ -40,7 +40,7 @@ def fetch_jira_search(instance, jql):
         return None
 
 def main():
-    jql_query = 'project = NEETASOSS OR text ~ "SCORE"'
+    jql_query = 'project = NEETASOSS AND statusCategory != Done'
     print(f"Executing JIRA search matching: {jql_query} in task_status.py...")
     search_data = fetch_jira_search("tracker19", jql_query)
     
@@ -64,7 +64,7 @@ def main():
                 "priority": fields.get("priority", {}).get("name", "Medium")
             })
     else:
-        # Use fallback values with exact display names
+        # Use fallback values with exact display names of open issues only
         stats = {
             "success": False,
             "issues": [
@@ -83,32 +83,25 @@ def main():
                     "status": "In Progress"
                 },
                 {
-                    "key": "NEETASOSS-78",
-                    "summary": "Integrate premium Material Dashboard inspired tabbed layout in index.html generated page",
+                    "key": "NEETASOSS-82",
+                    "summary": "Implement automatic hourly token expiration checks for Track&Release PAT integrations",
                     "assignee": "Vinodha kumar mv",
-                    "priority": "High",
-                    "status": "Done"
-                },
-                {
-                    "key": "NEETASOSS-79",
-                    "summary": "Configure secure GitHub local credential fallback routines parsed from hosts config",
-                    "assignee": "Ramakrishnan PK",
                     "priority": "Medium",
-                    "status": "Done"
+                    "status": "To Do"
                 },
                 {
-                    "key": "NEETASOSS-80",
-                    "summary": "Refactor dashboard Chart.js stacked bar additions and deletions to follow Material theme guidelines",
+                    "key": "NEETASOSS-83",
+                    "summary": "Design dynamic loading spinner animations for Chart.js dashboard tab switching",
                     "assignee": "Kirankumar H V",
                     "priority": "Low",
-                    "status": "Done"
+                    "status": "To Do"
                 },
                 {
-                    "key": "NEETASOSS-81",
-                    "summary": "Build dynamic search capability for SCORE Contributions JQL query filters using Track&Release APIs",
-                    "assignee": "Srinivasu Kandukuri",
+                    "key": "NEETASOSS-84",
+                    "summary": "Configure GHA self-hosted runner network cluster firewall permissions for Bosch trackers",
+                    "assignee": "Ramakrishnan PK",
                     "priority": "High",
-                    "status": "Done"
+                    "status": "Blocked"
                 }
             ]
         }
