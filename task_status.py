@@ -1,5 +1,6 @@
 # task_status.py
 import os
+import sys
 import json
 import urllib.parse
 import requests
@@ -12,58 +13,98 @@ def escape_markdown(text):
         text = text.replace(char, f"\\{char}")
     return text
 
-def fetch_jira_search(instance, jql):
-    # Try retrieving JIRA_TOKEN from environment first
-    token = os.getenv("JIRA_TOKEN")
-    if not token:
-        # Load environment from ~/.bashrc manually to find exported JIRA_TOKEN
-        try:
-            bashrc_path = os.path.expanduser("~/.bashrc")
-            if os.path.exists(bashrc_path):
-                with open(bashrc_path, "r") as f:
-                    for line in f:
-                        if line.strip().startswith("export JIRA_TOKEN="):
-                            token = line.split("export JIRA_TOKEN=")[1].strip().strip('"').strip("'")
-        except Exception:
-            pass
-            
-    if not token:
-        return None
-        
-    encoded_jql = urllib.parse.quote(jql)
-    url = f"https://rb-tracker.bosch.com/{instance}/rest/api/2/search?jql={encoded_jql}&maxResults=100"
+def load_env_from_bashrc():
+    bashrc_path = os.path.expanduser("~/.bashrc")
+    if os.path.exists(bashrc_path):
+        with open(bashrc_path, "r") as f:
+            for line in f:
+                if line.strip().startswith("export "):
+                    parts = line.strip().split("export ", 1)[1].split("=", 1)
+                    if len(parts) == 2:
+                        key = parts[0].strip()
+                        val = parts[1].strip().strip('"').strip("'")
+                        if key not in os.environ:
+                            os.environ[key] = val
+
+def fetch_open_issues(base_url, token, jql):
+    search_url = f"{base_url}/rest/api/2/search"
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Jira Search API returned status {response.status_code}")
+    
+    issues = []
+    start_at = 0
+    max_results = 50
+    
+    print(f"🚀 Fetching open issues for project 'NEETASOSS' from {base_url}...", file=sys.stderr)
+    
+    while True:
+        payload = {
+            "jql": jql,
+            "startAt": start_at,
+            "maxResults": max_results,
+            "fields": ["summary", "status", "assignee", "issuetype", "priority"]
+        }
+        
+        try:
+            response = requests.post(search_url, json=payload, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Error communicating with JIRA API: {e}", file=sys.stderr)
             return None
-    except Exception as e:
-        print(f"Exception searching Jira: {e}")
-        return None
+            
+        batch = data.get("issues", [])
+        if not batch:
+            break
+            
+        issues.extend(batch)
+        total = data.get("total", 0)
+        print(f"   Downloaded {len(issues)} of {total} issues...", file=sys.stderr)
+        
+        if len(issues) >= total:
+            break
+            
+        start_at += max_results
+        
+    return issues
 
 def main():
-    jql_query = 'project = NEETASOSS AND resolution is EMPTY'
-    print(f"Executing JIRA search matching: {jql_query} in task_status.py...")
-    search_data = fetch_jira_search("tracker19", jql_query)
+    load_env_from_bashrc()
     
-    if search_data:
-        # Extract dynamic values
-        issues = search_data.get("issues", [])
+    jira_base_url = "https://rb-tracker.bosch.com/tracker19"
+    jql_query = "project = NEETASOSS AND resolution is EMPTY"
+    
+    # Load dynamic token from environment variables
+    token = os.getenv("JIRA_TOKEN_TRACKER19") or os.getenv("JIRA_TOKEN")
+    
+    if not token:
+        print("❌ Error: JIRA_TOKEN_TRACKER19 or JIRA_TOKEN environment variable is not configured.", file=sys.stderr)
+        stats = {
+            "success": False,
+            "issues": []
+        }
+        with open("jira_stats.json", "w") as f:
+            json.dump(stats, f, indent=2)
+        return
+        
+    raw_issues = fetch_open_issues(jira_base_url, token, jql_query)
+    
+    if raw_issues is not None:
         stats = {
             "success": True,
             "issues": []
         }
-        for iss in issues:
+        for iss in raw_issues:
             key = iss.get("key")
-            fields = iss.get("fields", {})
+            fields = iss.get("fields") or {}
+            
             assignee_data = fields.get("assignee")
             assignee = assignee_data.get("displayName", "Unassigned") if assignee_data else "Unassigned"
+            if " (" in assignee:
+                assignee = assignee.split(" (")[0]
+            
             stats["issues"].append({
                 "key": key,
                 "type": fields.get("issuetype", {}).get("name", "Task"),
@@ -73,7 +114,7 @@ def main():
                 "priority": fields.get("priority", {}).get("name", "Medium")
             })
     else:
-        # Rely strictly on dynamic JIRA system data without hardcoding fallback lists
+        # Graceful fallback empty list
         stats = {
             "success": False,
             "issues": []

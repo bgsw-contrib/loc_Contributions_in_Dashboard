@@ -151,7 +151,7 @@
         
         .header-green {
             background: linear-gradient(195deg, #66bb6a, #43a047);
-            box-shadow: 0 4px 20px 0 rgba(102, 187, 106, 0.15), 0 7px 10px -5px rgba(67, 160, 71, 0.4);
+            box-shadow: 0 4px 20px 0 rgba(102, 187, 106, 0.15), 0 7px 10px -5px rgba(67, 160, 71, 0.47);
         }
         
         .header-orange {
@@ -420,7 +420,7 @@
                 <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>bgsw-contrib</strong> organization.</p>
             </div>
             <div class="updated-badge">
-                Last Updated: <strong>2026-08-25 15:20:30 UTC</strong>
+                Last Updated: <strong>2026-08-25 16:38:17 UTC</strong>
             </div>
         </header>
 
@@ -802,19 +802,19 @@
         <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
             <div class="stat-card blue">
                 <span class="stat-label">Connection</span>
-                <span class="stat-value" style="color: var(--danger); font-size: 1.5rem;">OFFLINE</span>
+                <span class="stat-value" style="color: var(--success); font-size: 1.5rem;">ONLINE</span>
             </div>
             <div class="stat-card" style="border-left: 4px solid var(--primary);">
                 <span class="stat-label">To Do</span>
-                <span class="stat-value" style="color: var(--primary);">0</span>
+                <span class="stat-value" style="color: var(--primary);">36</span>
             </div>
             <div class="stat-card" style="border-left: 4px solid var(--accent);">
                 <span class="stat-label">In Progress</span>
-                <span class="stat-value" style="color: var(--accent);">0</span>
+                <span class="stat-value" style="color: var(--accent);">24</span>
             </div>
             <div class="stat-card red">
-                <span class="stat-label">Blocked</span>
-                <span class="stat-value" style="color: var(--danger);">0</span>
+                <span class="stat-label">Blocked / On Hold</span>
+                <span class="stat-value" style="color: var(--danger);">2</span>
             </div>
             <div class="stat-card green">
                 <span class="stat-label">Done</span>
@@ -822,20 +822,654 @@
             </div>
         </div>
     
-        <div class="material-card" style="margin-top: 2.5rem;">
-            <div class="material-card-header header-dark">
-                <div>
-                    <h3 class="material-card-title">⏳ Open Tasks</h3>
-                    <p class="material-card-subtitle">No unresolved JIRA tasks found for this project</p>
+            <div class="material-card" style="margin-top: 2.5rem;">
+                <div class="material-card-header header-orange">
+                    <div>
+                        <h3 class="material-card-title">⏳ In Progress Tasks (24)</h3>
+                        <p class="material-card-subtitle">Synchronized live with Bosch Track&Release search</p>
+                    </div>
+                    <div class="health-status">
+                        <span class="indicator indicator-green"></span>
+                        <span class="text-green">LIVE SYNCED</span>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket Key</th>
+                                <th>Type</th>
+                                <th>Summary</th>
+                                <th>Assignee</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-78" target="_blank" class="user-link">NEETASOSS-78</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/tooling/issues/82</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>(INTERNAL) Dashboard on LOC (lines of code) for S-Core Contributions  </td>
+                                    <td>Srinivasu Kandukuri</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-76" target="_blank" class="user-link">NEETASOSS-76</a></td>
+                                    <td class="font-bold text-orange" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
+                                    <td>https://github.com/eclipse-score/lifecycle/issues/448</td>
+                                    <td>Srinivasu Kandukuri</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-75" target="_blank" class="user-link">NEETASOSS-75</a></td>
+                                    <td class="font-bold text-orange" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
+                                    <td>https://github.com/eclipse-score/baselibs/issues/455</td>
+                                    <td>Srinivasu Kandukuri</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-74" target="_blank" class="user-link">NEETASOSS-74</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/score/issues/1837</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-73" target="_blank" class="user-link">NEETASOSS-73</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/module\_template/issues/130</td>
+                                    <td>Panne Naveena</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72" target="_blank" class="user-link">NEETASOSS-72</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/bazel\_registry/issues/485</td>
+                                    <td>Nanda Purna Chandra</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-70" target="_blank" class="user-link">NEETASOSS-70</a></td>
+                                    <td class="font-bold text-orange" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
+                                    <td>https://github.com/eclipse-score/docs-as-code/issues/595</td>
+                                    <td>Kumar Mv Vinodha</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-67" target="_blank" class="user-link">NEETASOSS-67</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/.eclipsefdn/issues/210</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-53" target="_blank" class="user-link">NEETASOSS-53</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Joystick Reader integration - New Project Conan Cmake</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-51" target="_blank" class="user-link">NEETASOSS-51</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/scrample/issues/27</td>
+                                    <td>Amulya Doma</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-46" target="_blank" class="user-link">NEETASOSS-46</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/cicd-workflows/issues/135</td>
+                                    <td>Parthiban Kuppudurai</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-43" target="_blank" class="user-link">NEETASOSS-43</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>mw::com Data Provider for Kuksa Databroker (Rust, QM)</td>
+                                    <td>Prashanth Manje Gowda</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-39" target="_blank" class="user-link">NEETASOSS-39</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] Signal conversion & broker ingest</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-38" target="_blank" class="user-link">NEETASOSS-38</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] JSON + config generator</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-37" target="_blank" class="user-link">NEETASOSS-37</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] Rust bindings for mw::com using codegen</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-36" target="_blank" class="user-link">NEETASOSS-36</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] Provider skeleton and data provider trait implementation</td>
+                                    <td>Prashanth Manje Gowda</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-35" target="_blank" class="user-link">NEETASOSS-35</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] Analysis and design</td>
+                                    <td>Prashanth Manje Gowda</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-34" target="_blank" class="user-link">NEETASOSS-34</a></td>
+                                    <td class="font-bold text-blue" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">New Feature</td>
+                                    <td>mw::com Data Provider for Kuksa Databroker (Rust, QM)</td>
+                                    <td>Prashanth Manje Gowda</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-32" target="_blank" class="user-link">NEETASOSS-32</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/cicd-workflows/issues/126</td>
+                                    <td>Divya Priya Gopal</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-28" target="_blank" class="user-link">NEETASOSS-28</a></td>
+                                    <td class="font-bold text-muted" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Subtask</td>
+                                    <td>Part 1: Split Bridge Management fucntionality</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-27" target="_blank" class="user-link">NEETASOSS-27</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/inc\_someip\_gateway/issues/79</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-22" target="_blank" class="user-link">NEETASOSS-22</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>S-CORE Demo Kit</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-20" target="_blank" class="user-link">NEETASOSS-20</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>https://github.com/eclipse-score/communication/issues/449</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-progress">In Progress</span></td>
+                                </tr>
+                
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <p style="padding: 1.5rem; text-align: center; color: var(--text-muted);">No open issues found matching JQL filter criteria.</p>
-        </div>
-        
-                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
-                    <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
-                </p>
-        
+            
+            <div class="material-card" style="margin-top: 2.5rem;">
+                <div class="material-card-header header-dark">
+                    <div>
+                        <h3 class="material-card-title">⏳ On Hold Tasks (2)</h3>
+                        <p class="material-card-subtitle">Synchronized live with Bosch Track&Release search</p>
+                    </div>
+                    <div class="health-status">
+                        <span class="indicator indicator-green"></span>
+                        <span class="text-green">LIVE SYNCED</span>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket Key</th>
+                                <th>Type</th>
+                                <th>Summary</th>
+                                <th>Assignee</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-18" target="_blank" class="user-link">NEETASOSS-18</a></td>
+                                    <td class="font-bold text-orange" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
+                                    <td>Prepare the New development board</td>
+                                    <td>Amulya Doma</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">On Hold</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-17" target="_blank" class="user-link">NEETASOSS-17</a></td>
+                                    <td class="font-bold text-orange" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
+                                    <td>Cleanup initrd with unwanted binaries.</td>
+                                    <td>Amulya Doma</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">On Hold</span></td>
+                                </tr>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="material-card" style="margin-top: 2.5rem;">
+                <div class="material-card-header header-pink">
+                    <div>
+                        <h3 class="material-card-title">⏳ To Do Tasks (36)</h3>
+                        <p class="material-card-subtitle">Synchronized live with Bosch Track&Release search</p>
+                    </div>
+                    <div class="health-status">
+                        <span class="indicator indicator-green"></span>
+                        <span class="text-green">LIVE SYNCED</span>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket Key</th>
+                                <th>Type</th>
+                                <th>Summary</th>
+                                <th>Assignee</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-69" target="_blank" class="user-link">NEETASOSS-69</a></td>
+                                    <td class="font-bold text-orange" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Task</td>
+                                    <td>https://github.com/eclipse-score/cicd-workflows/issues/121</td>
+                                    <td>Divya Priya Gopal</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-66" target="_blank" class="user-link">NEETASOSS-66</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Parthiban Kuppudurai: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Parthiban Kuppudurai</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-65" target="_blank" class="user-link">NEETASOSS-65</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Srinivasu Kandukuri: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Srinivasu Kandukuri</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-64" target="_blank" class="user-link">NEETASOSS-64</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Nanda Purna Chandra: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Nanda Purna Chandra</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-63" target="_blank" class="user-link">NEETASOSS-63</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Logeshwari Sithan: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Logeshwari Sithan</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-62" target="_blank" class="user-link">NEETASOSS-62</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Deepak Pk Shetty: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Deepak Pk Shetty</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-61" target="_blank" class="user-link">NEETASOSS-61</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Gnana Prakash N R: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Gnana Prakash N R</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-59" target="_blank" class="user-link">NEETASOSS-59</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Android App update for Motor Control Demo</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-58" target="_blank" class="user-link">NEETASOSS-58</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Velocitas App for Motor Control Demo</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-57" target="_blank" class="user-link">NEETASOSS-57</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Motor Control Sources - CAN support</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-56" target="_blank" class="user-link">NEETASOSS-56</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Sync Middleware SOMEIP configurations</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-55" target="_blank" class="user-link">NEETASOSS-55</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>VSS signal update  - RC car controls</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-54" target="_blank" class="user-link">NEETASOSS-54</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Kuksa Databroker feeder Integration</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-52" target="_blank" class="user-link">NEETASOSS-52</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Joystick Reader and Databroker sender Integration for RaspberryPI</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-49" target="_blank" class="user-link">NEETASOSS-49</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Amulya Doma: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Amulya Doma</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-47" target="_blank" class="user-link">NEETASOSS-47</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Panne Naveena: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Panne Naveena</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-45" target="_blank" class="user-link">NEETASOSS-45</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Patil Kamesh Shambhurao: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Patil Kamesh Shambhurao</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-44" target="_blank" class="user-link">NEETASOSS-44</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Akhila Thapliyal: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Akhila Thapliyal</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-42" target="_blank" class="user-link">NEETASOSS-42</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] Delivery & OSS contribution</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-41" target="_blank" class="user-link">NEETASOSS-41</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] Testing and validation</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-40" target="_blank" class="user-link">NEETASOSS-40</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>\[mw::com Data Provider\] QM <-> ASIL-B boundary & robustness</td>
+                                    <td>Prashanth Manje Gowda</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-33" target="_blank" class="user-link">NEETASOSS-33</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Divya: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Divya Priya Gopal</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-30" target="_blank" class="user-link">NEETASOSS-30</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Vrinda: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Vrinda A M</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-29" target="_blank" class="user-link">NEETASOSS-29</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Prashanth MG: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Prashanth Manje Gowda</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-25" target="_blank" class="user-link">NEETASOSS-25</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Vinodha: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Kumar Mv Vinodha</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-24" target="_blank" class="user-link">NEETASOSS-24</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>KiranHV: S-Core Contributions: improvements, Bugs and test cases</td>
+                                    <td>Kiran Kumar Hoskere Venkatesh</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-23" target="_blank" class="user-link">NEETASOSS-23</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>RamPK: S-Core Contributions: Improvements, Bugs and test cases</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-19" target="_blank" class="user-link">NEETASOSS-19</a></td>
+                                    <td class="font-bold text-red" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Bug</td>
+                                    <td>FIX the below error due to FIL</td>
+                                    <td>Amulya Doma</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-10" target="_blank" class="user-link">NEETASOSS-10</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>S-Core RBC Demo feature</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-8" target="_blank" class="user-link">NEETASOSS-8</a></td>
+                                    <td class="font-bold text-green" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">User Story</td>
+                                    <td>Architecture & Design</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-7" target="_blank" class="user-link">NEETASOSS-7</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>KUKSA Databroker Integration with Eclipse S‑CORE </td>
+                                    <td>Joshi Mayank</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-6" target="_blank" class="user-link">NEETASOSS-6</a></td>
+                                    <td class="font-bold text-blue" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">New Feature</td>
+                                    <td>S-Core: Suitcase demo (RBC App)</td>
+                                    <td>Ramakrishnan P K</td>
+                                    <td><span class="priority-badge priority-high">Critical</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-4" target="_blank" class="user-link">NEETASOSS-4</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Rutuja: S-Core Contributions: Improvements, Bugs and test cases</td>
+                                    <td>Patil Rutuja Milind</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-3" target="_blank" class="user-link">NEETASOSS-3</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Score-Demo with Read and write</td>
+                                    <td>Joshi Mayank</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-2" target="_blank" class="user-link">NEETASOSS-2</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Drag and drop epics to reorder</td>
+                                    <td>Joshi Mayank</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-1" target="_blank" class="user-link">NEETASOSS-1</a></td>
+                                    <td class="font-bold text-pink" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">Epic</td>
+                                    <td>Click here to edit this epic's name</td>
+                                    <td>Joshi Mayank</td>
+                                    <td><span class="priority-badge priority-medium">Medium</span></td>
+                                    <td><span class="status-badge status-open">To Do</span></td>
+                                </tr>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
         </div>
 
         <!-- TAB 3: SYSTEM HEALTH PANEL -->

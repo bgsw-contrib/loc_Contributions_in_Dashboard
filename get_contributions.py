@@ -29,7 +29,7 @@ def main():
     with open("loc_stats.json", "r") as f:
         user_stats = json.load(f)
         
-    # 2. Load or run Task Status Jira query stage
+    # 2. Load or run Task Status JIRA query stage
     if not os.path.exists("jira_stats.json"):
         print("jira_stats.json not found. Executing task_status.py...")
         subprocess.run(["python3", "task_status.py"])
@@ -214,7 +214,55 @@ To manage the list of tracked contributors, modify the `users.json` file.
     add_metrics_json = json.dumps(add_metrics)
     del_metrics_json = json.dumps(del_metrics)
     total_locs_json = json.dumps(total_locs)
+
+    # Process Organization Actions self-hosted runners
+    runners = runners_info.get("runners", [])
+    runners_success = runners_info.get("success", False)
+    
+    # If API query was unsuccessful (returns 403 due to token scoping), fallback elegantly to corporate self-hosted runners
+    if not runners_success or not runners:
+        runners = [
+            {"name": "HYD_SLEF_01", "status": "online", "active": True, "os": "Linux"},
+            {"name": "HYD_SLEF_02", "status": "online", "active": False, "os": "Linux"},
+            {"name": "HYD_SLEF_03", "status": "offline", "active": False, "os": "Linux"}
+        ]
         
+    total_runners_count = len(runners)
+    online_count = sum(1 for r in runners if r.get("status") == "online")
+    offline_count = total_runners_count - online_count
+    
+    runner_rows_html = ""
+    for r in runners:
+        r_name = r.get("name")
+        r_status = r.get("status", "offline")
+        r_active = r.get("active", False)
+        r_os = r.get("os", "Linux")
+        
+        status_badge = '<span class="status-badge status-done">Online</span>' if r_status == "online" else '<span class="status-badge" style="background-color: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--card-border);">Offline</span>'
+        active_badge = '<span class="status-badge status-progress">Busy</span>' if r_active else '<span class="status-badge status-open">Idle</span>'
+        
+        runner_rows_html += f"""
+        <tr>
+            <td class="font-bold text-blue" style="font-size: 0.95rem;">{r_name}</td>
+            <td>{r_os}</td>
+            <td>{active_badge}</td>
+            <td>{status_badge}</td>
+        </tr>
+        """
+        
+    runner_sync_badge = '<span class="text-green">LIVE SYNCED</span>' if runners_success else '<span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>'
+    runner_sync_indicator = '<span class="indicator indicator-green"></span>' if runners_success else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
+    runner_header_subtitle = 'Live self-hosted runner statuses from bgsw-contrib settings' if runners_success else 'Showing cached self-hosted runner details. Live sync requires valid permissions.'
+    
+    runner_notice_paragraph = ""
+    if not runners_success:
+        runner_notice_paragraph = """
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
+                    <strong>Notice:</strong> The GITHUB_TOKEN loaded from <code>hosts.yml</code> currently does not have org admin permissions to access organization settings (HTTP Error 403: Forbidden). Please configure an administrative Personal Access Token with runners read scopes to enable live sync.
+                </p>
+        """
+
+    # Format JIRA Task Status Tab content
     sync_badge = '<span class="text-green">LIVE SYNCED</span>' if is_live else '<span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>'
     sync_indicator = '<span class="indicator indicator-green"></span>' if is_live else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
     sync_header_title = 'Live SCORE Contributions Task Status' if is_live else 'SCORE Contributions Task Status (Offline Fallback)'
@@ -226,7 +274,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
     if not is_live:
         notice_paragraph = """
                 <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
-                    <strong>Notice:</strong> The JIRA_TOKEN loaded from <code>~/.bashrc</code> currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
+                    <strong>Notice:</strong> The JIRA_TOKEN currently does not have permissions to query <code>tracker19</code> (HTTP Error 401: Unauthorized). Please configure a Personal Access Token with read access to enable live sync.
                 </p>
         """
 
@@ -246,7 +294,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                 <span class="stat-value" style="color: var(--accent);">{inprogress_count}</span>
             </div>
             <div class="stat-card red">
-                <span class="stat-label">Blocked</span>
+                <span class="stat-label">Blocked / On Hold</span>
                 <span class="stat-value" style="color: var(--danger);">{blocked_count}</span>
             </div>
             <div class="stat-card green">
@@ -336,53 +384,6 @@ To manage the list of tracked contributors, modify the `users.json` file.
         """
 
     jira_status_html += notice_paragraph
-
-    # Process Organization Actions self-hosted runners
-    runners = runners_info.get("runners", [])
-    runners_success = runners_info.get("success", False)
-    
-    # If API query was unsuccessful (returns 403 due to token scoping), fallback elegantly to corporate self-hosted runners
-    if not runners_success or not runners:
-        runners = [
-            {"name": "HYD_SLEF_01", "status": "online", "active": True, "os": "Linux"},
-            {"name": "HYD_SLEF_02", "status": "online", "active": False, "os": "Linux"},
-            {"name": "HYD_SLEF_03", "status": "offline", "active": False, "os": "Linux"}
-        ]
-        
-    total_runners_count = len(runners)
-    online_count = sum(1 for r in runners if r.get("status") == "online")
-    offline_count = total_runners_count - online_count
-    
-    runner_rows_html = ""
-    for r in runners:
-        r_name = r.get("name")
-        r_status = r.get("status", "offline")
-        r_active = r.get("active", False)
-        r_os = r.get("os", "Linux")
-        
-        status_badge = '<span class="status-badge status-done">Online</span>' if r_status == "online" else '<span class="status-badge" style="background-color: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--card-border);">Offline</span>'
-        active_badge = '<span class="status-badge status-progress">Busy</span>' if r_active else '<span class="status-badge status-open">Idle</span>'
-        
-        runner_rows_html += f"""
-        <tr>
-            <td class="font-bold text-blue" style="font-size: 0.95rem;">{r_name}</td>
-            <td>{r_os}</td>
-            <td>{active_badge}</td>
-            <td>{status_badge}</td>
-        </tr>
-        """
-        
-    runner_sync_badge = '<span class="text-green">LIVE SYNCED</span>' if runners_success else '<span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>'
-    runner_sync_indicator = '<span class="indicator indicator-green"></span>' if runners_success else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
-    runner_header_subtitle = 'Live self-hosted runner statuses from bgsw-contrib settings' if runners_success else 'Showing cached self-hosted runner details. Live sync requires valid permissions.'
-    
-    runner_notice_paragraph = ""
-    if not runners_success:
-        runner_notice_paragraph = """
-                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 1.25rem; line-height: 1.4;">
-                    <strong>Notice:</strong> The GITHUB_TOKEN loaded from <code>hosts.yml</code> currently does not have org admin permissions to access organization settings (HTTP Error 403: Forbidden). Please configure an administrative Personal Access Token with runners read scopes to enable live sync.
-                </p>
-        """
 
     # Sort workflows: alphabetically by repository name, then by workflow name
     workflows_sorted = sorted(workflows, key=lambda x: (x["repo"], x["name"]))
@@ -585,7 +586,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
         
         .header-green {{
             background: linear-gradient(195deg, #66bb6a, #43a047);
-            box-shadow: 0 4px 20px 0 rgba(102, 187, 106, 0.15), 0 7px 10px -5px rgba(67, 160, 71, 0.4);
+            box-shadow: 0 4px 20px 0 rgba(102, 187, 106, 0.15), 0 7px 10px -5px rgba(67, 160, 71, 0.47);
         }}
         
         .header-orange {{

@@ -40,6 +40,7 @@ jobs:
       - name: Run LOC Tracker Script and Show Summary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JIRA_TOKEN_TRACKER19: ${{ secrets.JIRA_TOKEN_TRACKER19 }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
         run: |
           python get_contributions.py
@@ -82,18 +83,19 @@ jobs:
 
       - name: Validate Jira JQL Search Quotas & Connections
         env:
+          JIRA_TOKEN_TRACKER19: ${{ secrets.JIRA_TOKEN_TRACKER19 }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
         run: |
           # Test querying Track&Release with simplified check to log validation metrics in GHA summary
           python3 -c "
           import requests, urllib.parse, os
-          token = os.getenv('JIRA_TOKEN')
+          token = os.getenv('JIRA_TOKEN_TRACKER19') or os.getenv('JIRA_TOKEN')
           if not token:
               print('Warning: JIRA_TOKEN is missing. Validating offline state.')
               exit(0)
-          encoded_jql = urllib.parse.quote('project = NEETASOSS OR text ~ \"SCORE\"')
-          url = f'https://rb-tracker.bosch.com/tracker19/rest/api/2/search?jql={encoded_jql}'
-          res = requests.get(url, headers={'Authorization': f'Bearer {token}'})
+          encoded_jql = urllib.parse.quote('project = NEETASOSS AND resolution is EMPTY')
+          url = f'https://rb-tracker.bosch.com/tracker19/rest/api/2/search?jql={encoded_jql}&maxResults=1'
+          res = requests.post(url, json={'jql': 'project = NEETASOSS AND resolution is EMPTY', 'maxResults': 1}, headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'})
           print(f'Jira validation completed. Response code: {res.status_code}')
           "
 
