@@ -420,7 +420,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                 </div>
                 <div class="stat-card green">
                     <span class="stat-label">Completed Tasks</span>
-                    <span class="stat-value">4 / 5</span>
+                    <span class="stat-value">4 / 6</span>
                 </div>
                 <div class="stat-card red">
                     <span class="stat-label">Blocked Tasks</span>
@@ -428,7 +428,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Sprint Progress</span>
-                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">80%</span>
+                    <span class="stat-value" style="color: var(--accent); font-size: 1.5rem;">66%</span>
                 </div>
             </div>
 
@@ -455,6 +455,13 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72" target="_blank" class="user-link">NEETASOSS-72</a></td>
+                                <td>Configure JIRA_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs</td>
+                                <td>@srinivasugithub</td>
+                                <td><span class="priority-badge priority-high">High</span></td>
+                                <td><span class="status-badge status-progress">In Progress</span></td>
+                            </tr>
                             <tr>
                                 <td><a href="https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77" target="_blank" class="user-link">NEETASOSS-77</a></td>
                                 <td>Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged)</td>

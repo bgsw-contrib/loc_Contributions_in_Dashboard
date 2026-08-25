@@ -39,6 +39,7 @@ jobs:
       - name: Run Tracker Script and Show Summary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
         run: |
           python get_contributions.py
           # Output the dashboard to the GitHub Actions Job Summary so it displays in the run overview
