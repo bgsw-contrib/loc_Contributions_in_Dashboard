@@ -62,6 +62,22 @@ def main():
 
     active_contributors = len(contributors)
 
+    # Process Jira JQL Search Results and grouping by status dynamically
+    issues = jira_stats.get("issues", [])
+    is_live = jira_stats.get("success", False)
+    
+    todo_count = jira_stats.get("todo", 5)
+    inprogress_count = jira_stats.get("inprogress", 3)
+    blocked_count = jira_stats.get("blocked", 2)
+    done_count = jira_stats.get("done", 0)
+
+    grouped_issues = {}
+    for iss in issues:
+        status = iss.get("status", "In Progress")
+        if status not in grouped_issues:
+            grouped_issues[status] = []
+        grouped_issues[status].append(iss)
+
     # Generate Markdown Dashboard Content
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
@@ -102,6 +118,28 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
 
     # Add bold Total row for In Progress at the bottom
     markdown += f"| **Total** | **[{total_prs_ip:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:open)** | **{total_additions_ip:,}** | **{total_deletions_ip:,}** | **{total_loc_ip:,}** |\n"
+
+    # Add dynamically grouped JIRA open tasks monitor to Markdown dashboard
+    markdown += """
+---
+
+## ⏳ Live JIRA Task Status Monitor (NEETASOSS)
+
+Automated task status tracking synchronized live with Track&Release JQL indexer. Grouped dynamically by their current status.
+"""
+    if grouped_issues:
+        for status_group, group_list in sorted(grouped_issues.items()):
+            markdown += f"\n### {status_group} ({len(group_list)})\n\n"
+            markdown += "| Key | Type | Assignee | Summary |\n"
+            markdown += "| :--- | :--- | :--- | :--- |\n"
+            for iss in group_list:
+                key = iss.get("key")
+                issue_type = iss.get("type", "Task")
+                assignee = iss.get("assignee", "Unassigned")
+                summary = iss.get("summary", "No Summary")
+                markdown += f"| **[{key}](https://rb-tracker.bosch.com/tracker19/browse/{key})** | {issue_type} | {assignee} | {summary} |\n"
+    else:
+        markdown += "\n*No unresolved JIRA issues found for this project.*\n"
 
     markdown += f"""
 ---
@@ -176,39 +214,6 @@ To manage the list of tracked contributors, modify the `users.json` file.
     add_metrics_json = json.dumps(add_metrics)
     del_metrics_json = json.dumps(del_metrics)
     total_locs_json = json.dumps(total_locs)
-
-    # Process Jira JQL Search Results
-    issues = jira_stats.get("issues", [])
-    is_live = jira_stats.get("success", False)
-    
-    todo_count = jira_stats.get("todo", 5)
-    inprogress_count = jira_stats.get("inprogress", 3)
-    blocked_count = jira_stats.get("blocked", 2)
-    done_count = jira_stats.get("done", 0)
-    
-    issue_rows_html = ""
-    for iss in issues:
-        key = iss.get("key")
-        issue_type = iss.get("type", "Task")
-        summary = iss.get("summary", "No Summary")
-        status = iss.get("status", "In Progress")
-        assignee = iss.get("assignee", "Unassigned")
-        priority = iss.get("priority", "Medium")
-        
-        status_class = "status-progress" if "Progress" in status else ("status-done" if "Done" in status or "Closed" in status or "Resolved" in status else "status-open")
-        priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
-        type_class = "text-red" if "Bug" in issue_type else ("text-green" if "Story" in issue_type or "User Story" in issue_type else ("text-blue" if "Feature" in issue_type or "New Feature" in issue_type else ("text-pink" if "Epic" in issue_type else ("text-orange" if "Task" in issue_type else "text-muted"))))
-        
-        issue_rows_html += f"""
-                        <tr>
-                            <td><a href="https://rb-tracker.bosch.com/tracker19/browse/{key}" target="_blank" class="user-link">{key}</a></td>
-                            <td class="font-bold {type_class}" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">{issue_type}</td>
-                            <td>{summary}</td>
-                            <td>{assignee}</td>
-                            <td><span class="priority-badge {priority_class}">{priority}</span></td>
-                            <td><span class="status-badge {status_class}">{status}</span></td>
-                        </tr>
-        """
         
     sync_badge = '<span class="text-green">LIVE SYNCED</span>' if is_live else '<span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>'
     sync_indicator = '<span class="indicator indicator-green"></span>' if is_live else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
@@ -249,38 +254,88 @@ To manage the list of tracked contributors, modify the `users.json` file.
                 <span class="stat-value" style="color: var(--success);">{done_count}</span>
             </div>
         </div>
-
-        <div class="material-card">
-            <div class="material-card-header header-pink">
-                <div>
-                    <h3 class="material-card-title">⏳ {sync_header_title}</h3>
-                    <p class="material-card-subtitle">{sync_header_subtitle}</p>
-                </div>
-                <div class="health-status">
-                    {sync_indicator}
-                    {sync_badge}
-                </div>
-            </div>
-            <div style="overflow-x: auto; padding-top: 0.5rem;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ticket Key</th>
-                            <th>Type</th>
-                            <th>Summary</th>
-                            <th>Assignee</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {issue_rows_html}
-                    </tbody>
-                </table>
-                {notice_paragraph}
-            </div>
-        </div>
     """
+
+    # Generate distinct material cards for each status group dynamically
+    if grouped_issues:
+        for status_group, group_list in sorted(grouped_issues.items()):
+            header_class = "header-blue"
+            if "To Do" in status_group or "Open" in status_group:
+                header_class = "header-pink"
+            elif "Progress" in status_group or "Active" in status_group:
+                header_class = "header-orange"
+            elif "Blocked" in status_group or "Hold" in status_group:
+                header_class = "header-dark"
+                
+            group_rows_html = ""
+            for iss in group_list:
+                key = iss.get("key")
+                issue_type = iss.get("type", "Task")
+                summary = iss.get("summary", "No Summary")
+                status_name = iss.get("status", "In Progress")
+                assignee = iss.get("assignee", "Unassigned")
+                priority = iss.get("priority", "Medium")
+                
+                status_class = "status-progress" if "Progress" in status_name else ("status-done" if "Done" in status_name or "Closed" in status_name or "Resolved" in status_name else "status-open")
+                priority_class = "priority-high" if "High" in priority or "Critical" in priority else ("priority-medium" if "Medium" in priority else "priority-low")
+                type_class = "text-red" if "Bug" in issue_type else ("text-green" if "Story" in issue_type or "User Story" in issue_type else ("text-blue" if "Feature" in issue_type or "New Feature" in issue_type else ("text-pink" if "Epic" in issue_type else ("text-orange" if "Task" in issue_type else "text-muted"))))
+                
+                group_rows_html += f"""
+                                <tr>
+                                    <td><a href="https://rb-tracker.bosch.com/tracker19/browse/{key}" target="_blank" class="user-link">{key}</a></td>
+                                    <td class="font-bold {type_class}" style="font-size: 0.825rem; text-transform: uppercase; font-weight: 600;">{issue_type}</td>
+                                    <td>{summary}</td>
+                                    <td>{assignee}</td>
+                                    <td><span class="priority-badge {priority_class}">{priority}</span></td>
+                                    <td><span class="status-badge {status_class}">{status_name}</span></td>
+                                </tr>
+                """
+                
+            jira_status_html += f"""
+            <div class="material-card" style="margin-top: 2.5rem;">
+                <div class="material-card-header {header_class}">
+                    <div>
+                        <h3 class="material-card-title">⏳ {status_group} Tasks ({len(group_list)})</h3>
+                        <p class="material-card-subtitle">{sync_header_subtitle}</p>
+                    </div>
+                    <div class="health-status">
+                        {sync_indicator}
+                        {sync_badge}
+                    </div>
+                </div>
+                <div style="overflow-x: auto; padding-top: 0.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket Key</th>
+                                <th>Type</th>
+                                <th>Summary</th>
+                                <th>Assignee</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {group_rows_html}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            """
+    else:
+        jira_status_html += """
+        <div class="material-card" style="margin-top: 2.5rem;">
+            <div class="material-card-header header-dark">
+                <div>
+                    <h3 class="material-card-title">⏳ Open Tasks</h3>
+                    <p class="material-card-subtitle">No unresolved JIRA tasks found for this project</p>
+                </div>
+            </div>
+            <p style="padding: 1.5rem; text-align: center; color: var(--text-muted);">No open issues found matching JQL filter criteria.</p>
+        </div>
+        """
+
+    jira_status_html += notice_paragraph
 
     # Process Organization Actions self-hosted runners
     runners = runners_info.get("runners", [])

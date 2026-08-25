@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-25 09:14:14 (UTC)`  
+> **Last Updated:** `2026-08-25 15:04:39 (UTC)`  
 > *Note: Metrics are split into completed ("Done") and active ("In Progress") pull requests.*
 
 ---
@@ -12,7 +12,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | Contributor (GitHub Username) | PRs Closed/Merged | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
 | **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [9](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:closed) | 1,549 | 1,737 | **3,286** |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:closed) | 479 | 64 | **543** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:closed) | 481 | 66 | **547** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [3](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:closed) | 299 | 34 | **333** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:closed) | 36 | 1 | **37** |
 | **[parthibankuppudurai](https://github.com/parthibankuppudurai)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai+is:closed) | 0 | 0 | **0** |
@@ -25,7 +25,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:closed) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:closed) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:closed) | 0 | 0 | **0** |
-| **Total** | **[14](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed)** | **2,363** | **1,836** | **4,199** |
+| **Total** | **[15](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed)** | **2,365** | **1,838** | **4,203** |
 
 ---
 
@@ -33,7 +33,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 | Contributor (GitHub Username) | PRs Open | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:open) | 963 | 131 | **1,094** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [3](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:open) | 964 | 133 | **1,097** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:open) | 239 | 0 | **239** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:open) | 2 | 2 | **4** |
 | **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:open) | 0 | 0 | **0** |
@@ -47,7 +47,38 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:open) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:open) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:open) | 0 | 0 | **0** |
-| **Total** | **[4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open)** | **1,204** | **133** | **1,337** |
+| **Total** | **[5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open)** | **1,205** | **135** | **1,340** |
+
+---
+
+## ⏳ Live JIRA Task Status Monitor (NEETASOSS)
+
+Automated task status tracking synchronized live with Track&Release JQL indexer. Grouped dynamically by their current status.
+
+### Blocked (2)
+
+| Key | Type | Assignee | Summary |
+| :--- | :--- | :--- | :--- |
+| **[NEETASOSS-52](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-52)** | Task | Srinivasu Kandukuri | Verify GHA write commits push permission scopes under corporate runner restrictions |
+| **[NEETASOSS-84](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-84)** | Epic | Ramakrishnan PK | Configure GHA self-hosted runner network cluster firewall permissions for Bosch trackers |
+
+### In Progress (3)
+
+| Key | Type | Assignee | Summary |
+| :--- | :--- | :--- | :--- |
+| **[NEETASOSS-21](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-21)** | Task | Ramakrishnan PK | Setup secured daily crontab schedules on GHA self-hosted HYD\_SLEF runner clusters |
+| **[NEETASOSS-72](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-72)** | New Feature | Srinivasu Kandukuri | Configure JIRA\_TOKEN secret in GitHub Actions pipeline to enable automated live sync on scheduled runs |
+| **[NEETASOSS-77](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-77)** | New Feature | Srinivasu Kandukuri | Separated LOC contributions standings report for In Progress (Open) and Done (Closed/Merged) |
+
+### To Do (5)
+
+| Key | Type | Assignee | Summary |
+| :--- | :--- | :--- | :--- |
+| **[NEETASOSS-6](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-6)** | New Feature | Srinivasu Kandukuri | Align team-wide LOC standings dashboard with Material Design components and color guidelines |
+| **[NEETASOSS-34](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-34)** | Bug | Vinodha kumar mv | Integrate Bosch corporate email mappings inside lines of code analyzer dictionary caches |
+| **[NEETASOSS-45](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-45)** | User Story | Kirankumar H V | Design responsive visual Chart.js LOC bar and doughnut graphs with premium slate theme |
+| **[NEETASOSS-82](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-82)** | User Story | Vinodha kumar mv | Implement automatic hourly token expiration checks for Track&Release PAT integrations |
+| **[NEETASOSS-83](https://rb-tracker.bosch.com/tracker19/browse/NEETASOSS-83)** | User Story | Kirankumar H V | Design dynamic loading spinner animations for Chart.js dashboard tab switching |
 
 ---
 
