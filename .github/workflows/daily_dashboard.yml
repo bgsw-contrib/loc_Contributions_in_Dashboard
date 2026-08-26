@@ -21,7 +21,7 @@ concurrency:
 jobs:
   line-of-code:
     name: 📊 Line of Code Stage
-    runs-on: Ubuntu-Latest
+    runs-on: [self-hosted, Linux, X64, HYD_SLEF]
 
     steps:
       - name: Checkout repository
@@ -64,7 +64,7 @@ jobs:
 
   task-status:
     name: ⏳ Task Status Stage
-    runs-on: Ubuntu-Latest
+    runs-on: [self-hosted, Linux, X64, HYD_SLEF]
     needs: line-of-code
 
     steps:
@@ -101,7 +101,7 @@ jobs:
 
   system-health:
     name: ⚙️ System Health & Deployment Stage
-    runs-on: Ubuntu-Latest
+    runs-on: [self-hosted, Linux, X64, HYD_SLEF]
     needs: task-status
 
     steps:
