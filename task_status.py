@@ -89,12 +89,19 @@ def main():
     
     if not token:
         print("❌ Error: JIRA_TOKEN_TRACKER19 or JIRA_TOKEN environment variable is not configured.", file=sys.stderr)
-        stats = {
-            "success": False,
-            "issues": []
-        }
-        with open("jira_stats.json", "w") as f:
-            json.dump(stats, f, indent=2)
+        if os.path.exists("jira_stats.json"):
+            print("⚠️ Warning: JIRA token is missing. Preserving the existing cached jira_stats.json file.", file=sys.stderr)
+        else:
+            stats = {
+                "success": False,
+                "issues": [],
+                "todo": 0,
+                "inprogress": 0,
+                "blocked": 0,
+                "done": 0
+            }
+            with open("jira_stats.json", "w") as f:
+                json.dump(stats, f, indent=2)
         return
         
     raw_issues = fetch_open_issues(jira_base_url, token, jql_query)
@@ -121,39 +128,49 @@ def main():
                 "assignee": assignee,
                 "priority": fields.get("priority", {}).get("name", "Medium")
             })
-    else:
-        # Graceful fallback empty list
-        stats = {
-            "success": False,
-            "issues": []
-        }
-        
-    # Dynamically calculate stats counts
-    todo_count = 0
-    inprogress_count = 0
-    blocked_count = 0
-    done_count = 0
-    
-    issues_list = stats["issues"]
-    for iss in issues_list:
-        status = iss["status"]
-        if "To Do" in status or "Open" in status:
-            todo_count += 1
-        elif "Progress" in status or "Active" in status:
-            inprogress_count += 1
-        elif "Hold" in status or "Blocked" in status:
-            blocked_count += 1
-        elif "Done" in status or "Closed" in status or "Resolved" in status:
-            done_count += 1
             
-    stats["todo"] = todo_count
-    stats["inprogress"] = inprogress_count
-    stats["blocked"] = blocked_count
-    stats["done"] = done_count
+        # Dynamically calculate stats counts
+        todo_count = 0
+        inprogress_count = 0
+        blocked_count = 0
+        done_count = 0
         
-    with open("jira_stats.json", "w") as f:
-        json.dump(stats, f, indent=2)
-    print("task_status.py completed: jira_stats.json written.")
+        issues_list = stats["issues"]
+        for iss in issues_list:
+            status = iss["status"]
+            if "To Do" in status or "Open" in status:
+                todo_count += 1
+            elif "Progress" in status or "Active" in status:
+                inprogress_count += 1
+            elif "Hold" in status or "Blocked" in status:
+                blocked_count += 1
+            elif "Done" in status or "Closed" in status or "Resolved" in status:
+                done_count += 1
+                
+        stats["todo"] = todo_count
+        stats["inprogress"] = inprogress_count
+        stats["blocked"] = blocked_count
+        stats["done"] = done_count
+            
+        with open("jira_stats.json", "w") as f:
+            json.dump(stats, f, indent=2)
+        print("task_status.py completed: jira_stats.json updated successfully.")
+    else:
+        # Graceful fallback: keep any existing cached jira_stats.json file intact
+        if os.path.exists("jira_stats.json"):
+            print("⚠️ Warning: JIRA query failed. Preserving the existing cached jira_stats.json file.", file=sys.stderr)
+        else:
+            stats = {
+                "success": False,
+                "issues": [],
+                "todo": 0,
+                "inprogress": 0,
+                "blocked": 0,
+                "done": 0
+            }
+            with open("jira_stats.json", "w") as f:
+                json.dump(stats, f, indent=2)
+            print("task_status.py completed: Empty jira_stats.json created as fallback.", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

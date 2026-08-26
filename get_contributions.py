@@ -30,9 +30,8 @@ def main():
         user_stats = json.load(f)
         
     # 2. Load or run Task Status JIRA query stage
-    if not os.path.exists("jira_stats.json"):
-        print("jira_stats.json not found. Executing task_status.py...")
-        subprocess.run(["python3", "task_status.py"])
+    print("Executing task_status.py to fetch JIRA updates...")
+    subprocess.run(["python3", "task_status.py"])
         
     with open("jira_stats.json", "r") as f:
         jira_stats = json.load(f)

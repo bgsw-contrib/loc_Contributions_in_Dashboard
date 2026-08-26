@@ -1,0 +1,633 @@
+{
+  "success": true,
+  "issues": [
+    {
+      "key": "NEETASOSS-78",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/tooling/issues/82",
+      "status": "In Progress",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-77",
+      "type": "User Story",
+      "summary": "(INTERNAL) Dashboard on LOC (lines of code) for S-Core Contributions  ",
+      "status": "In Progress",
+      "assignee": "Srinivasu Kandukuri",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-76",
+      "type": "Task",
+      "summary": "https://github.com/eclipse-score/lifecycle/issues/448",
+      "status": "In Progress",
+      "assignee": "Srinivasu Kandukuri",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-75",
+      "type": "Task",
+      "summary": "https://github.com/eclipse-score/baselibs/issues/455",
+      "status": "In Progress",
+      "assignee": "Srinivasu Kandukuri",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-74",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/score/issues/1837",
+      "status": "In Progress",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-73",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/module\\_template/issues/130",
+      "status": "In Progress",
+      "assignee": "Panne Naveena",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-72",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/bazel\\_registry/issues/485",
+      "status": "In Progress",
+      "assignee": "Nanda Purna Chandra",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-71",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/docs-as-code/issues/706",
+      "status": "Done",
+      "assignee": "Kiran Kumar Hoskere Venkatesh",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-70",
+      "type": "Task",
+      "summary": "https://github.com/eclipse-score/docs-as-code/issues/595",
+      "status": "In Progress",
+      "assignee": "Kumar Mv Vinodha",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-69",
+      "type": "Task",
+      "summary": "https://github.com/eclipse-score/cicd-workflows/issues/121",
+      "status": "To Do",
+      "assignee": "Divya Priya Gopal",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-68",
+      "type": "Task",
+      "summary": "https://github.com/eclipse-score/bazel\\_registry/issues/323",
+      "status": "Done",
+      "assignee": "Kumar Mv Vinodha",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-67",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/.eclipsefdn/issues/210",
+      "status": "In Progress",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-66",
+      "type": "Epic",
+      "summary": "Parthiban Kuppudurai: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Parthiban Kuppudurai",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-65",
+      "type": "Epic",
+      "summary": "Srinivasu Kandukuri: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Srinivasu Kandukuri",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-64",
+      "type": "Epic",
+      "summary": "Nanda Purna Chandra: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Nanda Purna Chandra",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-63",
+      "type": "Epic",
+      "summary": "Logeshwari Sithan: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Logeshwari Sithan",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-62",
+      "type": "Epic",
+      "summary": "Deepak Pk Shetty: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Deepak Pk Shetty",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-61",
+      "type": "Epic",
+      "summary": "Gnana Prakash N R: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Gnana Prakash N R",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-60",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/bazel\\_registry/issues/227",
+      "status": "Done",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-59",
+      "type": "User Story",
+      "summary": "Android App update for Motor Control Demo",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-58",
+      "type": "User Story",
+      "summary": "Velocitas App for Motor Control Demo",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-57",
+      "type": "User Story",
+      "summary": "Motor Control Sources - CAN support",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-56",
+      "type": "User Story",
+      "summary": "Sync Middleware SOMEIP configurations",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-55",
+      "type": "User Story",
+      "summary": "VSS signal update  - RC car controls",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-54",
+      "type": "User Story",
+      "summary": "Kuksa Databroker feeder Integration",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-53",
+      "type": "User Story",
+      "summary": "Joystick Reader integration - New Project Conan Cmake",
+      "status": "In Progress",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-52",
+      "type": "User Story",
+      "summary": "Joystick Reader and Databroker sender Integration for RaspberryPI",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-51",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/scrample/issues/27",
+      "status": "In Progress",
+      "assignee": "Amulya Doma",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-50",
+      "type": "Task",
+      "summary": "apt-install still needed\\#7",
+      "status": "Done",
+      "assignee": "Kumar Mv Vinodha",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-49",
+      "type": "Epic",
+      "summary": "Amulya Doma: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Amulya Doma",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-48",
+      "type": "User Story",
+      "summary": "Redfine folder structure for someip\\_socom",
+      "status": "Done",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-47",
+      "type": "Epic",
+      "summary": "Panne Naveena: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Panne Naveena",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-46",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/cicd-workflows/issues/135",
+      "status": "In Progress",
+      "assignee": "Parthiban Kuppudurai",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-45",
+      "type": "Epic",
+      "summary": "Patil Kamesh Shambhurao: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Patil Kamesh Shambhurao",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-44",
+      "type": "Epic",
+      "summary": "Akhila Thapliyal: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Akhila Thapliyal",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-43",
+      "type": "Epic",
+      "summary": "mw::com Data Provider for Kuksa Databroker (Rust, QM)",
+      "status": "In Progress",
+      "assignee": "Prashanth Manje Gowda",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-42",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] Delivery & OSS contribution",
+      "status": "To Do",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-41",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] Testing and validation",
+      "status": "To Do",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-40",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] QM <-> ASIL-B boundary & robustness",
+      "status": "To Do",
+      "assignee": "Prashanth Manje Gowda",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-39",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] Signal conversion & broker ingest",
+      "status": "In Progress",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-38",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] JSON + config generator",
+      "status": "In Progress",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-37",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] Rust bindings for mw::com using codegen",
+      "status": "In Progress",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-36",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] Provider skeleton and data provider trait implementation",
+      "status": "In Progress",
+      "assignee": "Prashanth Manje Gowda",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-35",
+      "type": "User Story",
+      "summary": "\\[mw::com Data Provider\\] Analysis and design",
+      "status": "In Progress",
+      "assignee": "Prashanth Manje Gowda",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-34",
+      "type": "New Feature",
+      "summary": "mw::com Data Provider for Kuksa Databroker (Rust, QM)",
+      "status": "In Progress",
+      "assignee": "Prashanth Manje Gowda",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-33",
+      "type": "Epic",
+      "summary": "Divya: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Divya Priya Gopal",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-32",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/cicd-workflows/issues/126",
+      "status": "In Progress",
+      "assignee": "Divya Priya Gopal",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-31",
+      "type": "Improvement",
+      "summary": "https://github.com/eclipse-score/docs-as-code/issues/570",
+      "status": "Done",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-30",
+      "type": "Epic",
+      "summary": "Vrinda: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Vrinda A M",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-29",
+      "type": "Epic",
+      "summary": "Prashanth MG: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Prashanth Manje Gowda",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-28",
+      "type": "Subtask",
+      "summary": "Part 1: Split Bridge Management fucntionality",
+      "status": "In Progress",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-27",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/inc\\_someip\\_gateway/issues/79",
+      "status": "In Progress",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-26",
+      "type": "Improvement",
+      "summary": "github secrets from forks \\#17",
+      "status": "Done",
+      "assignee": "Kumar Mv Vinodha",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-25",
+      "type": "Epic",
+      "summary": "Vinodha: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Kumar Mv Vinodha",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-24",
+      "type": "Epic",
+      "summary": "KiranHV: S-Core Contributions: improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Kiran Kumar Hoskere Venkatesh",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-23",
+      "type": "Epic",
+      "summary": "RamPK: S-Core Contributions: Improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-22",
+      "type": "Epic",
+      "summary": "S-CORE Demo Kit",
+      "status": "In Progress",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-21",
+      "type": "User Story",
+      "summary": "Improvement: Remove UpdateSkeletonReference from public API ",
+      "status": "Done",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-20",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/communication/issues/449",
+      "status": "In Progress",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-19",
+      "type": "Bug",
+      "summary": "FIX the below error due to FIL",
+      "status": "To Do",
+      "assignee": "Amulya Doma",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-18",
+      "type": "Task",
+      "summary": "Prepare the New development board",
+      "status": "On Hold",
+      "assignee": "Amulya Doma",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-17",
+      "type": "Task",
+      "summary": "Cleanup initrd with unwanted binaries.",
+      "status": "On Hold",
+      "assignee": "Amulya Doma",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-16",
+      "type": "Task",
+      "summary": "Setup the Suitcase - Prepare for the Demo",
+      "status": "Done",
+      "assignee": "Kiran K R",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-15",
+      "type": "Task",
+      "summary": "Deploy cloud ui with RPI",
+      "status": "Done",
+      "assignee": "Amulya Doma",
+      "priority": "Major"
+    },
+    {
+      "key": "NEETASOSS-14",
+      "type": "Improvement",
+      "summary": "S32G - linux image (someip read, speed, vmanager-server)",
+      "status": "Done",
+      "assignee": "Amulya Doma",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-13",
+      "type": "User Story",
+      "summary": "Refine folder structure for aligned include paths",
+      "status": "Done",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-12",
+      "type": "Improvement",
+      "summary": "Improvement: GitHub action guide \\#17",
+      "status": "Done",
+      "assignee": "Kumar Mv Vinodha",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-11",
+      "type": "Improvement",
+      "summary": "score\\#16: Improvement: otterdog extended configuration with branch protection",
+      "status": "Done",
+      "assignee": "Kumar Mv Vinodha",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-10",
+      "type": "Epic",
+      "summary": "S-Core RBC Demo feature",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-9",
+      "type": "Improvement",
+      "summary": "S-Core someip Read fix",
+      "status": "Done",
+      "assignee": "Amulya Doma",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-8",
+      "type": "User Story",
+      "summary": "Architecture & Design",
+      "status": "To Do",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-7",
+      "type": "Epic",
+      "summary": "KUKSA Databroker Integration with Eclipse S\u2011CORE ",
+      "status": "To Do",
+      "assignee": "Joshi Mayank",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-6",
+      "type": "New Feature",
+      "summary": "S-Core: Suitcase demo (RBC App)",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Critical"
+    },
+    {
+      "key": "NEETASOSS-5",
+      "type": "Improvement",
+      "summary": "Date time converter improvements",
+      "status": "Done",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-4",
+      "type": "Epic",
+      "summary": "Rutuja: S-Core Contributions: Improvements, Bugs and test cases",
+      "status": "To Do",
+      "assignee": "Patil Rutuja Milind",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-3",
+      "type": "Epic",
+      "summary": "Score-Demo with Read and write",
+      "status": "To Do",
+      "assignee": "Joshi Mayank",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-2",
+      "type": "Epic",
+      "summary": "Drag and drop epics to reorder",
+      "status": "To Do",
+      "assignee": "Joshi Mayank",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-1",
+      "type": "Epic",
+      "summary": "Click here to edit this epic's name",
+      "status": "To Do",
+      "assignee": "Joshi Mayank",
+      "priority": "Medium"
+    }
+  ],
+  "todo": 36,
+  "inprogress": 24,
+  "blocked": 2,
+  "done": 16
+}
