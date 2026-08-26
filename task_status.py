@@ -50,9 +50,17 @@ def fetch_open_issues(base_url, token, jql):
         try:
             response = requests.post(search_url, json=payload, headers=headers)
             response.raise_for_status()
-            data = response.json()
         except requests.exceptions.RequestException as e:
             print(f"❌ Error communicating with JIRA API: {e}", file=sys.stderr)
+            return None
+            
+        try:
+            data = response.json()
+        except ValueError as e:
+            print(f"❌ Error parsing JIRA response as JSON: {e}", file=sys.stderr)
+            print(f"Status Code: {response.status_code}, Content-Type: {response.headers.get('Content-Type')}", file=sys.stderr)
+            if "html" in response.headers.get("Content-Type", "").lower() or response.text.strip().startswith("<"):
+                print("💡 Notice: The JIRA API returned an HTML page instead of JSON. This typically indicates that your JIRA_TOKEN is expired, invalid, or needs to be re-authenticated via WebSSO/PingFederate.", file=sys.stderr)
             return None
             
         batch = data.get("issues", [])
