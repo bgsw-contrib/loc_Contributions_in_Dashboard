@@ -21,8 +21,12 @@ def get_gh_token():
     return None
 
 def fetch_user_prs(username, org, headers):
-    query = f"org:{org} author:{username} type:pr"
-    url = f"https://api.github.com/search/issues?q={query}"
+    if isinstance(org, str):
+        org_query = f"org:{org}"
+    else:
+        org_query = " ".join([f"org:{o}" for o in org])
+    query = f"{org_query} author:{username} type:pr"
+    url = f"https://api.github.com/search/issues?q={query}&per_page=100"
     try:
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
@@ -81,7 +85,7 @@ def main():
     with open("users.json", "r") as f:
         contributors = json.load(f)
         
-    stats = run_loc_analysis(contributors, "bgsw-contrib", headers)
+    stats = run_loc_analysis(contributors, ["bgsw-contrib", "eclipse-score"], headers)
     with open("loc_stats.json", "w") as f:
         json.dump(stats, f, indent=2)
     print("lines_of_code.py completed: loc_stats.json written.")

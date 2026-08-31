@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-31 08:48:19 (UTC)`  
+> **Last Updated:** `2026-08-31 14:32:58 (UTC)`  
 > *Note: Metrics are split into completed ("Done") and active ("In Progress") pull requests.*
 
 ---
@@ -11,11 +11,11 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 | Contributor (GitHub Username) | PRs Closed/Merged | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
-| **[Rutuja-Patil-Bosch](https://github.com/Rutuja-Patil-Bosch)** | [30](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Rutuja-Patil-Bosch+is:closed) | 167,751 | 46,547 | **214,298** |
-| **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [9](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:closed) | 1,549 | 1,737 | **3,286** |
-| **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:closed) | 550 | 34 | **584** |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:closed) | 479 | 64 | **543** |
-| **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:closed) | 36 | 1 | **37** |
+| **[Rutuja-Patil-Bosch](https://github.com/Rutuja-Patil-Bosch)** | [43](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Rutuja-Patil-Bosch+is:closed) | 168,946 | 47,117 | **216,063** |
+| **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [12](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:closed) | 1,657 | 1,751 | **3,408** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [9](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:closed) | 2,581 | 118 | **2,699** |
+| **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [6](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:closed) | 705 | 68 | **773** |
+| **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:closed) | 85 | 7 | **92** |
 | **[parthibankuppudurai](https://github.com/parthibankuppudurai)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai+is:closed) | 0 | 0 | **0** |
 | **[dgi1cob](https://github.com/dgi1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:dgi1cob+is:closed) | 0 | 0 | **0** |
 | **[mdl2kor](https://github.com/mdl2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:mdl2kor+is:closed) | 0 | 0 | **0** |
@@ -26,7 +26,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:closed) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:closed) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:closed) | 0 | 0 | **0** |
-| **Total** | **[45](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed)** | **170,365** | **48,383** | **218,748** |
+| **Total** | **[75](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed)** | **173,974** | **49,061** | **223,035** |
 
 ---
 
@@ -34,11 +34,12 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 | Contributor (GitHub Username) | PRs Open | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:open) | 11,178 | 3,001 | **14,179** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:srinivasugithub+is:open) | 12,158 | 3,174 | **15,332** |
+| **[Rutuja-Patil-Bosch](https://github.com/Rutuja-Patil-Bosch)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Rutuja-Patil-Bosch+is:open) | 1,159 | 107 | **1,266** |
+| **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:open) | 509 | 0 | **509** |
+| **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:open) | 223 | 0 | **223** |
 | **[naveena456](https://github.com/naveena456)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:naveena456+is:open) | 145 | 0 | **145** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:kirankumar-H-V+is:open) | 2 | 2 | **4** |
-| **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:RamakrishnanPK+is:open) | 0 | 0 | **0** |
-| **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Vinodha-kumar+is:open) | 0 | 0 | **0** |
 | **[parthibankuppudurai](https://github.com/parthibankuppudurai)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:parthibankuppudurai+is:open) | 0 | 0 | **0** |
 | **[dgi1cob](https://github.com/dgi1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:dgi1cob+is:open) | 0 | 0 | **0** |
 | **[mdl2kor](https://github.com/mdl2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:mdl2kor+is:open) | 0 | 0 | **0** |
@@ -48,8 +49,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:logesh+is:open) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:xna2kor+is:open) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:skd1cob+is:open) | 0 | 0 | **0** |
-| **[Rutuja-Patil-Bosch](https://github.com/Rutuja-Patil-Bosch)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+author:Rutuja-Patil-Bosch+is:open) | 0 | 0 | **0** |
-| **Total** | **[4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open)** | **11,325** | **3,003** | **14,328** |
+| **Total** | **[12](https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open)** | **14,196** | **3,283** | **17,479** |
 
 ---
 
