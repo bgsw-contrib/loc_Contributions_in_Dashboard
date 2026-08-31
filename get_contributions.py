@@ -96,11 +96,11 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
 """
     for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["done"]["total_loc"], reverse=True):
         profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:closed"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:{username}+is:closed"
         markdown += f"| **[{username}]({profile_url})** | [{stats['done']['pr_count']:,}]({pr_query_url}) | {stats['done']['additions']:,} | {stats['done']['deletions']:,} | **{stats['done']['total_loc']:,}** |\n"
 
     # Add bold Total row for Done at the bottom
-    markdown += f"| **Total** | **[{total_prs_done:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:closed)** | **{total_additions_done:,}** | **{total_deletions_done:,}** | **{total_loc_done:,}** |\n"
+    markdown += f"| **Total** | **[{total_prs_done:,}](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:closed)** | **{total_additions_done:,}** | **{total_deletions_done:,}** | **{total_loc_done:,}** |\n"
 
     markdown += f"""
 ---
@@ -112,11 +112,11 @@ Automated dashboard tracking active contributions within the **{ORG_NAME}** orga
 """
     for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["in_progress"]["total_loc"], reverse=True):
         profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:open"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:{username}+is:open"
         markdown += f"| **[{username}]({profile_url})** | [{stats['in_progress']['pr_count']:,}]({pr_query_url}) | {stats['in_progress']['additions']:,} | {stats['in_progress']['deletions']:,} | **{stats['in_progress']['total_loc']:,}** |\n"
 
     # Add bold Total row for In Progress at the bottom
-    markdown += f"| **Total** | **[{total_prs_ip:,}](https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:open)** | **{total_additions_ip:,}** | **{total_deletions_ip:,}** | **{total_loc_ip:,}** |\n"
+    markdown += f"| **Total** | **[{total_prs_ip:,}](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:open)** | **{total_additions_ip:,}** | **{total_deletions_ip:,}** | **{total_loc_ip:,}** |\n"
 
     # Add dynamically grouped JIRA open tasks monitor to Markdown dashboard
     markdown += """
