@@ -2,10 +2,26 @@
   "success": true,
   "issues": [
     {
+      "key": "NEETASOSS-80",
+      "type": "User Story",
+      "summary": "https://github.com/eclipse-score/cicd-workflows/issues/218",
+      "status": "In Progress",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
+      "key": "NEETASOSS-79",
+      "type": "Epic",
+      "summary": "S-CORE infrastructure contributions",
+      "status": "To Do",
+      "assignee": "Ramakrishnan P K",
+      "priority": "Medium"
+    },
+    {
       "key": "NEETASOSS-78",
       "type": "User Story",
       "summary": "https://github.com/eclipse-score/tooling/issues/82",
-      "status": "In Progress",
+      "status": "On Hold",
       "assignee": "Ramakrishnan P K",
       "priority": "Medium"
     },
@@ -93,7 +109,7 @@
       "key": "NEETASOSS-67",
       "type": "User Story",
       "summary": "https://github.com/eclipse-score/.eclipsefdn/issues/210",
-      "status": "In Progress",
+      "status": "Done",
       "assignee": "Ramakrishnan P K",
       "priority": "Medium"
     },
@@ -373,7 +389,7 @@
       "key": "NEETASOSS-32",
       "type": "User Story",
       "summary": "https://github.com/eclipse-score/cicd-workflows/issues/126",
-      "status": "In Progress",
+      "status": "Done",
       "assignee": "Divya Priya Gopal",
       "priority": "Medium"
     },
@@ -626,8 +642,8 @@
       "priority": "Medium"
     }
   ],
-  "todo": 36,
-  "inprogress": 24,
-  "blocked": 2,
-  "done": 16
+  "todo": 37,
+  "inprogress": 22,
+  "blocked": 3,
+  "done": 18
 }

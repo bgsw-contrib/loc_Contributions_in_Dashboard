@@ -59,7 +59,9 @@ jobs:
           else
             git add README.md index.html
             git commit -m "chore: auto-update contributions dashboard and HTML page [skip ci]"
-            git push
+            # Pull latest changes from remote with rebase to handle concurrent commits (e.g. users.json updates) gracefully
+            git pull --rebase origin main
+            git push origin main
           fi
 
   task-status:
