@@ -35,11 +35,11 @@ def get_pr_details(pr_url, headers):
     try:
         response = requests.get(pr_url, headers=headers)
         if response.status_code != 200:
-            return 0, 0
+            return 0, 0, False
         data = response.json()
-        return data.get("additions", 0), data.get("deletions", 0)
+        return data.get("additions", 0), data.get("deletions", 0), data.get("merged", False)
     except Exception:
-        return 0, 0
+        return 0, 0, False
 
 def run_loc_analysis(contributors, orgs, headers):
     stats = {}
@@ -58,8 +58,13 @@ def run_loc_analysis(contributors, orgs, headers):
             for pr in prs:
                 if "pull_request" in pr:
                     pr_detail_url = pr["pull_request"]["url"]
-                    additions, deletions = get_pr_details(pr_detail_url, headers)
+                    additions, deletions, merged = get_pr_details(pr_detail_url, headers)
                     state = pr.get("state", "closed")
+                    
+                    # Skip pull requests that were closed without being merged (rejected/cancelled)
+                    if state == "closed" and not merged:
+                        continue
+                        
                     category = "in_progress" if state == "open" else "done"
                     
                     stats[org][username][category]["pr_count"] += 1

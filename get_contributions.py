@@ -20,7 +20,7 @@ def load_config():
 def generate_markdown_table(org, user_stats, category):
     # category is 'done' or 'in_progress'
     header = "Closed/Merged" if category == "done" else "Open"
-    state = "closed" if category == "done" else "open"
+    state = "merged" if category == "done" else "open"
     
     total_prs = sum(stats[category]["pr_count"] for stats in user_stats.values())
     total_additions = sum(stats[category]["additions"] for stats in user_stats.values())
@@ -41,7 +41,7 @@ def generate_markdown_table(org, user_stats, category):
 
 def generate_html_rows(org, user_stats, category):
     # category is 'done' or 'in_progress'
-    state = "closed" if category == "done" else "open"
+    state = "merged" if category == "done" else "open"
     sorted_users = sorted(user_stats.items(), key=lambda x: x[1][category]["total_loc"], reverse=True)
     
     html = ""
@@ -972,7 +972,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
                                 <td><strong>Total Completed Stats</strong></td>
                                 <td class="text-center font-bold">
-                                    <a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{bgsw_done_prs:,}</a>
+                                    <a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:merged" target="_blank" class="pr-link" style="font-weight: 700;">{bgsw_done_prs:,}</a>
                                 </td>
                                 <td class="text-green text-right font-bold">+{bgsw_done_add:,}</td>
                                 <td class="text-red text-right font-bold">-{bgsw_done_del:,}</td>
@@ -1114,7 +1114,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
                                 <td><strong>Total Completed Stats</strong></td>
                                 <td class="text-center font-bold">
-                                    <a href="https://github.com/pulls?q=is:pr+org:eclipse-score+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{eclipse_done_prs:,}</a>
+                                    <a href="https://github.com/pulls?q=is:pr+org:eclipse-score+is:merged" target="_blank" class="pr-link" style="font-weight: 700;">{eclipse_done_prs:,}</a>
                                 </td>
                                 <td class="text-green text-right font-bold">+{eclipse_done_add:,}</td>
                                 <td class="text-red text-right font-bold">-{eclipse_done_del:,}</td>
