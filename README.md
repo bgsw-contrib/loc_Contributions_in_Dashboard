@@ -2,7 +2,7 @@
 
 Automated dashboard tracking active contributions within the **bgsw-contrib** organization.
 
-> **Last Updated:** `2026-08-31 14:47:00 (UTC)`  
+> **Last Updated:** `2026-08-31 09:20:07 (UTC)`  
 > *Note: Metrics are split into completed ("Done") and active ("In Progress") pull requests.*
 
 ---
@@ -13,7 +13,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | :--- | :---: | :---: | :---: | :---: |
 | **[Rutuja-Patil-Bosch](https://github.com/Rutuja-Patil-Bosch)** | [43](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:Rutuja-Patil-Bosch+is:closed) | 168,946 | 47,117 | **216,063** |
 | **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [12](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:Vinodha-kumar+is:closed) | 1,657 | 1,751 | **3,408** |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [9](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:srinivasugithub+is:closed) | 2,581 | 118 | **2,699** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [6](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:srinivasugithub+is:closed) | 2,552 | 115 | **2,667** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [6](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:RamakrishnanPK+is:closed) | 705 | 68 | **773** |
 | **[kirankumar-H-V](https://github.com/kirankumar-H-V)** | [5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:kirankumar-H-V+is:closed) | 85 | 7 | **92** |
 | **[parthibankuppudurai](https://github.com/parthibankuppudurai)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:parthibankuppudurai+is:closed) | 0 | 0 | **0** |
@@ -26,7 +26,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:logesh+is:closed) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:xna2kor+is:closed) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:skd1cob+is:closed) | 0 | 0 | **0** |
-| **Total** | **[75](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:closed)** | **173,974** | **49,061** | **223,035** |
+| **Total** | **[72](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:closed)** | **173,945** | **49,058** | **223,003** |
 
 ---
 
@@ -34,7 +34,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 
 | Contributor (GitHub Username) | PRs Open | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
 | :--- | :---: | :---: | :---: | :---: |
-| **[srinivasugithub](https://github.com/srinivasugithub)** | [5](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:srinivasugithub+is:open) | 12,158 | 3,174 | **15,332** |
+| **[srinivasugithub](https://github.com/srinivasugithub)** | [4](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:srinivasugithub+is:open) | 12,157 | 3,172 | **15,329** |
 | **[Rutuja-Patil-Bosch](https://github.com/Rutuja-Patil-Bosch)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:Rutuja-Patil-Bosch+is:open) | 1,159 | 107 | **1,266** |
 | **[RamakrishnanPK](https://github.com/RamakrishnanPK)** | [2](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:RamakrishnanPK+is:open) | 509 | 0 | **509** |
 | **[Vinodha-kumar](https://github.com/Vinodha-kumar)** | [1](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:Vinodha-kumar+is:open) | 223 | 0 | **223** |
@@ -49,7 +49,7 @@ Automated dashboard tracking active contributions within the **bgsw-contrib** or
 | **[logesh](https://github.com/logesh)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:logesh+is:open) | 0 | 0 | **0** |
 | **[xna2kor](https://github.com/xna2kor)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:xna2kor+is:open) | 0 | 0 | **0** |
 | **[skd1cob](https://github.com/skd1cob)** | [0](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:skd1cob+is:open) | 0 | 0 | **0** |
-| **Total** | **[12](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:open)** | **14,196** | **3,283** | **17,479** |
+| **Total** | **[11](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:open)** | **14,195** | **3,281** | **17,476** |
 
 ---
 
