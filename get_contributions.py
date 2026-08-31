@@ -9,7 +9,6 @@ import lines_of_code
 import task_status
 import system_health
 
-ORG_NAME = "bgsw-contrib"
 CONFIG_FILE = "users.json"
 DASHBOARD_FILE = "README.md"
 HTML_FILE = "index.html"
@@ -17,6 +16,73 @@ HTML_FILE = "index.html"
 def load_config():
     with open(CONFIG_FILE, "r") as f:
         return json.load(f)
+
+def generate_markdown_table(org, user_stats, category):
+    # category is 'done' or 'in_progress'
+    header = "Closed/Merged" if category == "done" else "Open"
+    state = "closed" if category == "done" else "open"
+    
+    total_prs = sum(stats[category]["pr_count"] for stats in user_stats.values())
+    total_additions = sum(stats[category]["additions"] for stats in user_stats.values())
+    total_deletions = sum(stats[category]["deletions"] for stats in user_stats.values())
+    total_loc = total_additions + total_deletions
+    
+    markdown = f"| Contributor (GitHub Username) | PRs {header} | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |\n"
+    markdown += "| :--- | :---: | :---: | :---: | :---: |\n"
+    
+    sorted_users = sorted(user_stats.items(), key=lambda x: x[1][category]["total_loc"], reverse=True)
+    for username, stats in sorted_users:
+        profile_url = f"https://github.com/{username}"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{org}+author:{username}+is:{state}"
+        markdown += f"| **[{username}]({profile_url})** | [{stats[category]['pr_count']:,}]({pr_query_url}) | {stats[category]['additions']:,} | {stats[category]['deletions']:,} | **{stats[category]['total_loc']:,}** |\n"
+        
+    markdown += f"| **Total** | **[{total_prs:,}](https://github.com/pulls?q=is:pr+org:{org}+is:{state})** | **{total_additions:,}** | **{total_deletions:,}** | **{total_loc:,}** |\n"
+    return markdown, total_prs, total_additions, total_deletions, total_loc
+
+def generate_html_rows(org, user_stats, category):
+    # category is 'done' or 'in_progress'
+    state = "closed" if category == "done" else "open"
+    sorted_users = sorted(user_stats.items(), key=lambda x: x[1][category]["total_loc"], reverse=True)
+    
+    html = ""
+    for username, stats in sorted_users:
+        profile_url = f"https://github.com/{username}"
+        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{org}+author:{username}+is:{state}"
+        html += f"""
+        <tr>
+            <td><a href="{profile_url}" target="_blank" class="user-link">@{username}</a></td>
+            <td class="text-center"><a href="{pr_query_url}" target="_blank" class="pr-link">{stats[category]['pr_count']:,}</a></td>
+            <td class="text-green text-right">+{stats[category]['additions']:,}</td>
+            <td class="text-red text-right">-{stats[category]['deletions']:,}</td>
+            <td class="text-right font-bold"><b>{stats[category]['total_loc']:,}</b></td>
+        </tr>
+        """
+    return html
+
+def extract_chart_data(user_stats):
+    # Sort users by done total_loc descending
+    sorted_users = sorted(user_stats.items(), key=lambda x: x[1]["done"]["total_loc"], reverse=True)
+    
+    labels = []
+    pr_counts = []
+    add_metrics = []
+    del_metrics = []
+    total_locs = []
+    
+    for username, stats in sorted_users:
+        labels.append(username)
+        pr_counts.append(stats["done"]["pr_count"])
+        add_metrics.append(stats["done"]["additions"])
+        del_metrics.append(stats["done"]["deletions"])
+        total_locs.append(stats["done"]["total_loc"])
+        
+    return {
+        "labels": labels,
+        "pr_counts": pr_counts,
+        "additions": add_metrics,
+        "deletions": del_metrics,
+        "total_locs": total_locs
+    }
 
 def main():
     contributors = load_config()
@@ -27,7 +93,10 @@ def main():
         subprocess.run(["python3", "lines_of_code.py"])
         
     with open("loc_stats.json", "r") as f:
-        user_stats = json.load(f)
+        loc_stats = json.load(f)
+        
+    bgsw_user_stats = loc_stats.get("bgsw-contrib", {})
+    eclipse_user_stats = loc_stats.get("eclipse-score", {})
         
     # 2. Load or run Task Status JIRA query stage
     print("Executing task_status.py to fetch JIRA updates...")
@@ -47,18 +116,6 @@ def main():
     workflows = health_stats.get("workflows", [])
     runners_info = health_stats.get("runners_data", {})
 
-    # Calculate Totals for Done
-    total_prs_done = sum(stats["done"]["pr_count"] for stats in user_stats.values())
-    total_additions_done = sum(stats["done"]["additions"] for stats in user_stats.values())
-    total_deletions_done = sum(stats["done"]["deletions"] for stats in user_stats.values())
-    total_loc_done = total_additions_done + total_deletions_done
-
-    # Calculate Totals for In Progress
-    total_prs_ip = sum(stats["in_progress"]["pr_count"] for stats in user_stats.values())
-    total_additions_ip = sum(stats["in_progress"]["additions"] for stats in user_stats.values())
-    total_deletions_ip = sum(stats["in_progress"]["deletions"] for stats in user_stats.values())
-    total_loc_ip = total_additions_ip + total_deletions_ip
-
     active_contributors = len(contributors)
 
     # Process Jira JQL Search Results and grouping by status dynamically
@@ -77,49 +134,47 @@ def main():
             grouped_issues[status] = []
         grouped_issues[status].append(iss)
 
+    # Generate Markdown Tables & Metrics
+    bgsw_done_md, bgsw_done_prs, bgsw_done_add, bgsw_done_del, bgsw_done_loc = generate_markdown_table("bgsw-contrib", bgsw_user_stats, "done")
+    eclipse_done_md, eclipse_done_prs, eclipse_done_add, eclipse_done_del, eclipse_done_loc = generate_markdown_table("eclipse-score", eclipse_user_stats, "done")
+    
+    bgsw_ip_md, bgsw_ip_prs, bgsw_ip_add, bgsw_ip_del, bgsw_ip_loc = generate_markdown_table("bgsw-contrib", bgsw_user_stats, "in_progress")
+    eclipse_ip_md, eclipse_ip_prs, eclipse_ip_add, eclipse_ip_del, eclipse_ip_loc = generate_markdown_table("eclipse-score", eclipse_user_stats, "in_progress")
+
     # Generate Markdown Dashboard Content
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     markdown = f"""# Dashboard
 
-Automated dashboard tracking active contributions within the **{ORG_NAME}** organization.
+Automated dashboard tracking active contributions within the **bgsw-contrib** and **eclipse-score** organizations.
 
 > **Last Updated:** `{now_str} (UTC)`  
 > *Note: Metrics are split into completed ("Done") and active ("In Progress") pull requests.*
 
 ---
 
-## 🏆 Completed Contributions (Done)
+## 🏆 Completed Contributions - bgsw-contrib (Done)
 
-| Contributor (GitHub Username) | PRs Closed/Merged | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
-| :--- | :---: | :---: | :---: | :---: |
-"""
-    for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["done"]["total_loc"], reverse=True):
-        profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:{username}+is:closed"
-        markdown += f"| **[{username}]({profile_url})** | [{stats['done']['pr_count']:,}]({pr_query_url}) | {stats['done']['additions']:,} | {stats['done']['deletions']:,} | **{stats['done']['total_loc']:,}** |\n"
+{bgsw_done_md}
 
-    # Add bold Total row for Done at the bottom
-    markdown += f"| **Total** | **[{total_prs_done:,}](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:closed)** | **{total_additions_done:,}** | **{total_deletions_done:,}** | **{total_loc_done:,}** |\n"
-
-    markdown += f"""
 ---
 
-## ⏳ In-Progress Contributions (In Progress)
+## 🏆 Completed Contributions - eclipse-score (Done)
 
-| Contributor (GitHub Username) | PRs Open | Lines Added (+) | Lines Deleted (-) | Total LOC Changed |
-| :--- | :---: | :---: | :---: | :---: |
-"""
-    for username, stats in sorted(user_stats.items(), key=lambda x: x[1]["in_progress"]["total_loc"], reverse=True):
-        profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+author:{username}+is:open"
-        markdown += f"| **[{username}]({profile_url})** | [{stats['in_progress']['pr_count']:,}]({pr_query_url}) | {stats['in_progress']['additions']:,} | {stats['in_progress']['deletions']:,} | **{stats['in_progress']['total_loc']:,}** |\n"
+{eclipse_done_md}
 
-    # Add bold Total row for In Progress at the bottom
-    markdown += f"| **Total** | **[{total_prs_ip:,}](https://github.com/pulls?q=is:pr+org:bgsw-contrib+org:eclipse-score+is:open)** | **{total_additions_ip:,}** | **{total_deletions_ip:,}** | **{total_loc_ip:,}** |\n"
+---
 
-    # Add dynamically grouped JIRA open tasks monitor to Markdown dashboard
-    markdown += """
+## ⏳ In-Progress Contributions - bgsw-contrib (In Progress)
+
+{bgsw_ip_md}
+
+---
+
+## ⏳ In-Progress Contributions - eclipse-score (In Progress)
+
+{eclipse_ip_md}
+
 ---
 
 ## ⏳ Live JIRA Task Status Monitor (NEETASOSS)
@@ -164,55 +219,15 @@ To manage the list of tracked contributors, modify the `users.json` file.
 """
 
     # Generate index.html Content (Rich Executive Dashboard with Chart.js)
-    labels = []
-    pr_counts = []
-    add_metrics = []
-    del_metrics = []
-    total_locs = []
+    bgsw_rows_done_html = generate_html_rows("bgsw-contrib", bgsw_user_stats, "done")
+    eclipse_rows_done_html = generate_html_rows("eclipse-score", eclipse_user_stats, "done")
     
-    sorted_users = sorted(user_stats.items(), key=lambda x: x[1]["done"]["total_loc"], reverse=True)
-    for username, stats in sorted_users:
-        labels.append(username)
-        pr_counts.append(stats["done"]["pr_count"])
-        add_metrics.append(stats["done"]["additions"])
-        del_metrics.append(stats["done"]["deletions"])
-        total_locs.append(stats["done"]["total_loc"])
+    bgsw_rows_ip_html = generate_html_rows("bgsw-contrib", bgsw_user_stats, "in_progress")
+    eclipse_rows_ip_html = generate_html_rows("eclipse-score", eclipse_user_stats, "in_progress")
 
-    table_rows_done_html = ""
-    for username, stats in sorted_users:
-        profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:closed"
-        table_rows_done_html += f"""
-        <tr>
-            <td><a href="{profile_url}" target="_blank" class="user-link">@{username}</a></td>
-            <td class="text-center"><a href="{pr_query_url}" target="_blank" class="pr-link">{stats['done']['pr_count']:,}</a></td>
-            <td class="text-green text-right">+{stats['done']['additions']:,}</td>
-            <td class="text-red text-right">-{stats['done']['deletions']:,}</td>
-            <td class="text-right font-bold"><b>{stats['done']['total_loc']:,}</b></td>
-        </tr>
-        """
-
-    table_rows_ip_html = ""
-    sorted_users_ip = sorted(user_stats.items(), key=lambda x: x[1]["in_progress"]["total_loc"], reverse=True)
-    for username, stats in sorted_users_ip:
-        profile_url = f"https://github.com/{username}"
-        pr_query_url = f"https://github.com/pulls?q=is:pr+org:{ORG_NAME}+author:{username}+is:open"
-        table_rows_ip_html += f"""
-        <tr>
-            <td><a href="{profile_url}" target="_blank" class="user-link">@{username}</a></td>
-            <td class="text-center"><a href="{pr_query_url}" target="_blank" class="pr-link">{stats['in_progress']['pr_count']:,}</a></td>
-            <td class="text-green text-right">+{stats['in_progress']['additions']:,}</td>
-            <td class="text-red text-right">-{stats['in_progress']['deletions']:,}</td>
-            <td class="text-right font-bold"><b>{stats['in_progress']['total_loc']:,}</b></td>
-        </tr>
-        """
-
-    # Serialize JSON for inject into JavaScript
-    labels_json = json.dumps(labels)
-    pr_counts_json = json.dumps(pr_counts)
-    add_metrics_json = json.dumps(add_metrics)
-    del_metrics_json = json.dumps(del_metrics)
-    total_locs_json = json.dumps(total_locs)
+    # Extract Chart Data
+    bgsw_chart = extract_chart_data(bgsw_user_stats)
+    eclipse_chart = extract_chart_data(eclipse_user_stats)
 
     # Process Organization Actions self-hosted runners
     runners = runners_info.get("runners", [])
@@ -264,7 +279,6 @@ To manage the list of tracked contributors, modify the `users.json` file.
     # Format JIRA Task Status Tab content
     sync_badge = '<span class="text-green">LIVE SYNCED</span>' if is_live else '<span style="color: #ffa726; font-weight: 600;">OFFLINE FALLBACK</span>'
     sync_indicator = '<span class="indicator indicator-green"></span>' if is_live else '<span class="indicator" style="background-color: #fb8c00; box-shadow: 0 0 8px #fb8c00;"></span>'
-    sync_header_title = 'Live SCORE Contributions Task Status' if is_live else 'SCORE Contributions Task Status (Offline Fallback)'
     sync_header_subtitle = 'Synchronized live with Bosch Track&Release search' if is_live else 'Showing cached task details. Live sync requires valid permissions.'
     
     notice_paragraph = ""
@@ -385,7 +399,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
     
     workflow_rows_html = ""
     for wf in workflows_sorted:
-        repo_url = f"https://github.com/{ORG_NAME}/{wf['repo']}"
+        repo_url = f"https://github.com/bgsw-contrib/{wf['repo']}"
         status = wf["status"]
         conclusion = wf["conclusion"]
         
@@ -433,7 +447,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOC Contributions Dashboard - {ORG_NAME}</title>
+    <title>LOC Contributions Dashboard - Multi-Org</title>
     <!-- Inter Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js CDN -->
@@ -846,8 +860,8 @@ To manage the list of tracked contributors, modify the `users.json` file.
     <div class="container">
         <header>
             <div>
-                <h1>Dashboard</h1>
-                <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>{ORG_NAME}</strong> organization.</p>
+                <h1>LOC Contributions Dashboard</h1>
+                <p style="color: var(--text-muted); margin-top: 0.25rem;">Active contribution tracking within the <strong>bgsw-contrib</strong> and <strong>eclipse-score</strong> organizations.</p>
             </div>
             <div class="updated-badge">
                 Last Updated: <strong>{now_str} UTC</strong>
@@ -863,20 +877,27 @@ To manage the list of tracked contributors, modify the `users.json` file.
 
         <!-- TAB 1: LINES OF CODE METRICS -->
         <div id="loc-tab" class="tab-content active">
-            <!-- Stats Rows -->
-            <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main);">🏆 Completed Metrics (Done)</h2>
+            
+            <!-- ================= BGSW-CONTRIB SECTION ================= -->
+            <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem; margin-top: 2rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">🌐 bgsw-contrib Organization</h2>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.15rem;">Metrics from developer forks and internal active code contributions.</p>
+            </div>
+
+            <!-- Stats Rows (BGSW) -->
+            <h3 style="font-size: 1.125rem; margin-bottom: 0.75rem; color: var(--text-main);">🏆 Completed Metrics (Done)</h3>
             <div class="stats-grid">
                 <div class="stat-card blue">
                     <span class="stat-label">Done Pull Requests</span>
-                    <span class="stat-value">{total_prs_done:,}</span>
+                    <span class="stat-value">{bgsw_done_prs:,}</span>
                 </div>
                 <div class="stat-card green">
                     <span class="stat-label">Lines Added (Done)</span>
-                    <span class="stat-value">+{total_additions_done:,}</span>
+                    <span class="stat-value">+{bgsw_done_add:,}</span>
                 </div>
                 <div class="stat-card red">
                     <span class="stat-label">Lines Deleted (Done)</span>
-                    <span class="stat-value">-{total_deletions_done:,}</span>
+                    <span class="stat-value">-{bgsw_done_del:,}</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Contributors Tracked</span>
@@ -884,56 +905,54 @@ To manage the list of tracked contributors, modify the `users.json` file.
                 </div>
             </div>
 
-            <h2 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--text-main); margin-top: 1.5rem;">⏳ Active Metrics (In Progress)</h2>
+            <h3 style="font-size: 1.125rem; margin-bottom: 0.75rem; color: var(--text-main); margin-top: 1.5rem;">⏳ Active Metrics (In Progress)</h3>
             <div class="stats-grid" style="margin-bottom: 2.5rem;">
                 <div class="stat-card blue">
                     <span class="stat-label">Open Pull Requests</span>
-                    <span class="stat-value">{total_prs_ip:,}</span>
+                    <span class="stat-value">{bgsw_ip_prs:,}</span>
                 </div>
                 <div class="stat-card green">
                     <span class="stat-label">Lines Added (IP)</span>
-                    <span class="stat-value">+{total_additions_ip:,}</span>
+                    <span class="stat-value">+{bgsw_ip_add:,}</span>
                 </div>
                 <div class="stat-card red">
                     <span class="stat-label">Lines Deleted (IP)</span>
-                    <span class="stat-value">-{total_deletions_ip:,}</span>
+                    <span class="stat-value">-{bgsw_ip_del:,}</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Total LOC In-Progress</span>
-                    <span class="stat-value" style="color: var(--accent);">{total_loc_ip:,}</span>
+                    <span class="stat-value" style="color: var(--accent);">{bgsw_ip_loc:,}</span>
                 </div>
             </div>
 
-            <!-- Charts Row -->
+            <!-- Charts Row (BGSW) -->
             <div class="charts-grid">
-                <!-- Lines of Code Chart -->
                 <div class="chart-card">
                     <div class="chart-title">
-                        <span>Lines of Code Contributions (Completed)</span>
+                        <span>Lines of Code (bgsw-contrib)</span>
                         <span style="font-size: 0.75rem; color: var(--text-muted);">Additions vs Deletions</span>
                     </div>
                     <div class="chart-container">
-                        <canvas id="locChart"></canvas>
+                        <canvas id="locChartBgsw"></canvas>
                     </div>
                 </div>
-                <!-- Pull Requests Chart -->
                 <div class="chart-card">
                     <div class="chart-title">
-                        <span>Completed Pull Request Share</span>
+                        <span>Pull Request Share (bgsw-contrib)</span>
                         <span style="font-size: 0.75rem; color: var(--text-muted);">Percentage per Contributor</span>
                     </div>
                     <div class="chart-container">
-                        <canvas id="prChart"></canvas>
+                        <canvas id="prChartBgsw"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Completed Standings Table -->
+            <!-- Completed Standings Table (BGSW) -->
             <div class="material-card">
                 <div class="material-card-header header-green">
                     <div>
-                        <h3 class="material-card-title">🏆 Completed Contributions (Done)</h3>
-                        <p class="material-card-subtitle">Finalized LOC and pull request standings</p>
+                        <h3 class="material-card-title">🏆 Completed Contributions (Done) - bgsw-contrib</h3>
+                        <p class="material-card-subtitle">Finalized LOC and pull request standings for BGSW-Contrib</p>
                     </div>
                 </div>
                 <div style="overflow-x: auto;">
@@ -948,28 +967,28 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             </tr>
                         </thead>
                         <tbody>
-                            {table_rows_done_html}
+                            {bgsw_rows_done_html}
                             <!-- Total Row -->
                             <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
                                 <td><strong>Total Completed Stats</strong></td>
                                 <td class="text-center font-bold">
-                                    <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{total_prs_done:,}</a>
+                                    <a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{bgsw_done_prs:,}</a>
                                 </td>
-                                <td class="text-green text-right font-bold">+{total_additions_done:,}</td>
-                                <td class="text-red text-right font-bold">-{total_deletions_done:,}</td>
-                                <td class="text-right font-bold" style="color: var(--primary);"><b>{total_loc_done:,}</b></td>
+                                <td class="text-green text-right font-bold">+{bgsw_done_add:,}</td>
+                                <td class="text-red text-right font-bold">-{bgsw_done_del:,}</td>
+                                <td class="text-right font-bold" style="color: var(--primary);"><b>{bgsw_done_loc:,}</b></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- In Progress Standings Table -->
-            <div class="material-card">
+            <!-- In Progress Standings Table (BGSW) -->
+            <div class="material-card" style="margin-bottom: 4rem;">
                 <div class="material-card-header header-orange">
                     <div>
-                        <h3 class="material-card-title">⏳ In-Progress Contributions (In Progress)</h3>
-                        <p class="material-card-subtitle">Active pull requests currently under review</p>
+                        <h3 class="material-card-title">⏳ In-Progress Contributions (In Progress) - bgsw-contrib</h3>
+                        <p class="material-card-subtitle">Active pull requests currently under review in BGSW-Contrib</p>
                     </div>
                 </div>
                 <div style="overflow-x: auto;">
@@ -984,16 +1003,158 @@ To manage the list of tracked contributors, modify the `users.json` file.
                             </tr>
                         </thead>
                         <tbody>
-                            {table_rows_ip_html}
+                            {bgsw_rows_ip_html}
                             <!-- Total Row -->
                             <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
                                 <td><strong>Total In-Progress Stats</strong></td>
                                 <td class="text-center font-bold">
-                                    <a href="https://github.com/pulls?q=is:pr+org:{ORG_NAME}+is:open" target="_blank" class="pr-link" style="font-weight: 700; background-color: rgba(56, 189, 248, 0.1); color: var(--primary);">{total_prs_ip:,}</a>
+                                    <a href="https://github.com/pulls?q=is:pr+org:bgsw-contrib+is:open" target="_blank" class="pr-link" style="font-weight: 700; background-color: rgba(56, 189, 248, 0.1); color: var(--primary);">{bgsw_ip_prs:,}</a>
                                 </td>
-                                <td class="text-green text-right font-bold">+{total_additions_ip:,}</td>
-                                <td class="text-red text-right font-bold">-{total_deletions_ip:,}</td>
-                                <td class="text-right font-bold" style="color: var(--accent);"><b>{total_loc_ip:,}</b></td>
+                                <td class="text-green text-right font-bold">+{bgsw_ip_add:,}</td>
+                                <td class="text-red text-right font-bold">-{bgsw_ip_del:,}</td>
+                                <td class="text-right font-bold" style="color: var(--accent);"><b>{bgsw_ip_loc:,}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- ================= ECLIPSE-SCORE SECTION ================= -->
+            <div style="border-left: 4px solid var(--accent); padding-left: 1rem; margin-bottom: 1.5rem; margin-top: 3rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">🌐 eclipse-score Organization</h2>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.15rem;">Metrics from upstream public repository code contributions.</p>
+            </div>
+
+            <!-- Stats Rows (Eclipse) -->
+            <h3 style="font-size: 1.125rem; margin-bottom: 0.75rem; color: var(--text-main);">🏆 Completed Metrics (Done)</h3>
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <span class="stat-label">Done Pull Requests</span>
+                    <span class="stat-value">{eclipse_done_prs:,}</span>
+                </div>
+                <div class="stat-card green">
+                    <span class="stat-label">Lines Added (Done)</span>
+                    <span class="stat-value">+{eclipse_done_add:,}</span>
+                </div>
+                <div class="stat-card red">
+                    <span class="stat-label">Lines Deleted (Done)</span>
+                    <span class="stat-value">-{eclipse_done_del:,}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Contributors Tracked</span>
+                    <span class="stat-value">{active_contributors}</span>
+                </div>
+            </div>
+
+            <h3 style="font-size: 1.125rem; margin-bottom: 0.75rem; color: var(--text-main); margin-top: 1.5rem;">⏳ Active Metrics (In Progress)</h3>
+            <div class="stats-grid" style="margin-bottom: 2.5rem;">
+                <div class="stat-card blue">
+                    <span class="stat-label">Open Pull Requests</span>
+                    <span class="stat-value">{eclipse_ip_prs:,}</span>
+                </div>
+                <div class="stat-card green">
+                    <span class="stat-label">Lines Added (IP)</span>
+                    <span class="stat-value">+{eclipse_ip_add:,}</span>
+                </div>
+                <div class="stat-card red">
+                    <span class="stat-label">Lines Deleted (IP)</span>
+                    <span class="stat-value">-{eclipse_ip_del:,}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Total LOC In-Progress</span>
+                    <span class="stat-value" style="color: var(--accent);">{eclipse_ip_loc:,}</span>
+                </div>
+            </div>
+
+            <!-- Charts Row (Eclipse) -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <span>Lines of Code (eclipse-score)</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Additions vs Deletions</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="locChartEclipse"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <span>Pull Request Share (eclipse-score)</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Percentage per Contributor</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="prChartEclipse"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Standings Table (Eclipse) -->
+            <div class="material-card">
+                <div class="material-card-header header-green">
+                    <div>
+                        <h3 class="material-card-title">🏆 Completed Contributions (Done) - eclipse-score</h3>
+                        <p class="material-card-subtitle">Finalized LOC and pull request standings for Eclipse SCORE</p>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contributor (GitHub Username)</th>
+                                <th class="text-center">PRs Closed/Merged</th>
+                                <th class="text-right">Lines Added (+)</th>
+                                <th class="text-right">Lines Deleted (-)</th>
+                                <th class="text-right">Total LOC Changed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {eclipse_rows_done_html}
+                            <!-- Total Row -->
+                            <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
+                                <td><strong>Total Completed Stats</strong></td>
+                                <td class="text-center font-bold">
+                                    <a href="https://github.com/pulls?q=is:pr+org:eclipse-score+is:closed" target="_blank" class="pr-link" style="font-weight: 700;">{eclipse_done_prs:,}</a>
+                                </td>
+                                <td class="text-green text-right font-bold">+{eclipse_done_add:,}</td>
+                                <td class="text-red text-right font-bold">-{eclipse_done_del:,}</td>
+                                <td class="text-right font-bold" style="color: var(--primary);"><b>{eclipse_done_loc:,}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- In Progress Standings Table (Eclipse) -->
+            <div class="material-card">
+                <div class="material-card-header header-orange">
+                    <div>
+                        <h3 class="material-card-title">⏳ In-Progress Contributions (In Progress) - eclipse-score</h3>
+                        <p class="material-card-subtitle">Active pull requests currently under review in Eclipse SCORE</p>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contributor (GitHub Username)</th>
+                                <th class="text-center">PRs Open</th>
+                                <th class="text-right">Lines Added (+)</th>
+                                <th class="text-right">Lines Deleted (-)</th>
+                                <th class="text-right">Total LOC Changed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {eclipse_rows_ip_html}
+                            <!-- Total Row -->
+                            <tr style="border-top: 2px solid var(--card-border); background-color: rgba(255, 255, 255, 0.01);">
+                                <td><strong>Total In-Progress Stats</strong></td>
+                                <td class="text-center font-bold">
+                                    <a href="https://github.com/pulls?q=is:pr+org:eclipse-score+is:open" target="_blank" class="pr-link" style="font-weight: 700; background-color: rgba(56, 189, 248, 0.1); color: var(--primary);">{eclipse_ip_prs:,}</a>
+                                </td>
+                                <td class="text-green text-right font-bold">+{eclipse_ip_add:,}</td>
+                                <td class="text-red text-right font-bold">-{eclipse_ip_del:,}</td>
+                                <td class="text-right font-bold" style="color: var(--accent);"><b>{eclipse_ip_loc:,}</b></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1067,7 +1228,7 @@ To manage the list of tracked contributors, modify the `users.json` file.
                 <div class="material-card-header header-blue">
                     <div>
                         <h3 class="material-card-title">🤖 Org-Wide Workflow Status Monitor</h3>
-                        <p class="material-card-subtitle">Live action run states across all repositories in {ORG_NAME}</p>
+                        <p class="material-card-subtitle">Live action run states across all repositories in bgsw-contrib</p>
                     </div>
                 </div>
                 <div style="overflow-x: auto; padding-top: 0.5rem;">
@@ -1143,11 +1304,17 @@ To manage the list of tracked contributors, modify the `users.json` file.
 
     <!-- Inject Chart.js Configuration -->
     <script>
-        const labels = {labels_json};
-        const prCounts = {pr_counts_json};
-        const additions = {add_metrics_json};
-        const deletions = {del_metrics_json};
-        const totalLocs = {total_locs_json};
+        // BGSW Datasets
+        const labelsBgsw = {json.dumps(bgsw_chart["labels"])};
+        const prCountsBgsw = {json.dumps(bgsw_chart["pr_counts"])};
+        const additionsBgsw = {json.dumps(bgsw_chart["additions"])};
+        const deletionsBgsw = {json.dumps(bgsw_chart["deletions"])};
+
+        // Eclipse Datasets
+        const labelsEclipse = {json.dumps(eclipse_chart["labels"])};
+        const prCountsEclipse = {json.dumps(eclipse_chart["pr_counts"])};
+        const additionsEclipse = {json.dumps(eclipse_chart["additions"])};
+        const deletionsEclipse = {json.dumps(eclipse_chart["deletions"])};
 
         // Tab Switching Logic
         function switchTab(tabId) {{
@@ -1162,23 +1329,29 @@ To manage the list of tracked contributors, modify the `users.json` file.
             event.currentTarget.classList.add('active');
         }}
 
-        // 1. Lines of Code Stacked Bar Chart
-        const ctxLoc = document.getElementById('locChart').getContext('2d');
-        new Chart(ctxLoc, {{
+        // Color Palette for Doughnut
+        const colorPalette = [
+            '#38bdf8', '#a78bfa', '#f43f5e', '#fbbf24', '#34d399', 
+            '#f472b6', '#fb7185', '#a3e635', '#2dd4bf', '#fb923c'
+        ];
+
+        // 1. bgsw-contrib Stacked LOC Bar Chart
+        const ctxLocBgsw = document.getElementById('locChartBgsw').getContext('2d');
+        new Chart(ctxLocBgsw, {{
             type: 'bar',
             data: {{
-                labels: labels,
+                labels: labelsBgsw,
                 datasets: [
                     {{
                         label: 'Lines Added (+)',
-                        data: additions,
+                        data: additionsBgsw,
                         backgroundColor: '#4ade80',
                         borderRadius: 6,
                         borderSkipped: false
                     }},
                     {{
                         label: 'Lines Deleted (-)',
-                        data: deletions.map(v => Math.abs(v)), // Plot positive values for stacked charts
+                        data: deletionsBgsw.map(v => Math.abs(v)),
                         backgroundColor: '#f87171',
                         borderRadius: 6,
                         borderSkipped: false
@@ -1219,23 +1392,110 @@ To manage the list of tracked contributors, modify the `users.json` file.
             }}
         }});
 
-        // 2. Pull Request Doughnut Chart
-        const ctxPr = document.getElementById('prChart').getContext('2d');
-        
-        // Generate beautiful gradient color palette for doughnut segments
-        const colorPalette = [
-            '#38bdf8', '#a78bfa', '#f43f5e', '#fbbf24', '#34d399', 
-            '#f472b6', '#fb7185', '#a3e635', '#2dd4bf', '#fb923c'
-        ];
-        
-        new Chart(ctxPr, {{
+        // 2. bgsw-contrib Doughnut PR Share Chart
+        const ctxPrBgsw = document.getElementById('prChartBgsw').getContext('2d');
+        new Chart(ctxPrBgsw, {{
             type: 'doughnut',
             data: {{
-                labels: labels,
+                labels: labelsBgsw,
                 datasets: [{{
                     label: 'PR Share',
-                    data: prCounts,
-                    backgroundColor: colorPalette.slice(0, labels.length),
+                    data: prCountsBgsw,
+                    backgroundColor: colorPalette.slice(0, labelsBgsw.length),
+                    borderWidth: 2,
+                    borderColor: '#1e293b'
+                }}]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {{
+                    legend: {{
+                        position: 'right',
+                        labels: {{ color: '#f8fafc', font: {{ family: 'Inter', size: 11 }} }}
+                    }},
+                    tooltip: {{
+                        callbacks: {{
+                            label: function(context) {{
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                return ` ${{context.label}}: ${{value}} PRs (${{percentage}}%)`;
+                            }}
+                        }}
+                    }}
+                }},
+                cutout: '65%'
+            }}
+        }});
+
+        // 3. eclipse-score Stacked LOC Bar Chart
+        const ctxLocEclipse = document.getElementById('locChartEclipse').getContext('2d');
+        new Chart(ctxLocEclipse, {{
+            type: 'bar',
+            data: {{
+                labels: labelsEclipse,
+                datasets: [
+                    {{
+                        label: 'Lines Added (+)',
+                        data: additionsEclipse,
+                        backgroundColor: '#4ade80',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }},
+                    {{
+                        label: 'Lines Deleted (-)',
+                        data: deletionsEclipse.map(v => Math.abs(v)),
+                        backgroundColor: '#f87171',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }}
+                ]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {{
+                    legend: {{
+                        position: 'top',
+                        labels: {{ color: '#f8fafc', font: {{ family: 'Inter' }} }}
+                    }},
+                    tooltip: {{
+                        callbacks: {{
+                            label: function(context) {{
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) label += context.parsed.y.toLocaleString();
+                                return label;
+                            }}
+                        }}
+                    }}
+                }},
+                scales: {{
+                    x: {{
+                        stacked: true,
+                        ticks: {{ color: '#94a3b8', font: {{ family: 'Inter' }} }},
+                        grid: {{ display: false }}
+                    }},
+                    y: {{
+                        stacked: true,
+                        ticks: {{ color: '#94a3b8', font: {{ family: 'Inter' }} }},
+                        grid: {{ color: '#334155' }}
+                    }}
+                }}
+            }}
+        }});
+
+        // 4. eclipse-score Doughnut PR Share Chart
+        const ctxPrEclipse = document.getElementById('prChartEclipse').getContext('2d');
+        new Chart(ctxPrEclipse, {{
+            type: 'doughnut',
+            data: {{
+                labels: labelsEclipse,
+                datasets: [{{
+                    label: 'PR Share',
+                    data: prCountsEclipse,
+                    backgroundColor: colorPalette.slice(0, labelsEclipse.length),
                     borderWidth: 2,
                     borderColor: '#1e293b'
                 }}]

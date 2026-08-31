@@ -21,11 +21,7 @@ def get_gh_token():
     return None
 
 def fetch_user_prs(username, org, headers):
-    if isinstance(org, str):
-        org_query = f"org:{org}"
-    else:
-        org_query = " ".join([f"org:{o}" for o in org])
-    query = f"{org_query} author:{username} type:pr"
+    query = f"org:{org} author:{username} type:pr"
     url = f"https://api.github.com/search/issues?q={query}&per_page=100"
     try:
         response = requests.get(url, headers=headers)
@@ -45,31 +41,33 @@ def get_pr_details(pr_url, headers):
     except Exception:
         return 0, 0
 
-def run_loc_analysis(contributors, org_name, headers):
-    user_stats = {}
-    print("Gathering LOC contribution metrics in lines_of_code.py...")
-    for username in contributors:
-        print(f"Analyzing user: {username}...")
-        prs = fetch_user_prs(username, org_name, headers)
-        
-        user_stats[username] = {
-            "done": {"pr_count": 0, "additions": 0, "deletions": 0, "total_loc": 0},
-            "in_progress": {"pr_count": 0, "additions": 0, "deletions": 0, "total_loc": 0}
-        }
-        
-        for pr in prs:
-            if "pull_request" in pr:
-                pr_detail_url = pr["pull_request"]["url"]
-                additions, deletions = get_pr_details(pr_detail_url, headers)
-                state = pr.get("state", "closed")
-                category = "in_progress" if state == "open" else "done"
-                
-                user_stats[username][category]["pr_count"] += 1
-                user_stats[username][category]["additions"] += additions
-                user_stats[username][category]["deletions"] += deletions
-                user_stats[username][category]["total_loc"] += additions + deletions
-        time.sleep(1)
-    return user_stats
+def run_loc_analysis(contributors, orgs, headers):
+    stats = {}
+    for org in orgs:
+        stats[org] = {}
+        print(f"Gathering LOC contribution metrics for organization: {org}...")
+        for username in contributors:
+            print(f"  Analyzing user: {username}...")
+            prs = fetch_user_prs(username, org, headers)
+            
+            stats[org][username] = {
+                "done": {"pr_count": 0, "additions": 0, "deletions": 0, "total_loc": 0},
+                "in_progress": {"pr_count": 0, "additions": 0, "deletions": 0, "total_loc": 0}
+            }
+            
+            for pr in prs:
+                if "pull_request" in pr:
+                    pr_detail_url = pr["pull_request"]["url"]
+                    additions, deletions = get_pr_details(pr_detail_url, headers)
+                    state = pr.get("state", "closed")
+                    category = "in_progress" if state == "open" else "done"
+                    
+                    stats[org][username][category]["pr_count"] += 1
+                    stats[org][username][category]["additions"] += additions
+                    stats[org][username][category]["deletions"] += deletions
+                    stats[org][username][category]["total_loc"] += additions + deletions
+            time.sleep(1)
+    return stats
 
 def main():
     token = get_gh_token()
